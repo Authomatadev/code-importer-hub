@@ -79,7 +79,7 @@ export default {
           "sans-serif",
         ],
         heading: [
-          "Be Vietnam Pro",
+          "Lexend Giga",
           "Inter",
           "sans-serif",
         ],
