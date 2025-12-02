@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Check, Leaf, Flame, Zap } from "lucide-react";
+import { Check, Leaf, Flame } from "lucide-react";
 
 interface DifficultySelectorProps {
   selected: number | null;
@@ -21,18 +21,11 @@ const difficulties = [
     description: "Para quienes ya corren regularmente",
     details: "4-5 días de entrenamiento por semana",
   },
-  {
-    level: 3,
-    name: "Avanzado",
-    icon: Zap,
-    description: "Entrenamiento intensivo para competir",
-    details: "5-6 días de entrenamiento por semana",
-  },
 ];
 
 export function DifficultySelector({ selected, onSelect }: DifficultySelectorProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
       {difficulties.map((difficulty) => {
         const Icon = difficulty.icon;
         const isSelected = selected === difficulty.level;
