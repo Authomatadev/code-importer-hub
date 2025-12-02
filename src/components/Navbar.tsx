@@ -1,7 +1,8 @@
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Settings } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,26 +12,30 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-black text-lg">M</span>
             </div>
             <span className="font-bold text-lg hidden sm:block">
               MARATÓN<span className="text-primary">SANTIAGO</span>
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/#features" className="text-muted-foreground hover:text-foreground transition-colors">
               Características
             </a>
-            <a href="#plans" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/#plans" className="text-muted-foreground hover:text-foreground transition-colors">
               Planes
             </a>
-            <a href="#countdown" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/#countdown" className="text-muted-foreground hover:text-foreground transition-colors">
               Countdown
             </a>
+            <Link to="/admin" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              <Settings className="w-4 h-4" />
+              Admin
+            </Link>
             <ThemeToggle />
             <Button variant="nike" size="lg">
               COMENZAR
@@ -55,26 +60,34 @@ export function Navbar() {
           <div className="md:hidden py-4 border-t border-border/50 animate-fade-in">
             <div className="flex flex-col gap-4">
               <a 
-                href="#features" 
+                href="/#features" 
                 className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Características
               </a>
               <a 
-                href="#plans" 
+                href="/#plans" 
                 className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Planes
               </a>
               <a 
-                href="#countdown" 
+                href="/#countdown" 
                 className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Countdown
               </a>
+              <Link 
+                to="/admin" 
+                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Settings className="w-4 h-4" />
+                Admin
+              </Link>
               <div className="px-4 pt-2">
                 <Button variant="nike" className="w-full">
                   COMENZAR
