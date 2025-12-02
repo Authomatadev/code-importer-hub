@@ -16,10 +16,12 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
   return (
     <div 
       className={cn(
-        "relative p-6 md:p-8 rounded-2xl transition-all duration-500 hover-lift opacity-0 animate-fade-in",
+        "relative p-6 md:p-8 rounded-2xl opacity-0 animate-fade-in",
+        "transition-all duration-300 ease-out",
+        "hover:scale-105 hover:-translate-y-2 hover:shadow-2xl",
         featured 
-          ? "bg-card border-2 border-primary glow-lg" 
-          : "glass-card"
+          ? "bg-card border-2 border-primary glow-lg hover:border-primary/80 hover:shadow-primary/20" 
+          : "glass-card hover:border-primary/30 hover:shadow-primary/10"
       )}
       style={{ animationDelay: `${delay}s` }}
     >
