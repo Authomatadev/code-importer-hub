@@ -17,7 +17,7 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       className={cn(
         "relative p-6 md:p-8 rounded-2xl transition-all duration-500 hover-lift opacity-0 animate-fade-in",
         featured 
-          ? "bg-muted border-2 border-primary glow-lg" 
+          ? "bg-card border-2 border-primary glow-lg" 
           : "glass-card"
       )}
       style={{ animationDelay: `${delay}s` }}
@@ -33,14 +33,11 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       <div className="text-center mb-6">
         <span className={cn(
           "font-heading text-6xl md:text-7xl font-black tracking-tighter",
-          featured ? "text-foreground" : "text-gradient"
+          "text-foreground"
         )}>
           {distance}
         </span>
-        <h3 className={cn(
-          "font-heading text-xl font-bold mt-2",
-          "text-card-foreground"
-        )}>
+        <h3 className="font-heading text-xl font-bold mt-2 text-foreground">
           {title}
         </h3>
       </div>
@@ -49,28 +46,25 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
         "text-center py-4 border-y mb-6",
         featured ? "border-primary/30" : "border-border/50"
       )}>
-        <span className="text-4xl font-bold text-card-foreground">
+        <span className="text-4xl font-bold text-foreground">
           {weeks}
         </span>
-        <span className="text-sm ml-2 text-card-foreground/70">
+        <span className="text-sm ml-2 text-muted-foreground">
           semanas
         </span>
       </div>
       
-      <p className="text-center mb-6 text-card-foreground/80">
+      <p className="text-center mb-6 text-muted-foreground">
         {description}
       </p>
 
       {/* Badge Caja Los Andes */}
-      <div className={cn(
-        "text-center mb-4 px-3 py-2 rounded-lg text-xs font-bold tracking-wide",
-        featured ? "bg-secondary text-secondary-foreground" : "bg-secondary/90 text-secondary-foreground"
-      )}>
+      <div className="text-center mb-4 px-3 py-2 rounded-lg text-xs font-bold tracking-wide bg-secondary text-secondary-foreground">
         ¡AFILIADO CAJA LOS ANDES: SIN COSTO!
       </div>
       
       <Button 
-        variant={featured ? "glass" : "nike"} 
+        variant={featured ? "default" : "nike"} 
         className="w-full group"
       >
         ELEGIR PLAN
