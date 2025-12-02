@@ -27,6 +27,7 @@ export default function Auth() {
   );
   const [selectedDifficulty, setSelectedDifficulty] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
 
   // Check if user is already logged in
   useEffect(() => {
@@ -39,13 +40,14 @@ export default function Auth() {
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
+      // Don't redirect during signup - we handle it manually after profile update
+      if (session && !isSigningUp) {
         navigate("/dashboard");
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, isSigningUp]);
 
   const handleSignUp = async (data: { email: string; password: string }) => {
     if (!selectedDistance || !selectedDifficulty) {
@@ -58,6 +60,8 @@ export default function Auth() {
     }
 
     setIsLoading(true);
+    setIsSigningUp(true);
+    
     try {
       // 1. Sign up the user
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
@@ -78,6 +82,7 @@ export default function Auth() {
         } else {
           throw signUpError;
         }
+        setIsSigningUp(false);
         return;
       }
 
@@ -95,9 +100,8 @@ export default function Auth() {
         }
 
         // 3. Update user profile with selected plan
-        // Note: The handle_new_user trigger already creates the profile
-        // We need to wait a moment for the trigger to complete
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        // Wait for the trigger to create the profile
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const { error: updateError } = await supabase
           .from("user_profiles")
@@ -111,12 +115,20 @@ export default function Auth() {
 
         if (updateError) {
           console.error("Error updating profile:", updateError);
+          toast({
+            title: "Error al guardar plan",
+            description: "Tu cuenta fue creada pero hubo un error guardando tu plan.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "¡Cuenta creada!",
+            description: "¡Bienvenido! Tu plan está listo.",
+          });
         }
 
-        toast({
-          title: "¡Cuenta creada!",
-          description: "Revisa tu correo para confirmar tu cuenta.",
-        });
+        // Navigate to dashboard after profile is updated
+        navigate("/dashboard");
       }
     } catch (error: any) {
       console.error("Sign up error:", error);
@@ -127,6 +139,7 @@ export default function Auth() {
       });
     } finally {
       setIsLoading(false);
+      setIsSigningUp(false);
     }
   };
 
