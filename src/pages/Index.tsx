@@ -165,7 +165,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-primary font-semibold text-sm uppercase tracking-widest">Características</span>
-            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-black mt-4 mb-4">
+            <h2 className="font-heading text-3xl lg:text-5xl font-black mt-4 mb-4 md:text-5xl">
               TU CAMINO AL ÉXITO.
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
