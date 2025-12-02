@@ -87,31 +87,51 @@ export default function Auth() {
       }
 
       if (authData.user) {
-        // 2. Find the corresponding plan
+        // 2. Wait for the trigger to create the profile first
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        // 3. Find the corresponding plan (ensure exact type match)
         const { data: plan, error: planError } = await supabase
           .from("plans")
-          .select("id")
+          .select("id, name")
           .eq("distance", selectedDistance)
-          .eq("difficulty", selectedDifficulty)
+          .eq("difficulty", Number(selectedDifficulty))
           .maybeSingle();
+
+        console.log("Finding plan for:", { 
+          distance: selectedDistance, 
+          difficulty: selectedDifficulty,
+          planFound: plan,
+          planError 
+        });
 
         if (planError) {
           console.error("Error finding plan:", planError);
         }
 
-        // 3. Update user profile with selected plan
-        // Wait for the trigger to create the profile
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (!plan) {
+          console.error("No plan found for:", { 
+            distance: selectedDistance, 
+            difficulty: selectedDifficulty 
+          });
+        }
 
+        // 4. Update user profile with selected plan
         const { error: updateError } = await supabase
           .from("user_profiles")
           .update({
             distance: selectedDistance,
-            difficulty: selectedDifficulty,
+            difficulty: Number(selectedDifficulty),
             current_plan_id: plan?.id || null,
             start_date: new Date().toISOString().split("T")[0],
           })
           .eq("id", authData.user.id);
+        
+        console.log("Profile update result:", { 
+          userId: authData.user.id,
+          planId: plan?.id,
+          updateError 
+        });
 
         if (updateError) {
           console.error("Error updating profile:", updateError);
