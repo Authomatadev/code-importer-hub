@@ -72,8 +72,8 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
 
       {/* Badge Caja Los Andes */}
       <div className={cn(
-        "text-center mb-4 px-3 py-2 rounded-lg text-xs font-semibold",
-        featured ? "bg-secondary/20 text-secondary" : "bg-secondary/10 text-secondary"
+        "text-center mb-4 px-3 py-2 rounded-lg text-xs font-bold tracking-wide",
+        featured ? "bg-secondary text-secondary-foreground" : "bg-secondary/90 text-secondary-foreground"
       )}>
         ¡AFILIADO CAJA LOS ANDES: SIN COSTO!
       </div>

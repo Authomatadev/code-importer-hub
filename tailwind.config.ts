@@ -79,7 +79,7 @@ export default {
           "sans-serif",
         ],
         heading: [
-          "Lexend Giga",
+          "Big Shoulders Display",
           "Inter",
           "sans-serif",
         ],

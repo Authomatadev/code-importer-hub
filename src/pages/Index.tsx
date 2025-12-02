@@ -104,10 +104,10 @@ const Index = () => {
             </p>
             
             {/* Destacado Caja Los Andes */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 border border-secondary/30 backdrop-blur-sm mb-4 opacity-0 animate-fade-in" style={{
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-secondary-foreground backdrop-blur-sm mb-4 opacity-0 animate-fade-in" style={{
             animationDelay: "0.25s"
           }}>
-              <span className="text-sm font-bold text-secondary">Afiliados Caja Los Andes: ¡Entrenamiento SIN COSTO!</span>
+              <span className="text-sm font-bold">Afiliados Caja Los Andes: ¡Entrenamiento SIN COSTO!</span>
             </div>
             
             <p className="text-sm text-muted-foreground mb-8 opacity-0 animate-fade-in" style={{
@@ -151,7 +151,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h3 className="font-heading text-2xl md:text-3xl font-black mb-4">
-              ENTRENA SIN COSTO CON <span className="text-secondary">CAJA LOS ANDES.</span>
+              ENTRENA SIN COSTO CON <span className="px-2 py-1 bg-secondary text-secondary-foreground rounded">CAJA LOS ANDES.</span>
             </h3>
             <p className="text-muted-foreground">
               Si eres afiliado a Caja Los Andes, tu plan de entrenamiento para el Maratón de Santiago 2026 es completamente SIN COSTO. Solo regístrate y desbloquea tus rutinas semana a semana.
