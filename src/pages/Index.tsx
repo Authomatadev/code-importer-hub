@@ -161,7 +161,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 md:py-32 bg-card/30">
+      <section id="features" className="py-20 md:py-32 bg-muted">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-primary font-semibold text-sm uppercase tracking-widest">Características</span>
