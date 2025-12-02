@@ -133,6 +133,11 @@ export default {
         "gradient-nike": "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(207 65% 38%) 100%)",
         "gradient-hero": "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
       },
+      rotate: {
+        "x-0": "rotateX(0deg)",
+        "x-90": "rotateX(-90deg)",
+        "x-180": "rotateX(-180deg)",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
