@@ -20,17 +20,17 @@ const features = [
   {
     icon: CalendarDays,
     title: "Plan Personalizado",
-    description: "Entrenamientos adaptados a tu nivel y disponibilidad. Desde principiante hasta avanzado."
+    description: "Tu plan, tu ritmo. Entrenamientos 100% adaptados a tu nivel y tiempo disponible."
   },
   {
     icon: TrendingUp,
-    title: "Progreso en Tiempo Real",
-    description: "Monitorea tu avance semana a semana y celebra cada logro en tu camino a la meta."
+    title: "Progreso Visible",
+    description: "Sigue tu avance. Monitorea tu evolución y celebra cada kilómetro recorrido."
   },
   {
     icon: Video,
-    title: "Contenido Multimedia",
-    description: "Videos, tips y guías de expertos para perfeccionar tu técnica y prevenir lesiones."
+    title: "Contenido Exclusivo",
+    description: "Entrena como un pro. Videos y guías de expertos para mejorar tu técnica y evitar lesiones."
   },
   {
     icon: Bell,
@@ -52,22 +52,22 @@ const features = [
 const plans = [
   {
     distance: "10K",
-    title: "Primera Carrera",
+    title: "Tu Primera Meta",
     weeks: 8,
-    description: "Ideal para quienes dan sus primeros pasos en el running competitivo."
+    description: "Ideal para iniciar en el running competitivo."
   },
   {
     distance: "21K",
-    title: "Media Maratón",
+    title: "El Gran Salto",
     weeks: 12,
-    description: "Preparación completa para conquistar tu primera o mejor media maratón.",
+    description: "Prepárate para conquistar tu primera o mejor media maratón.",
     featured: true
   },
   {
     distance: "42K",
-    title: "Maratón Completo",
+    title: "La Leyenda",
     weeks: 16,
-    description: "El desafío máximo. Entrenamiento integral para los 42.195 km."
+    description: "El entrenamiento integral para el desafío máximo."
   }
 ];
 
@@ -115,20 +115,28 @@ const Index = () => {
             
             {/* Main Heading */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-              TU MEJOR VERSIÓN
+              TU META
               <br />
-              <span className="text-gradient">TE ESPERA</span>
+              <span className="text-gradient">TE ESPERA.</span>
             </h1>
             
             {/* Subheading */}
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              Prepárate para el Maratón de Santiago 2026 con planes de entrenamiento personalizados. 
-              <span className="text-foreground font-medium"> Keep pushing. You're built for this.</span>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              Prepárate para el Maratón de Santiago 2026 con el plan de entrenamiento que te llevará a la meta.
+            </p>
+            
+            {/* Destacado Caja Los Andes */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 border border-secondary/30 backdrop-blur-sm mb-4 opacity-0 animate-fade-in" style={{ animationDelay: "0.25s" }}>
+              <span className="text-sm font-bold text-secondary">Afiliados Caja Los Andes: ¡Entrenamiento SIN COSTO!</span>
+            </div>
+            
+            <p className="text-sm text-muted-foreground mb-8 opacity-0 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+              <span className="text-foreground font-medium italic">Keep pushing. You're built for this.</span>
             </p>
             
             {/* Countdown */}
             <div id="countdown" className="mb-12">
-              <p className="text-sm text-muted-foreground uppercase tracking-widest mb-6 opacity-0 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+              <p className="text-sm text-muted-foreground uppercase tracking-widest mb-6 opacity-0 animate-fade-in" style={{ animationDelay: "0.35s" }}>
                 Faltan para la carrera
               </p>
               <Countdown />
@@ -150,16 +158,30 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Alliance Banner Section */}
+      <section className="py-12 bg-secondary/10 border-y border-secondary/20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h3 className="text-2xl md:text-3xl font-black mb-4">
+              ENTRENA SIN COSTO CON <span className="text-secondary">CAJA LOS ANDES.</span>
+            </h3>
+            <p className="text-muted-foreground">
+              Si eres afiliado a Caja Los Andes, tu plan de entrenamiento para el Maratón de Santiago 2026 es completamente SIN COSTO. Solo regístrate y desbloquea tus rutinas semana a semana.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section id="features" className="py-20 md:py-32 bg-card/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-primary font-semibold text-sm uppercase tracking-widest">Características</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mt-4 mb-4">
-              TODO LO QUE NECESITAS
+              TU CAMINO AL ÉXITO.
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Una plataforma completa diseñada para llevarte desde donde estás hasta la línea de meta.
+              Todo lo que necesitas en una sola plataforma para cruzar la meta.
             </p>
           </div>
           
@@ -183,10 +205,10 @@ const Index = () => {
           <div className="text-center mb-16">
             <span className="text-primary font-semibold text-sm uppercase tracking-widest">Planes de Entrenamiento</span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mt-4 mb-4">
-              ELIGE TU DISTANCIA
+              ELIGE TU DESAFÍO.
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Planes diseñados por expertos para cada nivel. Desde tu primera carrera hasta el maratón completo.
+              Planes diseñados por expertos para cada nivel, desde 10K hasta el Maratón completo.
             </p>
           </div>
           
@@ -212,10 +234,10 @@ const Index = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-6">
-              LEGEND IN <span className="text-gradient">PROGRESS</span>
+              LA LEYENDA <span className="text-gradient">TE ESPERA.</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Más de 2,000 corredores ya están preparándose. Únete a la comunidad y comienza tu transformación hoy.
+              Más de 2,000 corredores ya están entrenando. Únete a la comunidad y transforma tu potencial hoy.
             </p>
             <WaitingListForm />
           </div>

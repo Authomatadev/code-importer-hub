@@ -78,17 +78,17 @@ export function WaitingListForm() {
           variant="hero" 
           size="xl"
           disabled={isLoading}
-          className="min-w-[160px]"
+          className="min-w-[200px] text-sm"
         >
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
-            "UNIRME"
+            "¡EMPIEZA A ENTRENAR SIN COSTO!"
           )}
         </Button>
       </div>
       <p className="text-xs text-muted-foreground text-center mt-4">
-        Únete a más de 2,000 corredores preparándose para el maratón
+        Únete a más de 2,000 corredores que ya están en la pista.
       </p>
     </form>
   );
