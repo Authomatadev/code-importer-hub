@@ -9,7 +9,7 @@ export function Footer() {
             <div className="flex items-center gap-4 mb-4">
               
               <div className="h-8 w-px bg-border/50" />
-              <img src={logoCajaLosAndes} alt="Caja Los Andes" className="h-8" />
+              <img src={logoCajaLosAndes} alt="Caja Los Andes" className="h-24" />
             </div>
             <p className="text-muted-foreground max-w-sm mb-6">
               Prepárate para el Maratón de Santiago 2026 con planes de entrenamiento personalizados diseñados para llevarte a la línea de meta.
