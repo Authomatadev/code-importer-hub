@@ -17,7 +17,7 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       className={cn(
         "relative p-6 md:p-8 rounded-2xl transition-all duration-500 hover-lift opacity-0 animate-fade-in",
         featured 
-          ? "bg-primary text-primary-foreground glow-lg" 
+          ? "bg-card border-2 border-primary glow-lg" 
           : "glass-card"
       )}
       style={{ animationDelay: `${delay}s` }}
@@ -33,13 +33,13 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       <div className="text-center mb-6">
         <span className={cn(
           "font-heading text-6xl md:text-7xl font-black tracking-tighter",
-          featured ? "text-primary-foreground" : "text-gradient"
+          featured ? "text-primary" : "text-gradient"
         )}>
           {distance}
         </span>
         <h3 className={cn(
           "font-heading text-xl font-bold mt-2",
-          featured ? "text-primary-foreground" : "text-card-foreground"
+          "text-card-foreground"
         )}>
           {title}
         </h3>
@@ -47,26 +47,17 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       
       <div className={cn(
         "text-center py-4 border-y mb-6",
-        featured ? "border-primary-foreground/20" : "border-border/50"
+        featured ? "border-primary/30" : "border-border/50"
       )}>
-        <span className={cn(
-          "text-4xl font-bold",
-          featured ? "text-primary-foreground" : "text-card-foreground"
-        )}>
+        <span className="text-4xl font-bold text-card-foreground">
           {weeks}
         </span>
-        <span className={cn(
-          "text-sm ml-2",
-          featured ? "text-primary-foreground/80" : "text-card-foreground/70"
-        )}>
+        <span className="text-sm ml-2 text-card-foreground/70">
           semanas
         </span>
       </div>
       
-      <p className={cn(
-        "text-center mb-6",
-        featured ? "text-primary-foreground/80" : "text-card-foreground/70"
-      )}>
+      <p className="text-center mb-6 text-card-foreground/80">
         {description}
       </p>
 
