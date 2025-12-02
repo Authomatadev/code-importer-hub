@@ -13,7 +13,7 @@ export function Navbar() {
           <div className="flex items-center gap-4">
             
             <div className="hidden sm:block h-8 w-px bg-border/50" />
-            <img src={logoCajaLosAndes} alt="Caja Los Andes" className="h-8 hidden sm:block" />
+            <img src={logoCajaLosAndes} alt="Caja Los Andes" className="h-12 hidden sm:block" />
           </div>
 
           {/* Desktop Navigation */}
