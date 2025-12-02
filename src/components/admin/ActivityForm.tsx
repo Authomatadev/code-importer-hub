@@ -156,7 +156,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Editar' : 'Nueva'} Actividad - {dayNames[dayOfWeek] || `Día ${dayOfWeek + 1}`}

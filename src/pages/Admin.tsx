@@ -84,9 +84,9 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-y-auto">
       <Navbar />
-      <main className="container mx-auto px-4 py-8 pt-24">
+      <main className="container mx-auto px-4 py-8 pt-24 pb-16">
         <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
 
         <div className="space-y-8">
