@@ -283,19 +283,57 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="media_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>URL Multimedia (opcional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://youtube.com/..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            {/* Media Section */}
+            <div className="border border-border rounded-lg p-4 space-y-3 bg-muted/30">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <span>🎬</span>
+                <span>Contenido Multimedia (opcional)</span>
+              </div>
+              <FormField
+                control={form.control}
+                name="media_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-muted-foreground">
+                      URL de video o imagen de referencia
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="https://youtube.com/watch?v=... o URL de imagen" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Soporta: YouTube, Vimeo, o URLs directas de imágenes (jpg, png, gif)
+                    </p>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {form.watch('media_url') && (
+                <div className="mt-2 p-2 bg-background rounded border">
+                  <p className="text-xs text-muted-foreground mb-1">Vista previa:</p>
+                  {form.watch('media_url')?.includes('youtube.com') || form.watch('media_url')?.includes('youtu.be') ? (
+                    <div className="text-xs text-primary truncate">
+                      🎥 Video de YouTube: {form.watch('media_url')}
+                    </div>
+                  ) : form.watch('media_url')?.includes('vimeo.com') ? (
+                    <div className="text-xs text-primary truncate">
+                      🎥 Video de Vimeo: {form.watch('media_url')}
+                    </div>
+                  ) : (
+                    <img 
+                      src={form.watch('media_url') || ''} 
+                      alt="Preview" 
+                      className="max-h-24 rounded object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  )}
+                </div>
               )}
-            />
+            </div>
 
             <DialogFooter className="gap-2">
               {isEditing && (

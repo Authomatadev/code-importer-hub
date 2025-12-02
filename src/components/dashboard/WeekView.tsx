@@ -68,6 +68,7 @@ export function WeekView({
               isToday={dayOfWeek === today}
               isCompleted={isCompleted}
               onClick={() => activity && setSelectedActivity(activity)}
+              onToggleComplete={onMarkComplete}
             />
           );
         })}

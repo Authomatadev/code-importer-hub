@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ActivityIcon, ActivityType, getActivityLabel } from "./ActivityIcon";
-import { Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Activity {
   id: string;
@@ -19,6 +19,7 @@ interface DayCardProps {
   isToday?: boolean;
   isCompleted?: boolean;
   onClick?: () => void;
+  onToggleComplete?: (activityId: string) => void;
 }
 
 const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
@@ -29,63 +30,110 @@ export function DayCard({
   activity, 
   isToday = false, 
   isCompleted = false,
-  onClick 
+  onClick,
+  onToggleComplete
 }: DayCardProps) {
   const hasActivity = activity !== null;
   const activityType = activity?.activity_type || 'rest';
+
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (activity && onToggleComplete) {
+      onToggleComplete(activity.id);
+    }
+  };
 
   return (
     <button
       onClick={onClick}
       className={cn(
         "relative flex flex-col items-center p-3 md:p-4 rounded-xl border transition-all",
-        "hover:scale-105 hover:shadow-lg",
+        "hover:scale-105 hover:shadow-lg group",
         isToday 
           ? "border-primary bg-primary/5 ring-2 ring-primary/20" 
           : "border-border bg-card hover:border-primary/50",
-        isCompleted && "opacity-75"
+        isCompleted && "bg-muted/50"
       )}
     >
-      {/* Completed indicator */}
-      {isCompleted && (
-        <div className="absolute -top-2 -right-2 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-          <Check className="w-3 h-3 text-white" />
+      {/* Checkbox for completion */}
+      {hasActivity && (
+        <div 
+          className="absolute top-2 right-2 z-10"
+          onClick={handleCheckboxClick}
+        >
+          <Checkbox 
+            checked={isCompleted}
+            className={cn(
+              "h-5 w-5 transition-all duration-300",
+              isCompleted && "bg-green-500 border-green-500 data-[state=checked]:bg-green-500"
+            )}
+          />
         </div>
       )}
 
       {/* Day name */}
       <span className={cn(
-        "text-xs font-medium mb-2",
-        isToday ? "text-primary" : "text-muted-foreground"
+        "text-xs font-medium mb-2 transition-all duration-300",
+        isToday ? "text-primary" : "text-muted-foreground",
+        isCompleted && "text-muted-foreground/60"
       )}>
         {dayName}
       </span>
 
-      {/* Activity icon */}
-      <ActivityIcon 
-        type={activityType} 
-        size="lg" 
-        showBackground 
-      />
-
-      {/* Activity label */}
-      <span className={cn(
-        "text-xs mt-2 font-medium text-center line-clamp-1",
-        isToday ? "text-foreground" : "text-muted-foreground"
+      {/* Activity icon with completion effect */}
+      <div className={cn(
+        "relative transition-all duration-500",
+        isCompleted && "opacity-50 scale-90"
       )}>
-        {hasActivity ? getActivityLabel(activityType) : "—"}
+        <ActivityIcon 
+          type={activityType} 
+          size="lg" 
+          showBackground 
+        />
+        {/* Strikethrough line animation */}
+        <div className={cn(
+          "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-0.5 bg-green-500 rounded-full transition-all duration-500 ease-out",
+          isCompleted ? "w-[120%] opacity-100" : "w-0 opacity-0"
+        )} />
+      </div>
+
+      {/* Activity label with strikethrough */}
+      <span className={cn(
+        "text-xs mt-2 font-medium text-center line-clamp-1 relative transition-all duration-300",
+        isToday ? "text-foreground" : "text-muted-foreground",
+        isCompleted && "text-muted-foreground/60"
+      )}>
+        <span className={cn(
+          "relative inline-block",
+          isCompleted && "activity-strikethrough"
+        )}>
+          {hasActivity ? getActivityLabel(activityType) : "—"}
+        </span>
       </span>
 
       {/* Distance/Duration badge */}
       {activity?.distance_km && (
-        <span className="text-[10px] text-primary font-bold mt-1">
+        <span className={cn(
+          "text-[10px] font-bold mt-1 transition-all duration-300",
+          isCompleted ? "text-green-500/60 line-through" : "text-primary"
+        )}>
           {activity.distance_km} km
         </span>
       )}
       {!activity?.distance_km && activity?.duration_min && (
-        <span className="text-[10px] text-primary font-bold mt-1">
+        <span className={cn(
+          "text-[10px] font-bold mt-1 transition-all duration-300",
+          isCompleted ? "text-green-500/60 line-through" : "text-primary"
+        )}>
           {activity.duration_min} min
         </span>
+      )}
+
+      {/* Completion celebration effect */}
+      {isCompleted && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent animate-pulse" />
+        </div>
       )}
     </button>
   );
