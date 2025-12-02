@@ -4,6 +4,7 @@ import { WaitingListForm } from "@/components/WaitingListForm";
 import { FeatureCard } from "@/components/FeatureCard";
 import { DistanceCard } from "@/components/DistanceCard";
 import { Footer } from "@/components/Footer";
+import { LaserFlow } from "@/components/LaserFlow";
 import heroImage from "@/assets/hero-marathon.jpg";
 import { CalendarDays, TrendingUp, Video, Bell, Trophy, Users, ChevronDown } from "lucide-react";
 import { useEffect } from "react";
@@ -180,8 +181,19 @@ const Index = () => {
       </section>
 
       {/* Plans Section */}
-      <section id="plans" className="py-20 md:py-32">
-        <div className="container mx-auto px-4">
+      <section id="plans" className="py-20 md:py-32 relative overflow-hidden">
+        {/* LaserFlow Background */}
+        <div className="absolute inset-0 z-0">
+          <LaserFlow 
+            color="#3B82F6"
+            horizontalBeamOffset={0.0}
+            verticalBeamOffset={0.15}
+            fogIntensity={0.35}
+            verticalSizing={2.5}
+            horizontalSizing={0.6}
+          />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <span className="text-primary font-semibold text-sm uppercase tracking-widest">Planes de Entrenamiento</span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-black mt-4 mb-4">
