@@ -3,20 +3,26 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Settings } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import logoCajaLosAndes from "@/assets/logo-caja-los-andes.png";
+
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20 my-px">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-black text-lg">M</span>
-            </div>
-            <span className="font-bold text-lg hidden sm:block">
-              MARATÓN<span className="text-primary">SANTIAGO</span>
-            </span>
-          </Link>
+          {/* Logos */}
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+                <span className="text-primary-foreground font-black text-lg">M</span>
+              </div>
+              <span className="font-bold text-lg hidden sm:block">
+                MARATÓN<span className="text-primary">SANTIAGO</span>
+              </span>
+            </Link>
+            <div className="hidden sm:block h-8 w-px bg-border/50" />
+            <img src={logoCajaLosAndes} alt="Caja Los Andes" className="h-8 hidden sm:block" />
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
