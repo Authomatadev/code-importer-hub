@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface DistanceCardProps {
   distance: string;
@@ -63,13 +64,15 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
         ¡AFILIADO CAJA LOS ANDES: SIN COSTO!
       </div>
       
-      <Button 
-        variant={featured ? "default" : "nike"} 
-        className="w-full group"
-      >
-        ELEGIR PLAN
-        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-      </Button>
+      <Link to={`/auth?distance=${distance}`} className="w-full">
+        <Button 
+          variant={featured ? "default" : "nike"} 
+          className="w-full group"
+        >
+          ELEGIR PLAN
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </Button>
+      </Link>
     </div>
   );
 }

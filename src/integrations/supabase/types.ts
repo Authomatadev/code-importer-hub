@@ -248,6 +248,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           difficulty: number
+          distance: string | null
           id: string
           name: string
           total_weeks: number
@@ -256,6 +257,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           difficulty: number
+          distance?: string | null
           id?: string
           name: string
           total_weeks: number
@@ -264,6 +266,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           difficulty?: number
+          distance?: string | null
           id?: string
           name?: string
           total_weeks?: number

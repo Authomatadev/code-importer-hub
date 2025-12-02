@@ -32,9 +32,11 @@ export function Navbar() {
               Admin
             </Link>
             <ThemeToggle />
-            <Button variant="nike" size="lg">
-              COMENZAR
-            </Button>
+            <Link to="/auth">
+              <Button variant="nike" size="lg">
+                COMENZAR
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -63,9 +65,11 @@ export function Navbar() {
                 Admin
               </Link>
               <div className="px-4 pt-2">
-                <Button variant="nike" className="w-full">
-                  COMENZAR
-                </Button>
+                <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="nike" className="w-full">
+                    COMENZAR
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>}
