@@ -18,7 +18,9 @@ export default function Auth() {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const [mode, setMode] = useState<AuthMode>("signup");
+  const [mode, setMode] = useState<AuthMode>(
+    searchParams.get("mode") === "login" ? "login" : "signup"
+  );
   const [step, setStep] = useState(1);
   const [selectedDistance, setSelectedDistance] = useState<string | null>(
     searchParams.get("distance") || null
