@@ -39,7 +39,7 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
         </span>
         <h3 className={cn(
           "font-heading text-xl font-bold mt-2",
-          featured ? "text-primary-foreground" : "text-foreground"
+          featured ? "text-primary-foreground" : "text-card-foreground"
         )}>
           {title}
         </h3>
@@ -51,13 +51,13 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       )}>
         <span className={cn(
           "text-4xl font-bold",
-          featured ? "text-primary-foreground" : "text-foreground"
+          featured ? "text-primary-foreground" : "text-card-foreground"
         )}>
           {weeks}
         </span>
         <span className={cn(
           "text-sm ml-2",
-          featured ? "text-primary-foreground/80" : "text-muted-foreground"
+          featured ? "text-primary-foreground/80" : "text-card-foreground/70"
         )}>
           semanas
         </span>
@@ -65,7 +65,7 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       
       <p className={cn(
         "text-center mb-6",
-        featured ? "text-primary-foreground/80" : "text-muted-foreground"
+        featured ? "text-primary-foreground/80" : "text-card-foreground/70"
       )}>
         {description}
       </p>
