@@ -17,53 +17,52 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 11%;
 
-    --primary: 0 84% 60%;
+    --primary: 207 55% 48%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 166 100% 40%;
+    --secondary: 45 100% 50%;
     --secondary-foreground: 240 10% 11%;
-
     --muted: 240 5% 96%;
     --muted-foreground: 240 4% 46%;
 
     --accent: 240 5% 96%;
     --accent-foreground: 240 10% 11%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 0 84% 60%;
+    --ring: 207 55% 48%;
 
     --radius: 0.75rem;
 
-    /* Nike Custom */
-    --nike-red: 0 84% 60%;
-    --nike-cyan: 166 100% 40%;
+    /* Brand Custom */
+    --nike-red: 207 55% 48%;
+    --nike-cyan: 45 100% 50%;
     --nike-dark: 0 0% 6%;
-    --nike-glow: 0 84% 60%;
+    --nike-glow: 207 55% 48%;
 
     /* Gradients */
-    --gradient-nike: linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(340 100% 50%) 100%);
+    --gradient-nike: linear-gradient(135deg, hsl(207 55% 48%) 0%, hsl(207 65% 38%) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(0 0% 6%) 0%, hsl(0 0% 12%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.05) 0%, hsl(0 0% 100% / 0.02) 100%);
 
     /* Shadows */
-    --shadow-glow: 0 0 40px hsl(0 84% 60% / 0.3);
-    --shadow-glow-lg: 0 0 80px hsl(0 84% 60% / 0.4);
+    --shadow-glow: 0 0 40px hsl(207 55% 48% / 0.3);
+    --shadow-glow-lg: 0 0 80px hsl(207 55% 48% / 0.4);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 10% 11%;
-    --sidebar-primary: 0 84% 60%;
+    --sidebar-primary: 207 55% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 5% 96%;
     --sidebar-accent-foreground: 240 10% 11%;
     --sidebar-border: 240 6% 90%;
-    --sidebar-ring: 0 84% 60%;
+    --sidebar-ring: 207 55% 48%;
 
-    --chart-1: 0 84% 60%;
-    --chart-2: 166 100% 40%;
+    --chart-1: 207 55% 48%;
+    --chart-2: 45 100% 50%;
     --chart-3: 240 5% 65%;
     --chart-4: 240 4% 46%;
     --chart-5: 240 10% 30%;
@@ -79,10 +78,10 @@
     --popover: 0 0% 9%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 0 84% 60%;
+    --primary: 207 55% 48%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 166 100% 48%;
+    --secondary: 45 100% 50%;
     --secondary-foreground: 0 0% 6%;
 
     --muted: 0 0% 15%;
@@ -91,27 +90,27 @@
     --accent: 0 0% 15%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 18%;
     --input: 0 0% 18%;
-    --ring: 0 84% 60%;
+    --ring: 207 55% 48%;
 
-    --nike-glow: 0 84% 60%;
+    --nike-glow: 207 55% 48%;
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100% / 0.08) 0%, hsl(0 0% 100% / 0.02) 100%);
 
     --sidebar-background: 0 0% 6%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 0 84% 60%;
+    --sidebar-primary: 207 55% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 15%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 18%;
-    --sidebar-ring: 0 84% 60%;
+    --sidebar-ring: 207 55% 48%;
 
-    --chart-1: 0 84% 60%;
-    --chart-2: 166 100% 48%;
+    --chart-1: 207 55% 48%;
+    --chart-2: 45 100% 50%;
     --chart-3: 0 0% 50%;
     --chart-4: 0 0% 40%;
     --chart-5: 0 0% 30%;
