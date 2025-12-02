@@ -8,20 +8,23 @@ interface DistanceSelectorProps {
 
 const distances = [
   {
-    id: "10K",
+    id: "10k",
+    label: "10K",
     title: "Tu Primera Meta",
     weeks: 8,
     description: "Ideal para comenzar tu aventura en el running competitivo",
   },
   {
-    id: "21K",
+    id: "21k",
+    label: "21K",
     title: "El Gran Salto",
     weeks: 12,
     description: "Da el siguiente paso y conquista la media maratón",
     featured: true,
   },
   {
-    id: "42K",
+    id: "42k",
+    label: "42K",
     title: "La Leyenda",
     weeks: 16,
     description: "El desafío máximo para corredores determinados",
@@ -61,7 +64,7 @@ export function DistanceSelector({ selected, onSelect }: DistanceSelectorProps) 
 
           <div className="text-center mb-4">
             <span className="font-heading text-5xl md:text-6xl font-black tracking-tighter text-foreground">
-              {distance.id}
+              {distance.label}
             </span>
             <h3 className="font-heading text-lg font-bold mt-2 text-foreground">
               {distance.title}
