@@ -1,6 +1,6 @@
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X, Settings, LogIn } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logoCajaLosAndes from "@/assets/logo-caja-los-andes.png";
@@ -32,6 +32,12 @@ export function Navbar() {
               Admin
             </Link>
             <ThemeToggle />
+            <Link to="/auth?mode=login">
+              <Button variant="outline" size="lg" className="gap-2">
+                <LogIn className="w-4 h-4" />
+                INGRESAR
+              </Button>
+            </Link>
             <Link to="/auth">
               <Button variant="nike" size="lg">
                 COMENZAR
@@ -64,7 +70,13 @@ export function Navbar() {
                 <Settings className="w-4 h-4" />
                 Admin
               </Link>
-              <div className="px-4 pt-2">
+              <div className="px-4 pt-2 flex flex-col gap-2">
+                <Link to="/auth?mode=login" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="outline" className="w-full gap-2">
+                    <LogIn className="w-4 h-4" />
+                    INGRESAR
+                  </Button>
+                </Link>
                 <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="nike" className="w-full">
                     COMENZAR
