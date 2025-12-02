@@ -90,36 +90,38 @@ export function WaitingListForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input
-            type="email"
-            placeholder="tu@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="pl-12 h-14 rounded-xl bg-card border-border/50 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20 transition-all"
+    <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1 min-w-0">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" />
+            <Input
+              type="email"
+              placeholder="tu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-12 h-14 rounded-xl bg-card border-border/50 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20 transition-all"
+              disabled={isLoading}
+            />
+          </div>
+          <Button 
+            type="submit" 
+            variant="hero" 
+            size="xl"
             disabled={isLoading}
-          />
+            className="sm:min-w-[220px] whitespace-nowrap text-sm shrink-0"
+          >
+            {isLoading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              "¡EMPIEZA A ENTRENAR SIN COSTO!"
+            )}
+          </Button>
         </div>
-        <Button 
-          type="submit" 
-          variant="hero" 
-          size="xl"
-          disabled={isLoading}
-          className="min-w-[200px] text-sm"
-        >
-          {isLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            "¡EMPIEZA A ENTRENAR SIN COSTO!"
-          )}
-        </Button>
+        <p className="text-xs text-muted-foreground text-center">
+          Únete a más de 2,000 corredores que ya están en la pista.
+        </p>
       </div>
-      <p className="text-xs text-muted-foreground text-center mt-4">
-        Únete a más de 2,000 corredores que ya están en la pista.
-      </p>
     </form>
   );
 }
