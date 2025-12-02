@@ -35,7 +35,7 @@ export function FeatureCard({ icon: Icon, title, description, className, delay =
       <h3 className="font-heading text-xl font-bold mb-3 text-card-foreground group-hover:text-gradient transition-all duration-300">
         {title}
       </h3>
-      <p className="text-card-foreground/70 leading-relaxed">
+      <p className="text-card-foreground/80 leading-relaxed">
         {description}
       </p>
     </div>
