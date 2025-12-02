@@ -114,7 +114,7 @@ const Index = () => {
             </div>
             
             {/* Main Heading */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
               TU META
               <br />
               <span className="text-gradient">TE ESPERA.</span>
@@ -162,7 +162,7 @@ const Index = () => {
       <section className="py-12 bg-secondary/10 border-y border-secondary/20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h3 className="text-2xl md:text-3xl font-black mb-4">
+            <h3 className="font-heading text-2xl md:text-3xl font-black mb-4">
               ENTRENA SIN COSTO CON <span className="text-secondary">CAJA LOS ANDES.</span>
             </h3>
             <p className="text-muted-foreground">
@@ -177,7 +177,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-primary font-semibold text-sm uppercase tracking-widest">Características</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mt-4 mb-4">
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-black mt-4 mb-4">
               TU CAMINO AL ÉXITO.
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -204,7 +204,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-primary font-semibold text-sm uppercase tracking-widest">Planes de Entrenamiento</span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mt-4 mb-4">
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-black mt-4 mb-4">
               ELIGE TU DESAFÍO.
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -233,7 +233,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-6">
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-black mb-6">
               LA LEYENDA <span className="text-gradient">TE ESPERA.</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
