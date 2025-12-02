@@ -3,6 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, CheckCircle, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const emailSchema = z.string().email("Por favor ingresa un email válido").max(255, "Email muy largo");
 
 export function WaitingListForm() {
   const [email, setEmail] = useState("");
@@ -13,10 +17,11 @@ export function WaitingListForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !email.includes("@")) {
+    const validation = emailSchema.safeParse(email.trim().toLowerCase());
+    if (!validation.success) {
       toast({
         title: "Email inválido",
-        description: "Por favor ingresa un email válido.",
+        description: validation.error.errors[0].message,
         variant: "destructive",
       });
       return;
@@ -24,17 +29,42 @@ export function WaitingListForm() {
 
     setIsLoading(true);
     
-    // Simulate API call - will be replaced with Supabase
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    setIsLoading(false);
-    setIsSuccess(true);
-    setEmail("");
-    
-    toast({
-      title: "¡Estás en la lista! 🎉",
-      description: "Te notificaremos cuando el entrenamiento esté disponible.",
-    });
+    try {
+      const { error } = await supabase
+        .from("waiting_list")
+        .insert({ email: validation.data });
+
+      if (error) {
+        if (error.code === "23505") {
+          toast({
+            title: "Ya estás registrado",
+            description: "Este email ya está en nuestra lista de espera.",
+            variant: "destructive",
+          });
+        } else {
+          throw error;
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      setIsSuccess(true);
+      setEmail("");
+      
+      toast({
+        title: "¡Estás en la lista! 🎉",
+        description: "Te notificaremos cuando el entrenamiento esté disponible.",
+      });
+    } catch (error) {
+      console.error("Error al registrar:", error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema al registrarte. Intenta de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSuccess) {
