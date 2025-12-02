@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       activities: {
         Row: {
+          activity_type: Database["public"]["Enums"]["activity_type"] | null
           content_type: Database["public"]["Enums"]["content_type"]
           created_at: string | null
           day_of_week: number
@@ -30,6 +31,7 @@ export type Database = {
           week_id: string
         }
         Insert: {
+          activity_type?: Database["public"]["Enums"]["activity_type"] | null
           content_type?: Database["public"]["Enums"]["content_type"]
           created_at?: string | null
           day_of_week: number
@@ -44,6 +46,7 @@ export type Database = {
           week_id: string
         }
         Update: {
+          activity_type?: Database["public"]["Enums"]["activity_type"] | null
           content_type?: Database["public"]["Enums"]["content_type"]
           created_at?: string | null
           day_of_week?: number
@@ -463,6 +466,13 @@ export type Database = {
       }
     }
     Enums: {
+      activity_type:
+        | "run"
+        | "walk"
+        | "strength"
+        | "rest"
+        | "stretch"
+        | "cross_training"
       app_role: "admin" | "user"
       content_type:
         | "video_embed"
@@ -604,6 +614,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      activity_type: [
+        "run",
+        "walk",
+        "strength",
+        "rest",
+        "stretch",
+        "cross_training",
+      ],
       app_role: ["admin", "user"],
       content_type: [
         "video_embed",

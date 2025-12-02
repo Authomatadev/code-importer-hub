@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2, LogOut, User } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import logoImage from "@/assets/logo-caja-los-andes.png";
+import { WeekView, WeekNavigation, ActivityType } from "@/components/dashboard";
+import { useToast } from "@/hooks/use-toast";
 
 interface UserProfile {
   id: string;
@@ -13,12 +15,41 @@ interface UserProfile {
   distance: string | null;
   difficulty: number | null;
   start_date: string | null;
+  current_plan_id: string | null;
+}
+
+interface Plan {
+  id: string;
+  name: string;
+  total_weeks: number;
+}
+
+interface Week {
+  id: string;
+  week_number: number;
+  plan_id: string;
+}
+
+interface Activity {
+  id: string;
+  day_of_week: number;
+  title: string;
+  description: string | null;
+  activity_type: ActivityType;
+  distance_km: number | null;
+  duration_min: number | null;
+  intensity: number | null;
 }
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [plan, setPlan] = useState<Plan | null>(null);
+  const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [completedActivityIds, setCompletedActivityIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -41,6 +72,19 @@ export default function Dashboard() {
 
       if (profileData) {
         setProfile(profileData);
+
+        // Fetch plan if user has one
+        if (profileData.current_plan_id) {
+          const { data: planData } = await supabase
+            .from("plans")
+            .select("id, name, total_weeks")
+            .eq("id", profileData.current_plan_id)
+            .maybeSingle();
+
+          if (planData) {
+            setPlan(planData);
+          }
+        }
       }
 
       setIsLoading(false);
@@ -59,9 +103,82 @@ export default function Dashboard() {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  // Fetch week activities when plan or week changes
+  useEffect(() => {
+    const fetchWeekActivities = async () => {
+      if (!plan) return;
+
+      // Get the week for this plan and week number
+      const { data: weekData } = await supabase
+        .from("weeks")
+        .select("id, week_number")
+        .eq("plan_id", plan.id)
+        .eq("week_number", currentWeekNumber)
+        .maybeSingle();
+
+      if (!weekData) {
+        setActivities([]);
+        return;
+      }
+
+      // Get activities for this week
+      const { data: activitiesData } = await supabase
+        .from("activities")
+        .select("id, day_of_week, title, description, activity_type, distance_km, duration_min, intensity")
+        .eq("week_id", weekData.id)
+        .order("day_of_week");
+
+      if (activitiesData) {
+        setActivities(activitiesData as Activity[]);
+      }
+
+      // Get completed activities for this user
+      if (user) {
+        const { data: logsData } = await supabase
+          .from("activity_logs")
+          .select("activity_id")
+          .eq("user_id", user.id)
+          .eq("completed", true);
+
+        if (logsData) {
+          setCompletedActivityIds(logsData.map(log => log.activity_id));
+        }
+      }
+    };
+
+    fetchWeekActivities();
+  }, [plan, currentWeekNumber, user]);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
+  };
+
+  const handleMarkComplete = async (activityId: string) => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from("activity_logs")
+      .insert({
+        user_id: user.id,
+        activity_id: activityId,
+        completed: true
+      });
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo marcar la actividad como completada",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setCompletedActivityIds(prev => [...prev, activityId]);
+    toast({
+      title: "¡Excelente! 💪",
+      description: "Actividad completada"
+    });
   };
 
   if (isLoading) {
@@ -76,10 +193,11 @@ export default function Dashboard() {
     switch (difficulty) {
       case 1: return "Principiante";
       case 2: return "Intermedio";
-      case 3: return "Avanzado";
       default: return "No seleccionado";
     }
   };
+
+  const hasPlan = plan && plan.total_weeks > 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -147,17 +265,46 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Coming Soon */}
-        <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center">
-          <h3 className="font-heading text-2xl font-bold text-foreground mb-2">
-            🚧 En construcción
-          </h3>
-          <p className="text-muted-foreground">
-            Tu plan de entrenamiento personalizado estará disponible muy pronto.
-            <br />
-            ¡Prepárate para conquistar el Maratón de Santiago 2026!
-          </p>
-        </div>
+        {/* Week View or Coming Soon */}
+        {hasPlan ? (
+          <div className="space-y-6">
+            {/* Week Navigation */}
+            <WeekNavigation
+              currentWeek={currentWeekNumber}
+              totalWeeks={plan.total_weeks}
+              onWeekChange={setCurrentWeekNumber}
+            />
+
+            {/* Week Activities */}
+            <div className="bg-card border border-border rounded-2xl p-6">
+              {activities.length > 0 ? (
+                <WeekView
+                  weekNumber={currentWeekNumber}
+                  activities={activities}
+                  completedActivityIds={completedActivityIds}
+                  onMarkComplete={handleMarkComplete}
+                />
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">
+                    No hay actividades programadas para esta semana.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center">
+            <h3 className="font-heading text-2xl font-bold text-foreground mb-2">
+              🚧 En construcción
+            </h3>
+            <p className="text-muted-foreground">
+              Tu plan de entrenamiento personalizado estará disponible muy pronto.
+              <br />
+              ¡Prepárate para conquistar el Maratón de Santiago 2026!
+            </p>
+          </div>
+        )}
       </main>
     </div>
   );
