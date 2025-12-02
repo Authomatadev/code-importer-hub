@@ -3,14 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Settings } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
+  return <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-16 md:h-20 my-px">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
@@ -45,46 +42,25 @@ export function Navbar() {
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
+            <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border/50 animate-fade-in">
+        {isMenuOpen && <div className="md:hidden py-4 border-t border-border/50 animate-fade-in">
             <div className="flex flex-col gap-4">
-              <a 
-                href="/#features" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <a href="/#features" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Características
               </a>
-              <a 
-                href="/#plans" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <a href="/#plans" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Planes
               </a>
-              <a 
-                href="/#countdown" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <a href="/#countdown" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Countdown
               </a>
-              <Link 
-                to="/admin" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link to="/admin" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                 <Settings className="w-4 h-4" />
                 Admin
               </Link>
@@ -94,9 +70,7 @@ export function Navbar() {
                 </Button>
               </div>
             </div>
-          </div>
-        )}
+          </div>}
       </div>
-    </nav>
-  );
+    </nav>;
 }
