@@ -78,6 +78,11 @@ export default {
           "Roboto",
           "sans-serif",
         ],
+        heading: [
+          "Be Vietnam Pro",
+          "Inter",
+          "sans-serif",
+        ],
       },
       keyframes: {
         "accordion-down": {

@@ -32,13 +32,13 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       
       <div className="text-center mb-6">
         <span className={cn(
-          "text-6xl md:text-7xl font-black tracking-tighter",
+          "font-heading text-6xl md:text-7xl font-black tracking-tighter",
           featured ? "text-primary-foreground" : "text-gradient"
         )}>
           {distance}
         </span>
         <h3 className={cn(
-          "text-xl font-bold mt-2",
+          "font-heading text-xl font-bold mt-2",
           featured ? "text-primary-foreground" : "text-foreground"
         )}>
           {title}
