@@ -17,7 +17,7 @@ export function DistanceCard({ distance, title, weeks, description, featured = f
       className={cn(
         "relative p-6 md:p-8 rounded-2xl transition-all duration-500 hover-lift opacity-0 animate-fade-in",
         featured 
-          ? "bg-card border-2 border-primary glow-lg" 
+          ? "bg-muted border-2 border-primary glow-lg" 
           : "glass-card"
       )}
       style={{ animationDelay: `${delay}s` }}
