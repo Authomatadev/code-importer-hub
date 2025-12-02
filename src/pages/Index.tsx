@@ -192,8 +192,18 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
             {plans.map((plan, index) => <DistanceCard key={plan.distance} distance={plan.distance} title={plan.title} weeks={plan.weeks} description={plan.description} featured={plan.featured} delay={index * 0.15} />)}
+          </div>
+          
+          {/* CTA Button */}
+          <div className="text-center opacity-0 animate-fade-in" style={{ animationDelay: "0.5s" }}>
+            <a 
+              href="/auth" 
+              className="inline-flex items-center justify-center gap-3 px-12 py-5 text-lg font-bold uppercase tracking-wider bg-primary text-primary-foreground rounded-full hover:scale-105 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300"
+            >
+              COMENZAR TU ENTRENAMIENTO
+            </a>
           </div>
         </div>
       </section>
