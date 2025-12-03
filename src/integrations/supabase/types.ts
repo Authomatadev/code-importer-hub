@@ -284,9 +284,11 @@ export type Database = {
           difficulty: number | null
           distance: string | null
           email: string | null
+          first_name: string | null
           full_name: string | null
           id: string
           last_activity_at: string | null
+          last_name: string | null
           start_date: string | null
           target_race_date: string | null
         }
@@ -297,9 +299,11 @@ export type Database = {
           difficulty?: number | null
           distance?: string | null
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id: string
           last_activity_at?: string | null
+          last_name?: string | null
           start_date?: string | null
           target_race_date?: string | null
         }
@@ -310,9 +314,11 @@ export type Database = {
           difficulty?: number | null
           distance?: string | null
           email?: string | null
+          first_name?: string | null
           full_name?: string | null
           id?: string
           last_activity_at?: string | null
+          last_name?: string | null
           start_date?: string | null
           target_race_date?: string | null
         }
