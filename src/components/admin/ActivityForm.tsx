@@ -159,15 +159,16 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col gap-0 p-0">
+        <DialogHeader className="px-6 pt-6 pb-4">
           <DialogTitle>
             {isEditing ? 'Editar' : 'Nueva'} Actividad - {dayNames[dayOfWeek] || `Día ${dayOfWeek + 1}`}
           </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+            <div className="px-6 overflow-y-auto flex-1 space-y-4 pb-4">
             <FormField
               control={form.control}
               name="activity_type"
@@ -434,8 +435,9 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                 </div>
               )}
             </div>
+            </div>
 
-            <DialogFooter className="gap-2">
+            <DialogFooter className="px-6 py-4 border-t gap-2 mt-auto">
               {isEditing && (
                 <Button
                   type="button"
