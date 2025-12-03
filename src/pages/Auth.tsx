@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { StepIndicator } from "@/components/auth/StepIndicator";
 import { DistanceSelector } from "@/components/auth/DistanceSelector";
 import { DifficultySelector } from "@/components/auth/DifficultySelector";
-import { SignUpForm } from "@/components/auth/SignUpForm";
+import { SignUpForm, SignUpFormData } from "@/components/auth/SignUpForm";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import logoImage from "@/assets/logo-caja-los-andes.png";
@@ -49,7 +49,7 @@ export default function Auth() {
     return () => subscription.unsubscribe();
   }, [navigate, isSigningUp]);
 
-  const handleSignUp = async (data: { email: string; password: string }) => {
+  const handleSignUp = async (data: SignUpFormData) => {
     if (!selectedDistance || !selectedDifficulty) {
       toast({
         title: "Error",
@@ -63,12 +63,17 @@ export default function Auth() {
     setIsSigningUp(true);
     
     try {
-      // 1. Sign up the user
+      // 1. Sign up the user with name metadata
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
           emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            full_name: `${data.firstName} ${data.lastName}`,
+          },
         },
       });
 

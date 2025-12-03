@@ -8,6 +8,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Loader2, Eye, EyeOff } from "lucide-react";
 
 const signUpSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, "El nombre es requerido")
+    .max(50, "El nombre es demasiado largo")
+    .regex(/^[a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]+$/, "Solo letras permitidas"),
+  lastName: z
+    .string()
+    .min(1, "El apellido es requerido")
+    .max(50, "El apellido es demasiado largo")
+    .regex(/^[a-zA-ZáéíóúñÁÉÍÓÚÑüÜ\s]+$/, "Solo letras permitidas"),
   email: z
     .string()
     .min(1, "El correo es requerido")
@@ -26,7 +36,7 @@ const signUpSchema = z.object({
   path: ["confirmPassword"],
 });
 
-type SignUpFormData = z.infer<typeof signUpSchema>;
+export type SignUpFormData = z.infer<typeof signUpSchema>;
 
 interface SignUpFormProps {
   onSubmit: (data: SignUpFormData) => Promise<void>;
@@ -41,6 +51,8 @@ export function SignUpForm({ onSubmit, isLoading, onSwitchToLogin }: SignUpFormP
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -49,7 +61,48 @@ export function SignUpForm({ onSubmit, isLoading, onSwitchToLogin }: SignUpFormP
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        {/* Name fields - 2 columns on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-foreground">Nombre</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Juan"
+                    className="h-12 bg-background border-border"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-foreground">Apellido</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Pérez"
+                    className="h-12 bg-background border-border"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="email"
