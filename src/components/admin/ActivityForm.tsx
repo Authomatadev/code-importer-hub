@@ -29,8 +29,8 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { Loader2, Trash2, Upload, X, Link as LinkIcon } from 'lucide-react';
+import { useState, useRef } from 'react';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Activity = Tables<'activities'>;
@@ -68,6 +68,9 @@ interface ActivityFormProps {
 export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSaved }: ActivityFormProps) {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [mediaMode, setMediaMode] = useState<'url' | 'upload'>('url');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const isEditing = !!activity;
 
   const form = useForm<FormData>({
@@ -285,33 +288,124 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
 
             {/* Media Section */}
             <div className="border border-border rounded-lg p-4 space-y-3 bg-muted/30">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <span>🎬</span>
-                <span>Contenido Multimedia (opcional)</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <span>🎬</span>
+                  <span>Contenido Multimedia (opcional)</span>
+                </div>
+                <div className="flex gap-1">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={mediaMode === 'url' ? 'default' : 'outline'}
+                    onClick={() => setMediaMode('url')}
+                    className="h-7 text-xs"
+                  >
+                    <LinkIcon className="h-3 w-3 mr-1" />
+                    URL
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={mediaMode === 'upload' ? 'default' : 'outline'}
+                    onClick={() => setMediaMode('upload')}
+                    className="h-7 text-xs"
+                  >
+                    <Upload className="h-3 w-3 mr-1" />
+                    Subir
+                  </Button>
+                </div>
               </div>
-              <FormField
-                control={form.control}
-                name="media_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs text-muted-foreground">
-                      URL de video o imagen de referencia
-                    </FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="https://youtube.com/watch?v=... o URL de imagen" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Soporta: YouTube, Vimeo, o URLs directas de imágenes (jpg, png, gif)
-                    </p>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+              {mediaMode === 'url' ? (
+                <FormField
+                  control={form.control}
+                  name="media_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs text-muted-foreground">
+                        URL de video o imagen
+                      </FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="https://youtube.com/watch?v=..." 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ) : (
+                <div className="space-y-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*,video/*"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      
+                      setUploading(true);
+                      try {
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `${crypto.randomUUID()}.${fileExt}`;
+                        const filePath = `activities/${fileName}`;
+
+                        const { error: uploadError } = await supabase.storage
+                          .from('activity-media')
+                          .upload(filePath, file);
+
+                        if (uploadError) throw uploadError;
+
+                        const { data: { publicUrl } } = supabase.storage
+                          .from('activity-media')
+                          .getPublicUrl(filePath);
+
+                        form.setValue('media_url', publicUrl);
+                        toast({ title: 'Archivo subido correctamente' });
+                      } catch (error) {
+                        console.error(error);
+                        toast({
+                          title: 'Error al subir archivo',
+                          variant: 'destructive',
+                        });
+                      }
+                      setUploading(false);
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                  >
+                    {uploading ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Upload className="h-4 w-4 mr-2" />
+                    )}
+                    {uploading ? 'Subiendo...' : 'Seleccionar archivo'}
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    Formatos: JPG, PNG, GIF, MP4, WebM
+                  </p>
+                </div>
+              )}
+
               {form.watch('media_url') && (
-                <div className="mt-2 p-2 bg-background rounded border">
+                <div className="mt-2 p-2 bg-background rounded border relative">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute top-1 right-1 h-6 w-6 p-0"
+                    onClick={() => form.setValue('media_url', '')}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
                   <p className="text-xs text-muted-foreground mb-1">Vista previa:</p>
                   {form.watch('media_url')?.includes('youtube.com') || form.watch('media_url')?.includes('youtu.be') ? (
                     <div className="text-xs text-primary truncate">
@@ -321,6 +415,12 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                     <div className="text-xs text-primary truncate">
                       🎥 Video de Vimeo: {form.watch('media_url')}
                     </div>
+                  ) : form.watch('media_url')?.match(/\.(mp4|webm|ogg)$/i) ? (
+                    <video 
+                      src={form.watch('media_url') || ''} 
+                      className="max-h-24 rounded"
+                      controls
+                    />
                   ) : (
                     <img 
                       src={form.watch('media_url') || ''} 
