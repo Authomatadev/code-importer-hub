@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, LogOut, User } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import logoImage from "@/assets/logo-caja-los-andes.png";
-import { WeekView, WeekNavigation, ActivityType } from "@/components/dashboard";
+import { WeekView, WeekNavigation, ActivityType, TipCard } from "@/components/dashboard";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserProfile {
@@ -24,10 +24,18 @@ interface Plan {
   total_weeks: number;
 }
 
+interface Tip {
+  title?: string;
+  content?: string;
+  media_url?: string;
+}
+
 interface Week {
   id: string;
   week_number: number;
   plan_id: string;
+  tip_week: Tip | null;
+  tip_month: Tip | null;
 }
 
 interface Activity {
@@ -47,9 +55,10 @@ export default function Dashboard() {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [plan, setPlan] = useState<Plan | null>(null);
-  const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
+const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [completedActivityIds, setCompletedActivityIds] = useState<string[]>([]);
+  const [currentWeekTips, setCurrentWeekTips] = useState<{ tip_week: Tip | null; tip_month: Tip | null }>({ tip_week: null, tip_month: null });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -108,18 +117,25 @@ export default function Dashboard() {
     const fetchWeekActivities = async () => {
       if (!plan) return;
 
-      // Get the week for this plan and week number
+// Get the week for this plan and week number
       const { data: weekData } = await supabase
         .from("weeks")
-        .select("id, week_number")
+        .select("id, week_number, tip_week, tip_month")
         .eq("plan_id", plan.id)
         .eq("week_number", currentWeekNumber)
         .maybeSingle();
 
       if (!weekData) {
         setActivities([]);
+        setCurrentWeekTips({ tip_week: null, tip_month: null });
         return;
       }
+
+      // Set tips for this week
+      setCurrentWeekTips({
+        tip_week: weekData.tip_week as Tip | null,
+        tip_month: weekData.tip_month as Tip | null
+      });
 
       // Get activities for this week
       const { data: activitiesData } = await supabase
@@ -274,6 +290,21 @@ export default function Dashboard() {
               totalWeeks={plan.total_weeks}
               onWeekChange={setCurrentWeekNumber}
             />
+
+{/* Tips Section */}
+            {(currentWeekTips.tip_week || currentWeekTips.tip_month) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <TipCard 
+                  tip={currentWeekTips.tip_week} 
+                  type="week" 
+                  weekNumber={currentWeekNumber} 
+                />
+                <TipCard 
+                  tip={currentWeekTips.tip_month} 
+                  type="month" 
+                />
+              </div>
+            )}
 
             {/* Week Activities */}
             <div className="bg-card border border-border rounded-2xl p-6">

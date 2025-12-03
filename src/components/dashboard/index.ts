@@ -4,3 +4,4 @@ export { DayCard, getDayName } from './DayCard';
 export { WeekView } from './WeekView';
 export { ActivityDetail } from './ActivityDetail';
 export { WeekNavigation } from './WeekNavigation';
+export { TipCard } from './TipCard';
