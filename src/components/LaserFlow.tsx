@@ -308,16 +308,30 @@ export const LaserFlow = ({
     const mount = mountRef.current;
     if (!mount) return;
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: false,
-      alpha: false,
-      depth: false,
-      stencil: false,
-      powerPreference: 'high-performance',
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false,
-      failIfMajorPerformanceCaveat: false,
-    });
+    // Check WebGL support before attempting to create renderer
+    const testCanvas = document.createElement('canvas');
+    const gl = testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
+    if (!gl) {
+      console.warn('WebGL not supported, LaserFlow effect disabled');
+      return;
+    }
+
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        alpha: false,
+        depth: false,
+        stencil: false,
+        powerPreference: 'high-performance',
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false,
+      });
+    } catch (e) {
+      console.warn('Failed to create WebGL renderer:', e);
+      return;
+    }
     rendererRef.current = renderer;
 
     baseDprRef.current = Math.min(dpr ?? (window.devicePixelRatio || 1), 2);
