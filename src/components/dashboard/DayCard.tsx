@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
 import { ActivityIcon, ActivityType, getActivityLabel } from "./ActivityIcon";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { getZoneByValue } from "@/lib/activity-constants";
 
 interface Activity {
   id: string;
@@ -10,6 +12,9 @@ interface Activity {
   distance_km: number | null;
   duration_min: number | null;
   intensity: number | null;
+  zone?: string | null;
+  total_daily_km?: number | null;
+  phase?: string | null;
 }
 
 interface DayCardProps {
@@ -35,6 +40,7 @@ export function DayCard({
 }: DayCardProps) {
   const hasActivity = activity !== null;
   const activityType = activity?.activity_type || 'rest';
+  const zone = getZoneByValue(activity?.zone);
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -111,16 +117,26 @@ export function DayCard({
         </span>
       </span>
 
+      {/* Zone badge */}
+      {zone && (
+        <Badge 
+          className="text-[9px] mt-1 px-1.5 py-0 h-4 text-white"
+          style={{ backgroundColor: zone.color }}
+        >
+          {zone.value}
+        </Badge>
+      )}
+
       {/* Distance/Duration badge */}
-      {activity?.distance_km && (
+      {(activity?.total_daily_km || activity?.distance_km) && (
         <span className={cn(
           "text-[10px] font-bold mt-1 transition-all duration-300",
           isCompleted ? "text-green-500/60 line-through" : "text-primary"
         )}>
-          {activity.distance_km} km
+          {activity.total_daily_km || activity.distance_km} km
         </span>
       )}
-      {!activity?.distance_km && activity?.duration_min && (
+      {!activity?.total_daily_km && !activity?.distance_km && activity?.duration_min && (
         <span className={cn(
           "text-[10px] font-bold mt-1 transition-all duration-300",
           isCompleted ? "text-green-500/60 line-through" : "text-primary"

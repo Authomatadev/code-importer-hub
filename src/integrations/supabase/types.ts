@@ -25,10 +25,24 @@ export type Database = {
           duration_min: number | null
           id: string
           intensity: number | null
+          main_work_distance_km: number | null
+          main_work_duration_min: number | null
+          main_work_type: string | null
           media_url: string | null
+          notes: string | null
           order_index: number
+          phase: string | null
+          rep_distance_meters: number | null
+          repetitions: number | null
+          rest_between_reps_min: number | null
+          stretch_before_after: boolean | null
+          terrain: string | null
           title: string
+          total_daily_km: number | null
+          training_type: string | null
+          warmup_duration_min: number | null
           week_id: string
+          zone: string | null
         }
         Insert: {
           activity_type?: Database["public"]["Enums"]["activity_type"] | null
@@ -40,10 +54,24 @@ export type Database = {
           duration_min?: number | null
           id?: string
           intensity?: number | null
+          main_work_distance_km?: number | null
+          main_work_duration_min?: number | null
+          main_work_type?: string | null
           media_url?: string | null
+          notes?: string | null
           order_index?: number
+          phase?: string | null
+          rep_distance_meters?: number | null
+          repetitions?: number | null
+          rest_between_reps_min?: number | null
+          stretch_before_after?: boolean | null
+          terrain?: string | null
           title: string
+          total_daily_km?: number | null
+          training_type?: string | null
+          warmup_duration_min?: number | null
           week_id: string
+          zone?: string | null
         }
         Update: {
           activity_type?: Database["public"]["Enums"]["activity_type"] | null
@@ -55,10 +83,24 @@ export type Database = {
           duration_min?: number | null
           id?: string
           intensity?: number | null
+          main_work_distance_km?: number | null
+          main_work_duration_min?: number | null
+          main_work_type?: string | null
           media_url?: string | null
+          notes?: string | null
           order_index?: number
+          phase?: string | null
+          rep_distance_meters?: number | null
+          repetitions?: number | null
+          rest_between_reps_min?: number | null
+          stretch_before_after?: boolean | null
+          terrain?: string | null
           title?: string
+          total_daily_km?: number | null
+          training_type?: string | null
+          warmup_duration_min?: number | null
           week_id?: string
+          zone?: string | null
         }
         Relationships: [
           {
