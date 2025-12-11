@@ -1,13 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import { createPortal } from 'react-dom';
 import {
   Form,
   FormControl,
@@ -15,7 +9,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from '@/components/ui/form';
 import {
   Accordion,
@@ -133,6 +126,35 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
     },
   });
 
+  // Reset form when activity changes
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        activity_type: activity?.activity_type || 'run',
+        title: activity?.title || '',
+        description: activity?.description || '',
+        distance_km: activity?.distance_km ? Number(activity.distance_km) : undefined,
+        duration_min: activity?.duration_min || undefined,
+        intensity: activity?.intensity || 3,
+        media_url: activity?.media_url || '',
+        phase: activity?.phase || undefined,
+        training_type: activity?.training_type || undefined,
+        warmup_duration_min: activity?.warmup_duration_min || undefined,
+        main_work_type: activity?.main_work_type || undefined,
+        zone: activity?.zone || undefined,
+        terrain: activity?.terrain || undefined,
+        main_work_distance_km: activity?.main_work_distance_km ? Number(activity.main_work_distance_km) : undefined,
+        main_work_duration_min: activity?.main_work_duration_min || undefined,
+        repetitions: activity?.repetitions || undefined,
+        rep_distance_meters: activity?.rep_distance_meters || undefined,
+        rest_between_reps_min: activity?.rest_between_reps_min || undefined,
+        stretch_before_after: activity?.stretch_before_after ?? true,
+        total_daily_km: activity?.total_daily_km ? Number(activity.total_daily_km) : undefined,
+        notes: activity?.notes || undefined,
+      });
+    }
+  }, [open, activity, form]);
+
   const trainingType = form.watch('training_type');
   const isIntervalTraining = trainingType === 'intervalo';
 
@@ -219,19 +241,73 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
     setDeleting(false);
   }
 
+  async function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `activities/${crypto.randomUUID()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('activity-media')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('activity-media')
+        .getPublicUrl(fileName);
+
+      form.setValue('media_url', urlData.publicUrl);
+      toast({ title: 'Archivo subido correctamente' });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error al subir archivo',
+        variant: 'destructive',
+      });
+    }
+    setUploading(false);
+  }
+
   const dayNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  const mediaUrl = form.watch('media_url');
 
-  return (
-    <Dialog open={open} onOpenChange={onClose} modal={true}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col gap-0 p-0 overflow-hidden"
-        onInteractOutside={(e) => e.preventDefault()}
+  // Don't render if not open
+  if (!open) return null;
+
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+    >
+      {/* Overlay */}
+      <div 
+        className="absolute inset-0 bg-black/80"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div 
+        className="relative bg-background border rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col mx-4"
+        onClick={(e) => e.stopPropagation()}
       >
-        <DialogHeader className="px-6 pt-6 pb-4 border-b">
-          <DialogTitle className="text-xl">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b shrink-0">
+          <h2 className="text-xl font-semibold">
             {isEditing ? 'Editar' : 'Nueva'} Actividad - {dayNames[dayOfWeek] || `Día ${dayOfWeek + 1}`}
-          </DialogTitle>
-        </DialogHeader>
+          </h2>
+          <button 
+            onClick={onClose}
+            className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
 
+        {/* Form Content */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
             <div className="px-6 overflow-y-auto flex-1 py-4">
@@ -259,7 +335,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                                   <SelectValue placeholder="Seleccionar fase..." />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="z-[10000]">
                                 {PHASES.map((phase) => (
                                   <SelectItem key={phase.value} value={phase.value}>
                                     {phase.label}
@@ -283,7 +359,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                                   <SelectValue placeholder="Seleccionar tipo..." />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="z-[10000]">
                                 {TRAINING_TYPES.map((type) => (
                                   <SelectItem key={type.value} value={type.value}>
                                     {type.label}
@@ -307,7 +383,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                                   <SelectValue placeholder="Seleccionar..." />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="z-[10000]">
                                 {activityTypes.map((type) => (
                                   <SelectItem key={type.value} value={type.value}>
                                     {type.label}
@@ -394,7 +470,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                                   <SelectValue placeholder="Seleccionar..." />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="z-[10000]">
                                 {MAIN_WORK_TYPES.map((type) => (
                                   <SelectItem key={type.value} value={type.value}>
                                     {type.label}
@@ -418,7 +494,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                                   <SelectValue placeholder="Seleccionar zona..." />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="z-[10000]">
                                 {ZONES.map((zone) => (
                                   <SelectItem key={zone.value} value={zone.value}>
                                     <div className="flex items-center gap-2">
@@ -437,31 +513,31 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                       />
                     </div>
 
-                    <FormField
-                      control={form.control}
-                      name="terrain"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Terreno</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value || ''}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Seleccionar terreno..." />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {TERRAINS.map((terrain) => (
-                                <SelectItem key={terrain.value} value={terrain.value}>
-                                  {terrain.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="terrain"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Terreno</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value || ''}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Seleccionar..." />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent className="z-[10000]">
+                                {TERRAINS.map((terrain) => (
+                                  <SelectItem key={terrain.value} value={terrain.value}>
+                                    {terrain.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                        )}
+                      />
 
-                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="main_work_distance_km"
@@ -472,7 +548,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                               <Input
                                 type="number"
                                 step="0.1"
-                                placeholder="Ej: 10"
+                                placeholder="Ej: 8"
                                 {...field}
                                 value={field.value ?? ''}
                               />
@@ -490,7 +566,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                             <FormControl>
                               <Input
                                 type="number"
-                                placeholder="Ej: 60"
+                                placeholder="Ej: 45"
                                 {...field}
                                 value={field.value ?? ''}
                               />
@@ -502,107 +578,107 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                   </AccordionContent>
                 </AccordionItem>
 
-                {/* 4. INTERVALOS (Conditional) */}
-                <AccordionItem value="intervals" className="border rounded-lg px-4">
-                  <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">🔁</span>
-                      <span className="font-semibold">Intervalos</span>
-                      {!isIntervalTraining && (
-                        <span className="text-xs text-muted-foreground ml-2">(opcional)</span>
-                      )}
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="space-y-4 pt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="repetitions"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Repeticiones</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="Ej: 5"
-                                {...field}
-                                value={field.value ?? ''}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="rep_distance_meters"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Distancia por Rep (m)</FormLabel>
-                            <Select 
-                              onValueChange={(val) => field.onChange(Number(val))} 
-                              value={field.value?.toString() || ''}
-                            >
+                {/* 4. INTERVALOS (Condicional) */}
+                {isIntervalTraining && (
+                  <AccordionItem value="intervals" className="border rounded-lg px-4 border-primary/50">
+                    <AccordionTrigger className="hover:no-underline">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">⚡</span>
+                        <span className="font-semibold">Intervalos</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-4 pt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="repetitions"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Repeticiones</FormLabel>
                               <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Seleccionar..." />
-                                </SelectTrigger>
+                                <Input
+                                  type="number"
+                                  placeholder="Ej: 6"
+                                  {...field}
+                                  value={field.value ?? ''}
+                                />
                               </FormControl>
-                              <SelectContent>
-                                {REP_DISTANCES.map((dist) => (
-                                  <SelectItem key={dist} value={dist.toString()}>
-                                    {dist} m
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="rep_distance_meters"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Distancia por Rep (m)</FormLabel>
+                              <Select 
+                                onValueChange={(v) => field.onChange(Number(v))} 
+                                value={field.value?.toString() || ''}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Seleccionar..." />
+                                  </SelectTrigger>
+                                </FormControl>
+                              <SelectContent className="z-[10000]">
+                                  {REP_DISTANCES.map((dist) => (
+                                    <SelectItem key={dist} value={dist.toString()}>
+                                      {dist}m
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="rest_between_reps_min"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Descanso entre Reps (min)</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  step="0.5"
+                                  placeholder="Ej: 2"
+                                  {...field}
+                                  value={field.value ?? ''}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
                       <FormField
                         control={form.control}
-                        name="rest_between_reps_min"
+                        name="stretch_before_after"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Pausa entre Reps (min)</FormLabel>
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                             <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="Ej: 2"
-                                {...field}
-                                value={field.value ?? ''}
+                              <Checkbox
+                                checked={field.value ?? true}
+                                onCheckedChange={field.onChange}
                               />
                             </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel>
+                                Elongación antes y después
+                              </FormLabel>
+                              <p className="text-sm text-muted-foreground">
+                                {STRETCH_REMINDER}
+                              </p>
+                            </div>
                           </FormItem>
                         )}
                       />
-                    </div>
-
-                    <FormField
-                      control={form.control}
-                      name="stretch_before_after"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value ?? true}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>
-                              Elongar antes y después
-                            </FormLabel>
-                            <FormDescription>
-                              {STRETCH_REMINDER}
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  </AccordionContent>
-                </AccordionItem>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
                 {/* 5. RESUMEN DEL DÍA */}
                 <AccordionItem value="summary" className="border rounded-lg px-4">
@@ -613,7 +689,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4 pt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="total_daily_km"
@@ -624,7 +700,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                               <Input
                                 type="number"
                                 step="0.1"
-                                placeholder="Ej: 12.5"
+                                placeholder="Ej: 10"
                                 {...field}
                                 value={field.value ?? ''}
                               />
@@ -642,7 +718,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                             <FormControl>
                               <Input
                                 type="number"
-                                placeholder="Ej: 75"
+                                placeholder="Ej: 60"
                                 {...field}
                                 value={field.value ?? ''}
                               />
@@ -650,26 +726,27 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                           </FormItem>
                         )}
                       />
-
-                      <FormField
-                        control={form.control}
-                        name="intensity"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Intensidad: {field.value}/5</FormLabel>
-                            <FormControl>
-                              <Slider
-                                min={1}
-                                max={5}
-                                step={1}
-                                value={[field.value || 3]}
-                                onValueChange={(vals) => field.onChange(vals[0])}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
                     </div>
+
+                    <FormField
+                      control={form.control}
+                      name="intensity"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Intensidad General: {field.value || 3}/5</FormLabel>
+                          <FormControl>
+                            <Slider
+                              min={1}
+                              max={5}
+                              step={1}
+                              value={[field.value || 3]}
+                              onValueChange={(v) => field.onChange(v[0])}
+                              className="py-4"
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </AccordionContent>
                 </AccordionItem>
 
@@ -687,10 +764,10 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Instrucciones Detalladas</FormLabel>
+                          <FormLabel>Descripción (Markdown)</FormLabel>
                           <FormControl>
                             <Textarea
-                              placeholder="Instrucciones detalladas del ejercicio..."
+                              placeholder="Instrucciones detalladas..."
                               className="min-h-[100px]"
                               {...field}
                             />
@@ -707,7 +784,7 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                           <FormLabel>Notas Adicionales</FormLabel>
                           <FormControl>
                             <Textarea
-                              placeholder="Notas libres, observaciones..."
+                              placeholder="Notas para el corredor..."
                               className="min-h-[80px]"
                               {...field}
                               value={field.value ?? ''}
@@ -725,14 +802,13 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                     <div className="flex items-center gap-2">
                       <Watch className="h-5 w-5" />
                       <span className="font-semibold">Instrucciones Garmin</span>
-                      <span className="text-xs text-muted-foreground ml-2">(referencia)</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="pt-2">
                     <div className="bg-muted/50 rounded-lg p-4">
-                      <pre className="text-sm text-muted-foreground whitespace-pre-wrap font-sans">
+                      <p className="text-sm text-muted-foreground whitespace-pre-line">
                         {GARMIN_INSTRUCTIONS}
-                      </pre>
+                      </p>
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -743,29 +819,26 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                     <div className="flex items-center gap-2">
                       <span className="text-lg">🎬</span>
                       <span className="font-semibold">Multimedia</span>
-                      <span className="text-xs text-muted-foreground ml-2">(opcional)</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="space-y-3 pt-2">
-                    <div className="flex gap-1">
+                  <AccordionContent className="space-y-4 pt-2">
+                    <div className="flex gap-2 mb-4">
                       <Button
                         type="button"
-                        size="sm"
                         variant={mediaMode === 'url' ? 'default' : 'outline'}
+                        size="sm"
                         onClick={() => setMediaMode('url')}
-                        className="h-8 text-xs"
                       >
-                        <LinkIcon className="h-3 w-3 mr-1" />
+                        <LinkIcon className="h-4 w-4 mr-2" />
                         URL
                       </Button>
                       <Button
                         type="button"
-                        size="sm"
                         variant={mediaMode === 'upload' ? 'default' : 'outline'}
+                        size="sm"
                         onClick={() => setMediaMode('upload')}
-                        className="h-8 text-xs"
                       >
-                        <Upload className="h-3 w-3 mr-1" />
+                        <Upload className="h-4 w-4 mr-2" />
                         Subir
                       </Button>
                     </div>
@@ -776,143 +849,125 @@ export function ActivityForm({ open, onClose, weekId, dayOfWeek, activity, onSav
                         name="media_url"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-xs text-muted-foreground">
-                              URL de video o imagen
-                            </FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="https://youtube.com/watch?v=..." 
-                                {...field} 
-                              />
-                            </FormControl>
+                            <FormLabel>URL del Media</FormLabel>
+                            <div className="flex gap-2">
+                              <FormControl>
+                                <Input
+                                  placeholder="https://youtube.com/... o URL de imagen"
+                                  {...field}
+                                />
+                              </FormControl>
+                              {field.value && (
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => form.setValue('media_url', '')}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              )}
+                            </div>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     ) : (
                       <div className="space-y-2">
+                        <FormLabel>Subir Archivo</FormLabel>
                         <input
                           ref={fileInputRef}
                           type="file"
                           accept="image/*,video/*"
+                          onChange={handleFileUpload}
                           className="hidden"
-                          onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (!file) return;
-                            
-                            setUploading(true);
-                            try {
-                              const fileExt = file.name.split('.').pop();
-                              const fileName = `${crypto.randomUUID()}.${fileExt}`;
-                              const filePath = `activities/${fileName}`;
-
-                              const { error: uploadError } = await supabase.storage
-                                .from('activity-media')
-                                .upload(filePath, file);
-
-                              if (uploadError) throw uploadError;
-
-                              const { data: { publicUrl } } = supabase.storage
-                                .from('activity-media')
-                                .getPublicUrl(filePath);
-
-                              form.setValue('media_url', publicUrl);
-                              toast({ title: 'Archivo subido correctamente' });
-                            } catch (error) {
-                              console.error(error);
-                              toast({
-                                title: 'Error al subir archivo',
-                                variant: 'destructive',
-                              });
-                            }
-                            setUploading(false);
-                          }}
                         />
                         <Button
                           type="button"
                           variant="outline"
-                          className="w-full"
                           onClick={() => fileInputRef.current?.click()}
                           disabled={uploading}
+                          className="w-full"
                         >
                           {uploading ? (
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Subiendo...
+                            </>
                           ) : (
-                            <Upload className="h-4 w-4 mr-2" />
+                            <>
+                              <Upload className="h-4 w-4 mr-2" />
+                              Seleccionar archivo
+                            </>
                           )}
-                          {uploading ? 'Subiendo...' : 'Seleccionar archivo'}
                         </Button>
-                        <p className="text-xs text-muted-foreground">
-                          Formatos: JPG, PNG, GIF, MP4, WebM
-                        </p>
                       </div>
                     )}
 
-                    {form.watch('media_url') && (
-                      <div className="mt-2 p-2 bg-background rounded border relative">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute top-1 right-1 h-6 w-6 p-0"
-                          onClick={() => form.setValue('media_url', '')}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                        <p className="text-xs text-muted-foreground mb-1">Vista previa:</p>
-                        {form.watch('media_url')?.includes('youtube.com') || form.watch('media_url')?.includes('youtu.be') ? (
-                          <div className="text-xs text-primary truncate">
-                            🎥 Video de YouTube: {form.watch('media_url')}
-                          </div>
-                        ) : form.watch('media_url')?.includes('vimeo.com') ? (
-                          <div className="text-xs text-primary truncate">
-                            🎥 Video de Vimeo: {form.watch('media_url')}
-                          </div>
-                        ) : form.watch('media_url')?.match(/\.(mp4|webm|ogg)$/i) ? (
-                          <video 
-                            src={form.watch('media_url') || ''} 
-                            className="max-h-24 rounded"
-                            controls
+                    {/* Preview */}
+                    {mediaUrl && (
+                      <div className="mt-4 rounded-lg overflow-hidden border">
+                        {mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be') ? (
+                          <iframe
+                            src={mediaUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                            className="w-full aspect-video"
+                            allowFullScreen
                           />
+                        ) : mediaUrl.includes('vimeo.com') ? (
+                          <iframe
+                            src={mediaUrl.replace('vimeo.com/', 'player.vimeo.com/video/')}
+                            className="w-full aspect-video"
+                            allowFullScreen
+                          />
+                        ) : mediaUrl.match(/\.(mp4|webm|ogg)$/i) ? (
+                          <video src={mediaUrl} controls className="w-full" />
                         ) : (
-                          <img 
-                            src={form.watch('media_url') || ''} 
-                            alt="Preview" 
-                            className="max-h-24 rounded object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
+                          <img src={mediaUrl} alt="Preview" className="w-full max-h-[300px] object-contain" />
                         )}
                       </div>
                     )}
                   </AccordionContent>
                 </AccordionItem>
+
               </Accordion>
             </div>
 
-            <DialogFooter className="px-6 py-4 border-t gap-2 mt-auto bg-background">
-              {isEditing && (
+            {/* Footer */}
+            <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/30 shrink-0">
+              {isEditing ? (
                 <Button
                   type="button"
                   variant="destructive"
                   onClick={handleDelete}
                   disabled={deleting || saving}
                 >
-                  {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                  {deleting ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <Trash2 className="h-4 w-4 mr-2" />
+                  )}
+                  Eliminar
                 </Button>
+              ) : (
+                <div />
               )}
-              <Button type="button" variant="outline" onClick={onClose}>
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={saving}>
-                {saving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Guardar
-              </Button>
-            </DialogFooter>
+              
+              <div className="flex gap-2">
+                <Button type="button" variant="outline" onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={saving}>
+                  {saving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                  {isEditing ? 'Actualizar' : 'Crear'}
+                </Button>
+              </div>
+            </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
+
+  // Render using portal to body
+  return createPortal(modalContent, document.body);
 }
