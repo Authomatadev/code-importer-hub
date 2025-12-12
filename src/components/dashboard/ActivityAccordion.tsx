@@ -103,7 +103,7 @@ export function ActivityAccordion({
                 {/* Title Section */}
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-2xl font-semibold text-foreground">{dayFullNames[activity.day_of_week]}</h2>
+                    <h2 className="text-xl font-thin text-foreground ">{dayFullNames[activity.day_of_week]}</h2>
                     {isToday && <Badge variant="default" className="text-xs font-bold animate-pulse">
                         HOY
                       </Badge>}
