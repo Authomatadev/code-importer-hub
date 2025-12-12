@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import ShinyText from "@/components/ui/ShinyText";
+import ElectricBorder from "@/components/ui/ElectricBorder";
 import { ActivityIcon, ActivityType, getActivityLabel } from "./ActivityIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -75,7 +76,14 @@ export function ActivityAccordion({
     }
   };
   return <Collapsible open={isExpanded} onOpenChange={onToggle}>
-      <div className={cn("relative bg-card border rounded-xl transition-all duration-500 overflow-hidden", isToday && "ring-2 ring-primary/30 border-primary", isCompleted && "opacity-70", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isExpanded && "shadow-lg border-primary/50")}>
+      <ElectricBorder 
+        color="hsl(var(--primary))" 
+        speed={1.5} 
+        chaos={0.8} 
+        thickness={2}
+        className="rounded-xl"
+      >
+      <div className={cn("relative bg-card rounded-xl transition-all duration-500 overflow-hidden", isToday && "ring-2 ring-primary/30", isCompleted && "opacity-70", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isExpanded && "shadow-lg")}>
         {/* Today indicator */}
         {isToday && <div className="absolute -top-2 left-4 z-10">
             <Badge variant="default" className="text-xs font-bold animate-pulse">
@@ -298,6 +306,7 @@ export function ActivityAccordion({
           </div>
         </CollapsibleContent>
       </div>
+      </ElectricBorder>
     </Collapsible>;
 }
 
