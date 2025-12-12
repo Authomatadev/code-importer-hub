@@ -7,3 +7,4 @@ export { ActivityCard, RestDayCard } from './ActivityCard';
 export { ActivityDetail } from './ActivityDetail';
 export { WeekNavigation } from './WeekNavigation';
 export { TipCard } from './TipCard';
+export { ChangePlanDialog } from './ChangePlanDialog';
