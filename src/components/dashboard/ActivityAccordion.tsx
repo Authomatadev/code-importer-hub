@@ -70,12 +70,15 @@ export function ActivityAccordion({
     const timer = setTimeout(() => setIsLoaded(true), animationDelay * 100);
     return () => clearTimeout(timer);
   }, [animationDelay]);
-  
+
   // Scroll to content when accordion opens
   useEffect(() => {
     if (isExpanded && contentRef.current) {
       setTimeout(() => {
-        contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        contentRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
       }, 100);
     }
   }, [isExpanded]);
@@ -86,24 +89,18 @@ export function ActivityAccordion({
     }
   };
   return <Collapsible open={isExpanded} onOpenChange={onToggle} ref={contentRef}>
-      <ElectricBorder 
-        color="hsl(var(--primary))" 
-        speed={1.5} 
-        chaos={0.8} 
-        thickness={2}
-        className="rounded-xl"
-      >
+      <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-xl">
       <div className={cn("relative bg-card rounded-xl transition-all duration-500 overflow-hidden", isToday && "ring-2 ring-primary/30", isCompleted && "opacity-70", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isExpanded && "shadow-lg")}>
         {/* Today indicator */}
         {isToday && <div className="absolute -top-2 left-4 z-10">
-            <Badge variant="default" className="text-xs font-bold animate-pulse">
+            <Badge variant="default" className="text-xs font-bold animate-pulse py-0 my-[3px]">
               HOY
             </Badge>
           </div>}
 
         {/* Header - Always visible */}
         <CollapsibleTrigger asChild>
-          <div className="p-3 sm:p-4 cursor-pointer hover:bg-muted/30 transition-colors py-[15px] px-0 mx-0 border-2 border-dashed">
+          <div className="p-3 sm:p-4 cursor-pointer hover:bg-muted/30 transition-colors px-0 mx-0 border-2 border-dashed my-0 py-[17px]">
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Icon */}
               <ActivityIcon type={activity.activity_type} size="md" showBackground />
@@ -134,8 +131,8 @@ export function ActivityAccordion({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Badge className="text-[10px] sm:text-xs text-white cursor-help transition-transform hover:scale-105 gap-0.5 px-1.5 py-0" style={{
-                    backgroundColor: zone.color
-                  }}>
+                      backgroundColor: zone.color
+                    }}>
                         <span>{zone.icon}</span>
                         <span>{zone.shortLabel}</span>
                       </Badge>
