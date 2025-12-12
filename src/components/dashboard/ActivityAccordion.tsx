@@ -89,79 +89,127 @@ export function ActivityAccordion({
     }
   };
   return <Collapsible open={isExpanded} onOpenChange={onToggle} ref={contentRef}>
-      <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-xl">
-      <div className={cn("relative bg-card rounded-xl transition-all duration-500", isToday && "ring-2 ring-primary/30", isCompleted && "opacity-70", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isExpanded && "shadow-lg")}>
-
+      <div className={cn(
+        "w-full bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 light:from-slate-100 light:to-slate-50 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500",
+        isToday && "ring-2 ring-primary/50",
+        isCompleted && "opacity-80",
+        isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      )}>
         {/* Header - Always visible */}
         <CollapsibleTrigger asChild>
-          <div className="p-4 sm:p-5 cursor-pointer hover:bg-muted/30 transition-colors">
-            <div className="flex items-center gap-3 sm:gap-4">
-              {/* Icon */}
-              <ActivityIcon type={activity.activity_type} size="md" showBackground />
-              
-              {/* Title and Day - Flex column for better stacking */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <ShinyText text={dayFullNames[activity.day_of_week]} className={cn("text-xl sm:text-2xl font-semibold", isToday ? "!text-primary" : "")} speed={4} />
-                  {isToday && (
-                    <Badge variant="default" className="text-xs font-bold animate-pulse shadow-lg">
-                      HOY
-                    </Badge>
-                  )}
+          <div className="cursor-pointer">
+            {/* Header Row */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-start gap-3">
+                {/* Icon */}
+                <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center shrink-0">
+                  <ActivityIcon type={activity.activity_type} size="sm" />
                 </div>
-                <h3 className={cn("font-heading font-medium text-base sm:text-lg text-muted-foreground leading-tight truncate", isCompleted && "line-through opacity-70")}>
-                  {activity.title}
-                </h3>
+                {/* Title Section */}
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl font-semibold text-foreground">{dayFullNames[activity.day_of_week]}</h2>
+                    {isToday && (
+                      <Badge variant="default" className="text-xs font-bold animate-pulse">
+                        HOY
+                      </Badge>
+                    )}
+                  </div>
+                  <p className={cn(
+                    "text-sm text-muted-foreground",
+                    isCompleted && "line-through"
+                  )}>
+                    {activity.title}
+                  </p>
+                </div>
               </div>
-
-              {/* Chevron + Check status */}
+              {/* Status Badge + Chevron */}
               <div className="flex items-center gap-2 shrink-0">
-                {isCompleted && <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <Check className="w-3.5 h-3.5 text-white" />
-                  </div>}
+                {isCompleted && (
+                  <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white shrink-0">
+                    <Check className="w-4 h-4" />
+                  </div>
+                )}
                 <ChevronDown className={cn("w-5 h-5 text-muted-foreground transition-transform duration-300", isExpanded && "rotate-180")} />
               </div>
             </div>
 
-            {/* Stats row - Below title for better spacing */}
-            <div className="flex flex-wrap items-center gap-1.5 mt-1.5 ml-9 sm:ml-12">
-              {distance && <Badge variant="secondary" className="text-[10px] sm:text-xs font-bold px-1.5 py-0">
+            {/* Metrics Row */}
+            <div className="flex flex-wrap gap-2 mb-3">
+              {distance && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-400 text-slate-900 rounded-full text-xs font-semibold">
                   {formatDistance(distance)}
-                </Badge>}
-              {zone && <TooltipProvider delayDuration={100}>
+                </div>
+              )}
+              {zone && (
+                <TooltipProvider delayDuration={100}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge className="text-[10px] sm:text-xs text-white cursor-help transition-transform hover:scale-105 gap-0.5 px-1.5 py-0" style={{
-                      backgroundColor: zone.color
-                    }}>
-                        <span>{zone.icon}</span>
-                        <span>{zone.shortLabel}</span>
-                      </Badge>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 dark:bg-white/8 border border-white/20 dark:border-white/12 rounded-full text-xs text-amber-400 cursor-help">
+                        <Zap className="w-3 h-3" />
+                        {zone.shortLabel}
+                      </div>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-[250px] text-center">
                       <p className="font-semibold">{zone.icon} {zone.label}</p>
                       <p className="text-xs text-muted-foreground mt-1">{zone.description}</p>
                     </TooltipContent>
                   </Tooltip>
-                </TooltipProvider>}
-              {activity.intensity && <TooltipProvider delayDuration={100}>
+                </TooltipProvider>
+              )}
+              {activity.intensity && (
+                <TooltipProvider delayDuration={100}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge variant="outline" className="text-[10px] sm:text-xs cursor-help gap-0 px-1 py-0">
-                        {[1, 2, 3, 4, 5].map(level => <span key={level} className={cn("text-[8px] sm:text-[10px]", level <= activity.intensity! ? "opacity-100" : "opacity-20")}>
-                            ⚡
-                          </span>)}
-                      </Badge>
+                      <div className="inline-flex items-center gap-0.5 px-3 py-1.5 bg-white/10 dark:bg-white/8 border border-white/20 dark:border-white/12 rounded-full text-xs text-amber-400 cursor-help">
+                        {Array(activity.intensity).fill('⚡').join(' ')}
+                      </div>
                     </TooltipTrigger>
                     <TooltipContent side="top">
                       <p className="font-semibold">Intensidad {activity.intensity}/5</p>
                     </TooltipContent>
                   </Tooltip>
-                </TooltipProvider>}
-              {activity.duration_min && <Badge variant="outline" className="text-[10px] sm:text-xs px-1.5 py-0">
-                  <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5" />
+                </TooltipProvider>
+              )}
+              {activity.duration_min && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 dark:bg-white/8 border border-white/20 dark:border-white/12 rounded-full text-xs text-muted-foreground">
+                  <Clock className="w-3 h-3" />
                   {activity.duration_min} min
-                </Badge>}
+                </div>
+              )}
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-3" />
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {distance && (
+                <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                  <div className="text-base font-semibold text-cyan-400">{formatDistance(distance)}</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Distancia</div>
+                </div>
+              )}
+              {zone && (
+                <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                  <div className="text-base font-semibold text-cyan-400">{zone.shortLabel}</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Zona</div>
+                </div>
+              )}
+              {activity.duration_min && (
+                <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                  <div className="text-base font-semibold text-cyan-400">{activity.duration_min} min</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Tiempo</div>
+                </div>
+              )}
+              {activity.intensity && (
+                <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                  <div className="text-base font-semibold text-cyan-400">
+                    {Array(activity.intensity).fill('⚡').join('')}
+                  </div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Intensidad</div>
+                </div>
+              )}
             </div>
           </div>
         </CollapsibleTrigger>
@@ -314,7 +362,6 @@ export function ActivityAccordion({
           </div>
         </CollapsibleContent>
       </div>
-      </ElectricBorder>
     </Collapsible>;
 }
 
@@ -332,25 +379,33 @@ export function RestDayAccordion({
     return () => clearTimeout(timer);
   }, [animationDelay]);
   return (
-    <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-xl">
-      <div className={cn(
-        "bg-card rounded-xl p-4 sm:p-5 transition-all duration-500",
-        isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-      )}>
-        <div className="flex items-center gap-3 sm:gap-4">
-          <ActivityIcon type="rest" size="md" showBackground />
-          <div className="flex-1 min-w-0">
-            <ShinyText 
-              text={dayName} 
-              className="text-xl sm:text-2xl font-semibold" 
-              speed={4} 
-            />
-            <p className="font-heading font-medium text-base sm:text-lg text-muted-foreground leading-tight">
-              Día de descanso
-            </p>
-          </div>
+    <div className={cn(
+      "w-full bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500",
+      isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+    )}>
+      {/* Header Row */}
+      <div className="flex items-start gap-3">
+        {/* Icon */}
+        <div className="w-10 h-10 bg-muted/30 rounded-lg flex items-center justify-center shrink-0">
+          <ActivityIcon type="rest" size="sm" />
+        </div>
+        {/* Title Section */}
+        <div>
+          <h2 className="text-2xl font-semibold text-foreground">{dayName}</h2>
+          <p className="text-sm text-muted-foreground">
+            Día de descanso
+          </p>
         </div>
       </div>
-    </ElectricBorder>
+
+      {/* Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-3" />
+
+      {/* Rest Info */}
+      <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-3 text-center">
+        <div className="text-2xl mb-1">😴</div>
+        <div className="text-sm text-muted-foreground">Recuperación activa</div>
+      </div>
+    </div>
   );
 }
