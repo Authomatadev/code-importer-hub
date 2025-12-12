@@ -70,9 +70,10 @@ export default function Dashboard() {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [plan, setPlan] = useState<Plan | null>(null);
-const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
+  const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [completedActivityIds, setCompletedActivityIds] = useState<string[]>([]);
+  const [completedWeeks, setCompletedWeeks] = useState<number[]>([]);
   const [currentWeekTips, setCurrentWeekTips] = useState<{ tip_week: Tip | null; tip_month: Tip | null }>({ tip_week: null, tip_month: null });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -132,7 +133,7 @@ const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
     const fetchWeekActivities = async () => {
       if (!plan) return;
 
-// Get the week for this plan and week number
+      // Get the week for this plan and week number
       const { data: weekData } = await supabase
         .from("weeks")
         .select("id, week_number, tip_week, tip_month")
@@ -179,6 +180,56 @@ const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
 
     fetchWeekActivities();
   }, [plan, currentWeekNumber, user]);
+
+  // Fetch completed weeks
+  useEffect(() => {
+    const fetchCompletedWeeks = async () => {
+      if (!plan || !user) return;
+
+      // Get all weeks for this plan
+      const { data: weeksData } = await supabase
+        .from("weeks")
+        .select("id, week_number")
+        .eq("plan_id", plan.id);
+
+      if (!weeksData) return;
+
+      // Get all completed activity logs
+      const { data: logsData } = await supabase
+        .from("activity_logs")
+        .select("activity_id")
+        .eq("user_id", user.id)
+        .eq("completed", true);
+
+      if (!logsData) return;
+
+      const completedActivitySet = new Set(logsData.map(log => log.activity_id));
+
+      // Check each week for completion
+      const completedWeekNumbers: number[] = [];
+
+      for (const week of weeksData) {
+        const { data: weekActivities } = await supabase
+          .from("activities")
+          .select("id, activity_type")
+          .eq("week_id", week.id);
+
+        if (weekActivities) {
+          const nonRestActivities = weekActivities.filter(a => a.activity_type !== 'rest');
+          const allCompleted = nonRestActivities.length > 0 && 
+            nonRestActivities.every(a => completedActivitySet.has(a.id));
+          
+          if (allCompleted) {
+            completedWeekNumbers.push(week.week_number);
+          }
+        }
+      }
+
+      setCompletedWeeks(completedWeekNumbers);
+    };
+
+    fetchCompletedWeeks();
+  }, [plan, user, completedActivityIds]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -356,6 +407,7 @@ const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
             <WeekNavigation
               currentWeek={currentWeekNumber}
               totalWeeks={plan.total_weeks}
+              completedWeeks={completedWeeks}
               onWeekChange={setCurrentWeekNumber}
             />
 
