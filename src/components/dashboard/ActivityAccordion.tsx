@@ -89,12 +89,7 @@ export function ActivityAccordion({
     }
   };
   return <Collapsible open={isExpanded} onOpenChange={onToggle} ref={contentRef}>
-      <div className={cn(
-        "w-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500",
-        isToday && "ring-2 ring-primary/50",
-        isCompleted && "opacity-80",
-        isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-      )}>
+      <div className={cn("w-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500", isToday && "ring-2 ring-primary/50", isCompleted && "opacity-80", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
         {/* Header - Always visible */}
         <CollapsibleTrigger asChild>
           <div className="cursor-pointer">
@@ -109,56 +104,39 @@ export function ActivityAccordion({
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-2xl font-semibold text-foreground">{dayFullNames[activity.day_of_week]}</h2>
-                    {isToday && (
-                      <Badge variant="default" className="text-xs font-bold animate-pulse">
+                    {isToday && <Badge variant="default" className="text-xs font-bold animate-pulse">
                         HOY
-                      </Badge>
-                    )}
+                      </Badge>}
                   </div>
-                  <p className={cn(
-                    "text-base text-muted-foreground",
-                    isCompleted && "opacity-60"
-                  )}>
+                  <p className={cn("text-base text-muted-foreground", isCompleted && "opacity-60")}>
                     {activity.title}
                   </p>
                 </div>
               </div>
               {/* Status Badge + Chevron */}
               <div className="flex items-center gap-2 shrink-0">
-                {isCompleted && (
-                  <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white shrink-0">
+                {isCompleted && <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white shrink-0">
                     <Check className="w-4 h-4" />
-                  </div>
-                )}
+                  </div>}
                 <ChevronDown className={cn("w-5 h-5 text-muted-foreground transition-transform duration-300", isExpanded && "rotate-180")} />
               </div>
             </div>
 
             {/* Metrics Row */}
             <div className="flex flex-wrap gap-2 mb-3">
-              {distance && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-400 text-slate-900 rounded-full text-xs font-semibold">
-                  {formatDistance(distance)}
-                </div>
-              )}
-              {zone && (
-                <TooltipProvider delayDuration={100}>
+              {distance}
+              {zone && <TooltipProvider delayDuration={100}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 dark:bg-white/8 border border-white/20 dark:border-white/12 rounded-full text-xs text-amber-400 cursor-help">
-                        <Zap className="w-3 h-3" />
-                        {zone.shortLabel}
-                      </div>
+                      
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-[250px] text-center">
                       <p className="font-semibold">{zone.icon} {zone.label}</p>
                       <p className="text-xs text-muted-foreground mt-1">{zone.description}</p>
                     </TooltipContent>
                   </Tooltip>
-                </TooltipProvider>
-              )}
-              {activity.intensity && (
-                <TooltipProvider delayDuration={100}>
+                </TooltipProvider>}
+              {activity.intensity && <TooltipProvider delayDuration={100}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="inline-flex items-center gap-0.5 px-3 py-1.5 bg-white/10 dark:bg-white/8 border border-white/20 dark:border-white/12 rounded-full text-xs text-amber-400 cursor-help">
@@ -169,14 +147,8 @@ export function ActivityAccordion({
                       <p className="font-semibold">Intensidad {activity.intensity}/5</p>
                     </TooltipContent>
                   </Tooltip>
-                </TooltipProvider>
-              )}
-              {activity.duration_min && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/10 dark:bg-white/8 border border-white/20 dark:border-white/12 rounded-full text-xs text-muted-foreground">
-                  <Clock className="w-3 h-3" />
-                  {activity.duration_min} min
-                </div>
-              )}
+                </TooltipProvider>}
+              {activity.duration_min}
             </div>
 
             {/* Divider */}
@@ -184,32 +156,24 @@ export function ActivityAccordion({
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {distance && (
-                <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+              {distance && <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
                   <div className="text-base font-semibold text-cyan-400">{formatDistance(distance)}</div>
                   <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Distancia</div>
-                </div>
-              )}
-              {zone && (
-                <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                </div>}
+              {zone && <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
                   <div className="text-base font-semibold text-cyan-400">{zone.shortLabel}</div>
                   <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Zona</div>
-                </div>
-              )}
-              {activity.duration_min && (
-                <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                </div>}
+              {activity.duration_min && <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
                   <div className="text-base font-semibold text-cyan-400">{activity.duration_min} min</div>
                   <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Tiempo</div>
-                </div>
-              )}
-              {activity.intensity && (
-                <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                </div>}
+              {activity.intensity && <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
                   <div className="text-base font-semibold text-cyan-400">
                     {Array(activity.intensity).fill('⚡').join('')}
                   </div>
                   <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Intensidad</div>
-                </div>
-              )}
+                </div>}
             </div>
           </div>
         </CollapsibleTrigger>
@@ -378,11 +342,7 @@ export function RestDayAccordion({
     const timer = setTimeout(() => setIsLoaded(true), animationDelay * 100);
     return () => clearTimeout(timer);
   }, [animationDelay]);
-  return (
-    <div className={cn(
-      "w-full bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500",
-      isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-    )}>
+  return <div className={cn("w-full bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
       {/* Header Row */}
       <div className="flex items-start gap-3">
         {/* Icon */}
@@ -406,6 +366,5 @@ export function RestDayAccordion({
         <div className="text-2xl mb-1">😴</div>
         <div className="text-sm text-muted-foreground">Recuperación activa</div>
       </div>
-    </div>
-  );
+    </div>;
 }
