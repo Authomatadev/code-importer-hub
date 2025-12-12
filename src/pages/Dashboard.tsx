@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, LogOut, User } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import logoImage from "@/assets/logo-caja-los-andes.png";
-import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard } from "@/components/dashboard";
+import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard, ChangePlanDialog } from "@/components/dashboard";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserProfile {
@@ -305,18 +305,24 @@ const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
 
         {/* Profile Card */}
         <div className="bg-card border border-border rounded-2xl p-6 md:p-8 mb-8">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-              <User className="w-8 h-8 text-primary" />
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                <User className="w-8 h-8 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-heading text-xl font-bold text-foreground">
+                  Tu Plan de Entrenamiento
+                </h2>
+                <p className="text-muted-foreground text-sm">
+                  Maratón de Santiago 2026
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="font-heading text-xl font-bold text-foreground">
-                Tu Plan de Entrenamiento
-              </h2>
-              <p className="text-muted-foreground text-sm">
-                Maratón de Santiago 2026
-              </p>
-            </div>
+            <ChangePlanDialog 
+              currentPlanId={profile?.current_plan_id || null}
+              onPlanChanged={() => window.location.reload()}
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
