@@ -26,6 +26,8 @@ import {
   STRETCH_REMINDER,
 } from "@/lib/activity-constants";
 import { formatDistance } from "@/lib/format-distance";
+import { ZoneTooltip } from "./ZoneTooltip";
+import { IntensityTooltip } from "./IntensityTooltip";
 
 interface Activity {
   id: string;
@@ -106,12 +108,14 @@ export function ActivityDetail({
                   </Badge>
                 )}
                 {zone && (
-                  <Badge 
-                    className="text-xs text-white"
-                    style={{ backgroundColor: zone.color }}
-                  >
-                    {zone.label}
-                  </Badge>
+                  <ZoneTooltip zone={zone}>
+                    <Badge 
+                      className="text-xs text-white"
+                      style={{ backgroundColor: zone.color }}
+                    >
+                      {zone.icon} {zone.label}
+                    </Badge>
+                  </ZoneTooltip>
                 )}
                 {trainingType && (
                   <Badge variant="outline" className="text-xs">
@@ -142,10 +146,12 @@ export function ActivityDetail({
                 </div>
               )}
               {activity.intensity && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Zap className="w-4 h-4 text-orange-500" />
-                  <span className="font-medium">Intensidad {activity.intensity}/5</span>
-                </div>
+                <IntensityTooltip level={activity.intensity}>
+                  <div className="flex items-center gap-2 text-sm cursor-help">
+                    <Zap className="w-4 h-4 text-orange-500" />
+                    <span className="font-medium">Intensidad {activity.intensity}/5</span>
+                  </div>
+                </IntensityTooltip>
               )}
               {terrain && (
                 <div className="flex items-center gap-2 text-sm">
@@ -218,9 +224,11 @@ export function ActivityDetail({
                     {zone && (
                       <div className="flex items-center gap-2 mt-2">
                         <span className="text-xs text-muted-foreground">Zona cardíaca:</span>
-                        <Badge style={{ backgroundColor: zone.color }} className="text-white text-xs">
-                          {zone.label}
-                        </Badge>
+                        <ZoneTooltip zone={zone}>
+                          <Badge style={{ backgroundColor: zone.color }} className="text-white text-xs">
+                            {zone.icon} {zone.label}
+                          </Badge>
+                        </ZoneTooltip>
                       </div>
                     )}
                   </AccordionContent>
