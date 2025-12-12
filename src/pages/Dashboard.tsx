@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut, User, ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import ElectricBorder from "@/components/ui/ElectricBorder";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import logoImage from "@/assets/logo-caja-los-andes.png";
 import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard, ChangePlanDialog } from "@/components/dashboard";
@@ -381,13 +382,15 @@ export default function Dashboard() {
               </div>}
 
             {/* Week Activities */}
-            <div className="bg-card border border-border rounded-2xl p-6 px-[7px]">
+            <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-2xl">
+            <div className="bg-card rounded-2xl p-6 px-[7px]">
               {activities.length > 0 ? <WeekActivityGrid weekNumber={currentWeekNumber} activities={activities} completedActivityIds={completedActivityIds} onMarkComplete={handleMarkComplete} onCompleteWeek={handleCompleteWeek} /> : <div className="text-center py-8">
                   <p className="text-muted-foreground">
                     No hay actividades programadas para esta semana.
                   </p>
                 </div>}
             </div>
+            </ElectricBorder>
           </div> : <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center">
             <h3 className="font-heading text-2xl font-bold text-foreground mb-2">
               🚧 En construcción
