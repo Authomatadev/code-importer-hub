@@ -123,33 +123,7 @@ export function ActivityAccordion({
             </div>
 
             {/* Metrics Row */}
-            <div className="flex flex-wrap gap-2 mb-3">
-              {distance}
-              {zone && <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      
-                    </TooltipTrigger>
-                    <TooltipContent side="top" className="max-w-[250px] text-center">
-                      <p className="font-semibold">{zone.icon} {zone.label}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{zone.description}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>}
-              {activity.intensity && <TooltipProvider delayDuration={100}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="inline-flex items-center gap-0.5 px-3 py-1.5 bg-white/10 dark:bg-white/8 border border-white/20 dark:border-white/12 rounded-full text-xs text-amber-400 cursor-help">
-                        {Array(activity.intensity).fill('⚡').join(' ')}
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="top">
-                      <p className="font-semibold">Intensidad {activity.intensity}/5</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>}
-              {activity.duration_min}
-            </div>
+            
 
             {/* Divider */}
             <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-3" />
