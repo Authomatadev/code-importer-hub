@@ -25,6 +25,7 @@ import {
   WARMUP_INFO,
   STRETCH_REMINDER,
 } from "@/lib/activity-constants";
+import { formatDistance } from "@/lib/format-distance";
 
 interface Activity {
   id: string;
@@ -130,7 +131,7 @@ export function ActivityDetail({
                 <div className="flex items-center gap-2 text-sm">
                   <MapPin className="w-4 h-4 text-primary" />
                   <span className="font-medium">
-                    {activity.total_daily_km || activity.distance_km} km
+                    {formatDistance(activity.total_daily_km || activity.distance_km)}
                   </span>
                 </div>
               )}
@@ -200,7 +201,7 @@ export function ActivityDetail({
                         <div className="bg-muted/30 rounded-lg p-3 text-center">
                           <p className="text-xs text-muted-foreground">Distancia</p>
                           <p className="text-lg font-bold text-primary">
-                            {activity.main_work_distance_km} km
+                            {formatDistance(activity.main_work_distance_km)}
                           </p>
                         </div>
                       )}

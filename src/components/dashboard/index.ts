@@ -4,6 +4,7 @@ export { DayCard, getDayName } from './DayCard';
 export { WeekView } from './WeekView';
 export { WeekActivityGrid } from './WeekActivityGrid';
 export { ActivityCard, RestDayCard } from './ActivityCard';
+export { ActivityAccordion, RestDayAccordion } from './ActivityAccordion';
 export { ActivityDetail } from './ActivityDetail';
 export { WeekNavigation } from './WeekNavigation';
 export { TipCard } from './TipCard';
