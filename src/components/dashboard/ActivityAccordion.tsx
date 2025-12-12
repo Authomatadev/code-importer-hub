@@ -123,25 +123,25 @@ export function ActivityAccordion({
 
         {/* Header - Always visible */}
         <CollapsibleTrigger asChild>
-          <div className="p-4 cursor-pointer hover:bg-muted/30 transition-colors">
-            <div className="flex items-center gap-3">
+          <div className="p-3 sm:p-4 cursor-pointer hover:bg-muted/30 transition-colors">
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* Icon */}
               <ActivityIcon 
                 type={activity.activity_type} 
-                size="lg" 
+                size="md" 
                 showBackground 
               />
               
               {/* Title and Day - Flex column for better stacking */}
               <div className="flex-1 min-w-0">
                 <p className={cn(
-                  "text-xs font-medium mb-0.5",
+                  "text-[10px] sm:text-xs font-medium mb-0.5",
                   isToday ? "text-primary" : "text-muted-foreground"
                 )}>
                   {dayFullNames[activity.day_of_week]}
                 </p>
                 <h3 className={cn(
-                  "font-heading font-bold text-foreground leading-tight",
+                  "font-heading font-semibold text-sm sm:text-base text-foreground leading-tight truncate",
                   isCompleted && "line-through opacity-70"
                 )}>
                   {activity.title}
@@ -163,9 +163,9 @@ export function ActivityAccordion({
             </div>
 
             {/* Stats row - Below title for better spacing */}
-            <div className="flex flex-wrap items-center gap-2 mt-2 ml-12 sm:ml-14">
+            <div className="flex flex-wrap items-center gap-1.5 mt-1.5 ml-9 sm:ml-12">
               {distance && (
-                <Badge variant="secondary" className="text-xs font-bold">
+                <Badge variant="secondary" className="text-[10px] sm:text-xs font-bold px-1.5 py-0">
                   {formatDistance(distance)}
                 </Badge>
               )}
@@ -174,7 +174,7 @@ export function ActivityAccordion({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Badge 
-                        className="text-xs text-white cursor-help transition-transform hover:scale-105 gap-1"
+                        className="text-[10px] sm:text-xs text-white cursor-help transition-transform hover:scale-105 gap-0.5 px-1.5 py-0"
                         style={{ backgroundColor: zone.color }}
                       >
                         <span>{zone.icon}</span>
@@ -195,12 +195,12 @@ export function ActivityAccordion({
                 <TooltipProvider delayDuration={100}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge variant="outline" className="text-xs cursor-help gap-0.5">
+                      <Badge variant="outline" className="text-[10px] sm:text-xs cursor-help gap-0 px-1 py-0">
                         {[1, 2, 3, 4, 5].map((level) => (
                           <span 
                             key={level} 
                             className={cn(
-                              "text-[10px]",
+                              "text-[8px] sm:text-[10px]",
                               level <= activity.intensity! ? "opacity-100" : "opacity-20"
                             )}
                           >
@@ -216,8 +216,8 @@ export function ActivityAccordion({
                 </TooltipProvider>
               )}
               {activity.duration_min && (
-                <Badge variant="outline" className="text-xs">
-                  <Clock className="w-3 h-3 mr-1" />
+                <Badge variant="outline" className="text-[10px] sm:text-xs px-1.5 py-0">
+                  <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5" />
                   {activity.duration_min} min
                 </Badge>
               )}
@@ -446,7 +446,7 @@ export function RestDayAccordion({ dayName, animationDelay = 0 }: { dayName: str
 
   return (
     <div className={cn(
-      "bg-muted/50 border border-border/50 rounded-xl p-4 transition-all duration-500",
+      "bg-muted/50 border border-border/50 rounded-xl p-3 sm:p-4 transition-all duration-500",
       isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
     )}>
       <div className="flex items-center gap-3">
