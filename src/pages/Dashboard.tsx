@@ -375,12 +375,6 @@ export default function Dashboard() {
             {/* Week Navigation */}
             <WeekNavigation currentWeek={currentWeekNumber} totalWeeks={plan.total_weeks} completedWeeks={completedWeeks} onWeekChange={setCurrentWeekNumber} />
 
-        {/* Tips Section */}
-            {(currentWeekTips.tip_week || currentWeekTips.tip_month) && <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TipCard tip={currentWeekTips.tip_week} type="week" weekNumber={currentWeekNumber} />
-                <TipCard tip={currentWeekTips.tip_month} type="month" />
-              </div>}
-
             {/* Week Activities */}
             <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-2xl">
             <div className="bg-card rounded-2xl p-6 px-[7px]">
@@ -391,6 +385,13 @@ export default function Dashboard() {
                 </div>}
             </div>
             </ElectricBorder>
+
+            {/* Tips Section - Below week activities */}
+            {/* Tips Section - Below week activities */}
+            {(currentWeekTips.tip_week || currentWeekTips.tip_month) && <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <TipCard tip={currentWeekTips.tip_week} type="week" weekNumber={currentWeekNumber} />
+                <TipCard tip={currentWeekTips.tip_month} type="month" />
+              </div>}
           </div> : <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center">
             <h3 className="font-heading text-2xl font-bold text-foreground mb-2">
               🚧 En construcción
