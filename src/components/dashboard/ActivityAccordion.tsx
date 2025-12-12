@@ -92,7 +92,7 @@ export function ActivityAccordion({
       <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-xl">
       <div className={cn("relative bg-card rounded-xl transition-all duration-500 overflow-hidden", isToday && "ring-2 ring-primary/30", isCompleted && "opacity-70", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isExpanded && "shadow-lg")}>
         {/* Today indicator */}
-        {isToday && <div className="absolute -top-3 left-4 z-50">
+        {isToday && <div className="absolute -top-3 left-4 z-[100]">
             <Badge variant="default" className="text-xs font-bold animate-pulse py-0 my-[3px]">
               HOY
             </Badge>
