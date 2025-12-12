@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { ActivityCard, RestDayCard } from "./ActivityCard";
-import { ActivityDetail } from "./ActivityDetail";
+import { ActivityAccordion, RestDayAccordion } from "./ActivityAccordion";
 import { ActivityType } from "./ActivityIcon";
 import { Button } from "@/components/ui/button";
 import { CheckCheck, Trophy } from "lucide-react";
@@ -41,7 +40,6 @@ interface WeekActivityGridProps {
   onCompleteWeek?: () => void;
 }
 
-const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const dayFullNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
 export function WeekActivityGrid({
@@ -51,7 +49,7 @@ export function WeekActivityGrid({
   onMarkComplete,
   onCompleteWeek
 }: WeekActivityGridProps) {
-  const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+  const [expandedActivityId, setExpandedActivityId] = useState<string | null>(null);
   
   const today = new Date().getDay();
   const daysOrder = [1, 2, 3, 4, 5, 6, 0]; // Monday to Sunday
@@ -69,6 +67,10 @@ export function WeekActivityGrid({
   ).length;
   const isWeekComplete = totalActivities > 0 && completedCount === totalActivities;
   const progressPercent = totalActivities > 0 ? (completedCount / totalActivities) * 100 : 0;
+
+  const handleToggleActivity = (activityId: string) => {
+    setExpandedActivityId(prev => prev === activityId ? null : activityId);
+  };
 
   return (
     <div className="space-y-6">
@@ -100,16 +102,16 @@ export function WeekActivityGrid({
         </div>
       </div>
 
-      {/* Activity Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {/* Activity Accordion List */}
+      <div className="space-y-3">
         {daysOrder.map((dayOfWeek, index) => {
           const activity = activityByDay[dayOfWeek];
           const isCompleted = activity ? completedActivityIds.includes(activity.id) : false;
           
           if (!activity || activity.activity_type === 'rest') {
             return (
-              <RestDayCard 
-                key={dayOfWeek}
+              <RestDayAccordion 
+                key={`rest-${dayOfWeek}`}
                 dayName={dayFullNames[dayOfWeek]}
                 animationDelay={index}
               />
@@ -117,14 +119,14 @@ export function WeekActivityGrid({
           }
 
           return (
-            <ActivityCard
+            <ActivityAccordion
               key={activity.id}
               activity={activity}
-              dayName={dayNames[dayOfWeek]}
               isToday={dayOfWeek === today}
               isCompleted={isCompleted}
+              isExpanded={expandedActivityId === activity.id}
+              onToggle={() => handleToggleActivity(activity.id)}
               onMarkComplete={onMarkComplete}
-              onClick={() => setSelectedActivity(activity)}
               animationDelay={index}
             />
           );
@@ -162,14 +164,6 @@ export function WeekActivityGrid({
           )}
         </Button>
       </div>
-
-      {/* Activity Detail Modal */}
-      <ActivityDetail
-        activity={selectedActivity}
-        isCompleted={selectedActivity ? completedActivityIds.includes(selectedActivity.id) : false}
-        onClose={() => setSelectedActivity(null)}
-        onMarkComplete={onMarkComplete}
-      />
     </div>
   );
 }
