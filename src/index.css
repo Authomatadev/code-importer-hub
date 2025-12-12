@@ -342,4 +342,25 @@
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
   .stagger-5 { animation-delay: 0.5s; }
+
+  /* Typography System - Mobile-First Legibility */
+  .text-label {
+    @apply text-[11px] sm:text-xs;
+  }
+
+  .text-body {
+    @apply text-sm sm:text-base;
+  }
+
+  .text-title {
+    @apply text-lg sm:text-xl;
+  }
+
+  .text-heading {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+
+  .text-hero {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+  }
 }

@@ -76,7 +76,7 @@ export function WeekNavigation({
               Semana {currentWeek} de {totalWeeks}
             </p>
             {isCurrentWeekCompleted && (
-              <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span className="bg-emerald-500 text-white text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
                 <CheckCircle className="w-3 h-3" />
                 COMPLETADA
               </span>
@@ -95,7 +95,7 @@ export function WeekNavigation({
                   onClick={() => isUnlocked && onWeekChange(week)}
                   disabled={!isUnlocked}
                   className={cn(
-                    "w-6 h-6 rounded-full transition-all flex items-center justify-center text-[9px] font-bold",
+                    "w-6 h-6 rounded-full transition-all flex items-center justify-center text-[11px] sm:text-xs font-bold",
                     isCurrent && "ring-2 ring-primary ring-offset-2 ring-offset-background",
                     isCompleted && "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30",
                     !isCompleted && isUnlocked && "bg-muted hover:bg-muted-foreground/30 text-muted-foreground",
