@@ -90,7 +90,7 @@ export function ActivityAccordion({
   };
   return <Collapsible open={isExpanded} onOpenChange={onToggle} ref={contentRef}>
       <div className={cn(
-        "w-full bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 light:from-slate-100 light:to-slate-50 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500",
+        "w-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500",
         isToday && "ring-2 ring-primary/50",
         isCompleted && "opacity-80",
         isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
