@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, LogOut, User } from "lucide-react";
+import { Loader2, LogOut, User, ChevronDown } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import logoImage from "@/assets/logo-caja-los-andes.png";
 import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard, ChangePlanDialog } from "@/components/dashboard";
@@ -310,46 +311,63 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Profile Card */}
-        <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 md:p-8 mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                <User className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-              </div>
-              <div className="min-w-0">
-                <h2 className="font-heading text-lg sm:text-xl font-bold text-foreground truncate">
-                  Tu Plan de Entrenamiento
-                </h2>
-                <p className="text-muted-foreground text-xs sm:text-sm">
-                  Maratón de Santiago 2026
-                </p>
+        {/* Profile Card - Collapsible */}
+        <Collapsible className="mb-8">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <CollapsibleTrigger className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 text-left">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
+                  <User className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h2 className="font-heading text-base sm:text-lg font-bold text-foreground">
+                      Tu Plan
+                    </h2>
+                    <div className="flex items-center gap-1.5">
+                      <span className="bg-primary/10 text-primary text-xs sm:text-sm font-semibold px-2 py-0.5 rounded-full">
+                        {profile?.distance || "—"}
+                      </span>
+                      <span className="bg-muted text-muted-foreground text-xs sm:text-sm font-medium px-2 py-0.5 rounded-full">
+                        {getDifficultyName(profile?.difficulty)}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground text-xs sm:text-sm">
+                    Maratón de Santiago 2026
+                  </p>
+                </div>
+                <ChevronDown className="w-5 h-5 text-muted-foreground shrink-0 transition-transform duration-200 data-[state=open]:rotate-180" />
+              </CollapsibleTrigger>
+              <div className="shrink-0">
+                <ChangePlanDialog currentPlanId={profile?.current_plan_id || null} onPlanChanged={() => window.location.reload()} />
               </div>
             </div>
-            <ChangePlanDialog currentPlanId={profile?.current_plan_id || null} onPlanChanged={() => window.location.reload()} />
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-muted rounded-xl p-4">
-              <p className="text-sm text-muted-foreground mb-1">Distancia</p>
-              <p className="font-heading text-2xl font-bold text-foreground">
-                {profile?.distance || "No seleccionado"}
-              </p>
-            </div>
-            <div className="bg-muted rounded-xl p-4">
-              <p className="text-sm text-muted-foreground mb-1">Nivel</p>
-              <p className="font-heading text-2xl font-bold text-foreground">
-                {getDifficultyName(profile?.difficulty)}
-              </p>
-            </div>
-            <div className="bg-muted rounded-xl p-4">
-              <p className="text-sm text-muted-foreground mb-1">Fecha de inicio</p>
-              <p className="font-heading text-2xl font-bold text-foreground">
-                {profile?.start_date ? new Date(profile.start_date).toLocaleDateString("es-CL") : "No iniciado"}
-              </p>
-            </div>
+            <CollapsibleContent className="mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-muted rounded-xl p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Distancia</p>
+                  <p className="font-heading text-2xl font-bold text-foreground">
+                    {profile?.distance || "No seleccionado"}
+                  </p>
+                </div>
+                <div className="bg-muted rounded-xl p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Nivel</p>
+                  <p className="font-heading text-2xl font-bold text-foreground">
+                    {getDifficultyName(profile?.difficulty)}
+                  </p>
+                </div>
+                <div className="bg-muted rounded-xl p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Fecha de inicio</p>
+                  <p className="font-heading text-2xl font-bold text-foreground">
+                    {profile?.start_date ? new Date(profile.start_date).toLocaleDateString("es-CL") : "No iniciado"}
+                  </p>
+                </div>
+              </div>
+            </CollapsibleContent>
           </div>
-        </div>
+        </Collapsible>
 
         {/* Week View or Coming Soon */}
         {hasPlan ? <div className="space-y-6">
