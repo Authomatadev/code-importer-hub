@@ -65,10 +65,13 @@ export function PlanImporter() {
       } else {
         setParsedData(null);
       }
-    } catch {
+    } catch (error: any) {
+      const errorMessage = error instanceof SyntaxError 
+        ? `JSON inválido: ${error.message}` 
+        : `Error de validación: ${error.message}`;
       setValidationResult({
         valid: false,
-        errors: ['JSON inválido: Error de sintaxis'],
+        errors: [errorMessage],
         summary: { totalWeeks: 0, totalActivities: 0, weekNumbers: [] },
       });
       setParsedData(null);
