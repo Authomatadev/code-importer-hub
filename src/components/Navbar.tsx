@@ -23,15 +23,15 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
-            <a href="/#features" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/#features" className="text-muted-foreground hover:text-foreground transition-colors">
               Características
-            </a>
-            <a href="/#plans" className="text-muted-foreground hover:text-foreground transition-colors">
+            </Link>
+            <Link to="/#plans" className="text-muted-foreground hover:text-foreground transition-colors">
               Planes
-            </a>
-            <a href="/#countdown" className="text-muted-foreground hover:text-foreground transition-colors">
+            </Link>
+            <Link to="/#countdown" className="text-muted-foreground hover:text-foreground transition-colors">
               Countdown
-            </a>
+            </Link>
             <Link to="/results" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
               <Trophy className="w-4 h-4" />
               Resultados
@@ -78,27 +78,27 @@ export function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border/50 animate-fade-in">
             <div className="flex flex-col gap-4">
-              <a 
-                href="/#features" 
+              <Link 
+                to="/#features" 
                 className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" 
                 onClick={() => setIsMenuOpen(false)}
               >
                 Características
-              </a>
-              <a 
-                href="/#plans" 
+              </Link>
+              <Link 
+                to="/#plans" 
                 className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" 
                 onClick={() => setIsMenuOpen(false)}
               >
                 Planes
-              </a>
-              <a 
-                href="/#countdown" 
+              </Link>
+              <Link 
+                to="/#countdown" 
                 className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" 
                 onClick={() => setIsMenuOpen(false)}
               >
                 Countdown
-              </a>
+              </Link>
               <Link 
                 to="/results" 
                 className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" 
