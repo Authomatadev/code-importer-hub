@@ -339,15 +339,16 @@ export function PlanImporter() {
         )}
 
         {/* Actions */}
-        <div className="flex gap-2 justify-between">
-          <Button variant="outline" onClick={downloadTemplate}>
+        <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-between">
+          <Button variant="outline" onClick={downloadTemplate} className="w-full sm:w-auto">
             <Download className="h-4 w-4 mr-2" />
-            Descargar Plantilla
+            <span className="hidden sm:inline">Descargar</span> Plantilla
           </Button>
 
           <Button
             onClick={handleImport}
             disabled={!selectedPlan || !parsedData || importing}
+            className="w-full sm:w-auto"
           >
             {importing ? (
               <>

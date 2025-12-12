@@ -27,11 +27,12 @@ export function WeekNavigation({
         Anterior
       </Button>
 
-      <div className="text-center">
+      <div className="text-center flex-1">
         <p className="text-sm font-medium text-foreground">
           Semana {currentWeek} de {totalWeeks}
         </p>
-        <div className="flex gap-1 mt-1 justify-center">
+        {/* Hide indicators on mobile when too many weeks */}
+        <div className="hidden sm:flex gap-1 mt-1 justify-center flex-wrap max-w-xs mx-auto">
           {Array.from({ length: totalWeeks }, (_, i) => i + 1).map((week) => (
             <button
               key={week}

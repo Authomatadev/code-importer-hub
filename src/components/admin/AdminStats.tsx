@@ -49,12 +49,12 @@ export function AdminStats() {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
         {[...Array(5)].map((_, i) => (
           <Card key={i}>
-            <CardContent className="p-4">
-              <Skeleton className="h-4 w-20 mb-2" />
-              <Skeleton className="h-8 w-12" />
+            <CardContent className="p-3 sm:p-4">
+              <Skeleton className="h-4 w-16 sm:w-20 mb-2" />
+              <Skeleton className="h-6 sm:h-8 w-10 sm:w-12" />
             </CardContent>
           </Card>
         ))}
@@ -63,15 +63,15 @@ export function AdminStats() {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
       {statItems.map((item) => (
         <Card key={item.label}>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <item.icon className={`h-4 w-4 ${item.color}`} />
-              <span className="text-sm">{item.label}</span>
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground mb-1">
+              <item.icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${item.color}`} />
+              <span className="text-xs sm:text-sm truncate">{item.label}</span>
             </div>
-            <p className="text-2xl font-bold">{item.value}</p>
+            <p className="text-xl sm:text-2xl font-bold">{item.value}</p>
           </CardContent>
         </Card>
       ))}

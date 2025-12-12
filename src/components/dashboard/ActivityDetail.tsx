@@ -83,7 +83,7 @@ export function ActivityDetail({
 
   return (
     <Dialog open={!!activity} onOpenChange={() => onClose()}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col p-0">
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-lg max-h-[90vh] flex flex-col p-0 mx-auto">
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <div className="flex items-start gap-4">
             <ActivityIcon 
