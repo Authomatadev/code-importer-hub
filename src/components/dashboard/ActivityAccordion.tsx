@@ -92,23 +92,23 @@ export function ActivityAccordion({
       <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-xl">
       <div className={cn("relative bg-card rounded-xl transition-all duration-500 overflow-hidden", isToday && "ring-2 ring-primary/30", isCompleted && "opacity-70", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isExpanded && "shadow-lg")}>
         {/* Today indicator */}
-        {isToday && <div className="absolute -top-3 left-4 z-[100]">
-            <Badge variant="default" className="text-xs font-bold animate-pulse py-0 my-[3px]">
+        {isToday && <div className="absolute -top-4 left-12 z-[100]">
+            <Badge variant="default" className="text-xs font-bold animate-pulse shadow-lg">
               HOY
             </Badge>
           </div>}
 
         {/* Header - Always visible */}
         <CollapsibleTrigger asChild>
-          <div className="p-3 sm:p-4 cursor-pointer hover:bg-muted/30 transition-colors px-0 mx-0 border-2 border-dashed my-0 py-[17px]">
-            <div className="flex items-center gap-2 sm:gap-3">
+          <div className="p-4 sm:p-5 cursor-pointer hover:bg-muted/30 transition-colors">
+            <div className="flex items-center gap-3 sm:gap-4">
               {/* Icon */}
               <ActivityIcon type={activity.activity_type} size="md" showBackground />
               
               {/* Title and Day - Flex column for better stacking */}
               <div className="flex-1 min-w-0">
-                <ShinyText text={dayFullNames[activity.day_of_week]} className={cn("text-base sm:text-lg font-semibold", isToday ? "!text-primary" : "")} speed={4} />
-                <h3 className={cn("font-heading font-semibold text-sm sm:text-base text-foreground leading-tight truncate", isCompleted && "line-through opacity-70")}>
+                <ShinyText text={dayFullNames[activity.day_of_week]} className={cn("text-xl sm:text-2xl font-semibold", isToday ? "!text-primary" : "")} speed={4} />
+                <h3 className={cn("font-heading font-medium text-base sm:text-lg text-muted-foreground leading-tight truncate", isCompleted && "line-through opacity-70")}>
                   {activity.title}
                 </h3>
               </div>
