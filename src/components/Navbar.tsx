@@ -4,28 +4,19 @@ import { Menu, X, Settings, LogIn, Play, Trophy } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logoCajaLosAndes from "@/assets/logo-caja-los-andes.png";
-
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
+  return <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo - siempre visible */}
           <div className="flex items-center gap-2 sm:gap-4">
-            <img 
-              src={logoCajaLosAndes} 
-              alt="Caja Los Andes" 
-              className="h-8 sm:h-12" 
-            />
+            <img src={logoCajaLosAndes} alt="Caja Los Andes" className="h-8 sm:h-12" />
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/#features" className="text-muted-foreground hover:text-foreground transition-colors">
-              Características
-            </Link>
+            
             <Link to="/#plans" className="text-muted-foreground hover:text-foreground transition-colors">
               Planes
             </Link>
@@ -36,10 +27,7 @@ export function Navbar() {
               <Trophy className="w-4 h-4" />
               Resultados
             </Link>
-            <Link to="/admin" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-              <Settings className="w-4 h-4" />
-              Admin
-            </Link>
+            
             <ThemeToggle />
             <Link to="/auth?mode=login">
               <Button variant="outline" size="lg" className="gap-2">
@@ -75,50 +63,27 @@ export function Navbar() {
         </div>
 
         {/* Mobile Menu - Solo navegación */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border/50 animate-fade-in">
+        {isMenuOpen && <div className="md:hidden py-4 border-t border-border/50 animate-fade-in">
             <div className="flex flex-col gap-4">
-              <Link 
-                to="/#features" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" 
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link to="/#features" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Características
               </Link>
-              <Link 
-                to="/#plans" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" 
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link to="/#plans" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Planes
               </Link>
-              <Link 
-                to="/#countdown" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" 
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link to="/#countdown" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Countdown
               </Link>
-              <Link 
-                to="/results" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" 
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link to="/results" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                 <Trophy className="w-4 h-4" />
                 Resultados
               </Link>
-              <Link 
-                to="/admin" 
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" 
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link to="/admin" className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                 <Settings className="w-4 h-4" />
                 Admin
               </Link>
             </div>
-          </div>
-        )}
+          </div>}
       </div>
-    </nav>
-  );
+    </nav>;
 }
