@@ -1,6 +1,6 @@
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Settings, LogIn, Play } from "lucide-react";
+import { Menu, X, Settings, LogIn, Play, Trophy } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logoCajaLosAndes from "@/assets/logo-caja-los-andes.png";
@@ -32,6 +32,10 @@ export function Navbar() {
             <a href="/#countdown" className="text-muted-foreground hover:text-foreground transition-colors">
               Countdown
             </a>
+            <Link to="/results" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              <Trophy className="w-4 h-4" />
+              Resultados
+            </Link>
             <Link to="/admin" className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
               <Settings className="w-4 h-4" />
               Admin
@@ -95,6 +99,14 @@ export function Navbar() {
               >
                 Countdown
               </a>
+              <Link 
+                to="/results" 
+                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" 
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Trophy className="w-4 h-4" />
+                Resultados
+              </Link>
               <Link 
                 to="/admin" 
                 className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2" 
