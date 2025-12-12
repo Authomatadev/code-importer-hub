@@ -20,13 +20,13 @@ export const TRAINING_TYPES = [
 ] as const;
 
 export const ZONES = [
-  { value: 'Z1', label: 'Zona 1', color: 'hsl(var(--chart-2))' },
-  { value: 'Z2', label: 'Zona 2', color: 'hsl(var(--chart-3))' },
-  { value: 'Z3', label: 'Zona 3', color: 'hsl(var(--chart-4))' },
-  { value: 'Z4', label: 'Zona 4', color: 'hsl(var(--chart-5))' },
-  { value: 'Z5', label: 'Zona 5', color: 'hsl(var(--destructive))' },
-  { value: 'ZX', label: 'Zona X', color: 'hsl(var(--primary))' },
-  { value: 'ZY', label: 'Zona Y (Umbral)', color: 'hsl(var(--accent))' },
+  { value: 'Z1', label: 'Zona 1', shortLabel: 'Z1', color: 'hsl(var(--chart-2))', description: 'Recuperación activa - Ritmo muy suave, conversacional. 50-60% FC máx.' },
+  { value: 'Z2', label: 'Zona 2', shortLabel: 'Z2', color: 'hsl(var(--chart-3))', description: 'Resistencia base - Ritmo cómodo, puedes hablar. 60-70% FC máx.' },
+  { value: 'Z3', label: 'Zona 3', shortLabel: 'Z3', color: 'hsl(var(--chart-4))', description: 'Tempo - Ritmo moderado, hablar es difícil. 70-80% FC máx.' },
+  { value: 'Z4', label: 'Zona 4', shortLabel: 'Z4', color: 'hsl(var(--chart-5))', description: 'Umbral - Ritmo intenso, frases cortas. 80-90% FC máx.' },
+  { value: 'Z5', label: 'Zona 5', shortLabel: 'Z5', color: 'hsl(var(--destructive))', description: 'VO2 máx - Esfuerzo máximo, no puedes hablar. 90-100% FC máx.' },
+  { value: 'ZX', label: 'Zona X', shortLabel: 'ZX', color: 'hsl(var(--primary))', description: 'Zona especial - Trabajo específico de técnica y forma.' },
+  { value: 'ZY', label: 'Umbral', shortLabel: 'ZY', color: 'hsl(var(--accent))', description: 'Zona Umbral - Ritmo maratón, sostenible pero exigente. ~85% FC máx.' },
 ] as const;
 
 export const TERRAINS = [
