@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, LogOut, User } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import logoImage from "@/assets/logo-caja-los-andes.png";
-import { WeekView, WeekNavigation, ActivityType, TipCard } from "@/components/dashboard";
+import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard } from "@/components/dashboard";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserProfile {
@@ -47,6 +47,21 @@ interface Activity {
   distance_km: number | null;
   duration_min: number | null;
   intensity: number | null;
+  zone?: string | null;
+  terrain?: string | null;
+  training_type?: string | null;
+  total_daily_km?: number | null;
+  phase?: string | null;
+  warmup_duration_min?: number | null;
+  main_work_type?: string | null;
+  main_work_distance_km?: number | null;
+  main_work_duration_min?: number | null;
+  repetitions?: number | null;
+  rep_distance_meters?: number | null;
+  rest_between_reps_min?: number | null;
+  stretch_before_after?: boolean | null;
+  notes?: string | null;
+  media_url?: string | null;
 }
 
 export default function Dashboard() {
@@ -137,10 +152,10 @@ const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
         tip_month: weekData.tip_month as Tip | null
       });
 
-      // Get activities for this week
+      // Get activities for this week with all fields
       const { data: activitiesData } = await supabase
         .from("activities")
-        .select("id, day_of_week, title, description, activity_type, distance_km, duration_min, intensity")
+        .select("id, day_of_week, title, description, activity_type, distance_km, duration_min, intensity, zone, terrain, training_type, total_daily_km, phase, warmup_duration_min, main_work_type, main_work_distance_km, main_work_duration_min, repetitions, rep_distance_meters, rest_between_reps_min, stretch_before_after, notes, media_url")
         .eq("week_id", weekData.id)
         .order("day_of_week");
 
@@ -194,6 +209,53 @@ const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
     toast({
       title: "¡Excelente! 💪",
       description: "Actividad completada"
+    });
+  };
+
+  const handleCompleteWeek = async () => {
+    if (!user) return;
+    
+    // Get all non-rest activities that aren't completed
+    const uncompletedActivities = activities.filter(
+      a => a.activity_type !== 'rest' && !completedActivityIds.includes(a.id)
+    );
+    
+    if (uncompletedActivities.length === 0) {
+      toast({
+        title: "¡Semana ya completada!",
+        description: "Todas las actividades ya están marcadas"
+      });
+      return;
+    }
+
+    // Mark all as completed
+    const insertData = uncompletedActivities.map(activity => ({
+      user_id: user.id,
+      activity_id: activity.id,
+      completed: true
+    }));
+
+    const { error } = await supabase
+      .from("activity_logs")
+      .insert(insertData);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo completar la semana",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setCompletedActivityIds(prev => [
+      ...prev, 
+      ...uncompletedActivities.map(a => a.id)
+    ]);
+    
+    toast({
+      title: "🎉 ¡SEMANA COMPLETADA!",
+      description: `${uncompletedActivities.length} actividades marcadas como completadas`
     });
   };
 
@@ -309,11 +371,12 @@ const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
             {/* Week Activities */}
             <div className="bg-card border border-border rounded-2xl p-6">
               {activities.length > 0 ? (
-                <WeekView
+                <WeekActivityGrid
                   weekNumber={currentWeekNumber}
                   activities={activities}
                   completedActivityIds={completedActivityIds}
                   onMarkComplete={handleMarkComplete}
+                  onCompleteWeek={handleCompleteWeek}
                 />
               ) : (
                 <div className="text-center py-8">
