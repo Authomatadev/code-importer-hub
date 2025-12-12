@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { AdminStats, PlanSelector, WeekManager, ActivityManager, PlanImporter } from '@/components/admin';
+import { AdminStats, PlanSelector, WeekManager, ActivityManager, PlanImporter, ResultsImporter } from '@/components/admin';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { supabase } from '@/integrations/supabase/client';
@@ -134,6 +134,12 @@ export default function Admin() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Importación Masiva</h2>
             <PlanImporter />
+          </section>
+
+          {/* Results Management Section */}
+          <section>
+            <h2 className="text-xl font-semibold mb-4">Gestión de Resultados</h2>
+            <ResultsImporter />
           </section>
         </div>
       </main>
