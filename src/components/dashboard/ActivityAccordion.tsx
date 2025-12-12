@@ -90,13 +90,7 @@ export function ActivityAccordion({
   };
   return <Collapsible open={isExpanded} onOpenChange={onToggle} ref={contentRef}>
       <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-xl">
-      <div className={cn("relative bg-card rounded-xl transition-all duration-500 overflow-hidden", isToday && "ring-2 ring-primary/30", isCompleted && "opacity-70", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isExpanded && "shadow-lg")}>
-        {/* Today indicator */}
-        {isToday && <div className="absolute -top-4 left-12 z-[100]">
-            <Badge variant="default" className="text-xs font-bold animate-pulse shadow-lg">
-              HOY
-            </Badge>
-          </div>}
+      <div className={cn("relative bg-card rounded-xl transition-all duration-500", isToday && "ring-2 ring-primary/30", isCompleted && "opacity-70", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isExpanded && "shadow-lg")}>
 
         {/* Header - Always visible */}
         <CollapsibleTrigger asChild>
@@ -107,7 +101,14 @@ export function ActivityAccordion({
               
               {/* Title and Day - Flex column for better stacking */}
               <div className="flex-1 min-w-0">
-                <ShinyText text={dayFullNames[activity.day_of_week]} className={cn("text-xl sm:text-2xl font-semibold", isToday ? "!text-primary" : "")} speed={4} />
+                <div className="flex items-center gap-2">
+                  <ShinyText text={dayFullNames[activity.day_of_week]} className={cn("text-xl sm:text-2xl font-semibold", isToday ? "!text-primary" : "")} speed={4} />
+                  {isToday && (
+                    <Badge variant="default" className="text-xs font-bold animate-pulse shadow-lg">
+                      HOY
+                    </Badge>
+                  )}
+                </div>
                 <h3 className={cn("font-heading font-medium text-base sm:text-lg text-muted-foreground leading-tight truncate", isCompleted && "line-through opacity-70")}>
                   {activity.title}
                 </h3>
@@ -317,7 +318,7 @@ export function ActivityAccordion({
     </Collapsible>;
 }
 
-// Rest Day Card - simplified
+// Rest Day Card - matching design with ActivityAccordion
 export function RestDayAccordion({
   dayName,
   animationDelay = 0
@@ -330,13 +331,26 @@ export function RestDayAccordion({
     const timer = setTimeout(() => setIsLoaded(true), animationDelay * 100);
     return () => clearTimeout(timer);
   }, [animationDelay]);
-  return <div className={cn("bg-muted/50 border border-border/50 rounded-xl p-3 sm:p-4 transition-all duration-500", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
-      <div className="flex items-center gap-3">
-        <ActivityIcon type="rest" size="lg" showBackground />
-        <div>
-          <p className="text-sm font-medium text-muted-foreground">{dayName}</p>
-          <p className="text-xs text-muted-foreground/60">Día de descanso</p>
+  return (
+    <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-xl">
+      <div className={cn(
+        "bg-card rounded-xl p-4 sm:p-5 transition-all duration-500",
+        isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      )}>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <ActivityIcon type="rest" size="md" showBackground />
+          <div className="flex-1 min-w-0">
+            <ShinyText 
+              text={dayName} 
+              className="text-xl sm:text-2xl font-semibold" 
+              speed={4} 
+            />
+            <p className="font-heading font-medium text-base sm:text-lg text-muted-foreground leading-tight">
+              Día de descanso
+            </p>
+          </div>
         </div>
       </div>
-    </div>;
+    </ElectricBorder>
+  );
 }
