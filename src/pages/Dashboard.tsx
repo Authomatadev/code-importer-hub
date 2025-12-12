@@ -304,17 +304,17 @@ const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
         </div>
 
         {/* Profile Card */}
-        <div className="bg-card border border-border rounded-2xl p-6 md:p-8 mb-8">
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                <User className="w-8 h-8 text-primary" />
+        <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 md:p-8 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
+                <User className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
               </div>
-              <div>
-                <h2 className="font-heading text-xl font-bold text-foreground">
+              <div className="min-w-0">
+                <h2 className="font-heading text-lg sm:text-xl font-bold text-foreground truncate">
                   Tu Plan de Entrenamiento
                 </h2>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-muted-foreground text-xs sm:text-sm">
                   Maratón de Santiago 2026
                 </p>
               </div>

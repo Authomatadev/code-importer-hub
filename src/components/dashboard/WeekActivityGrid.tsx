@@ -84,7 +84,7 @@ export function WeekActivityGrid({
         </div>
         
         {/* Progress bar */}
-        <div className="flex items-center gap-4 flex-1 max-w-md">
+        <div className="flex items-center gap-4 flex-1 w-full md:max-w-md">
           <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
             <div 
               className={cn(

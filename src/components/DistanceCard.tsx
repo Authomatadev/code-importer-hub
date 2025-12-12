@@ -20,7 +20,7 @@ export function DistanceCard({
   return (
     <div 
       className={cn(
-        "group relative p-6 md:p-8 rounded-2xl opacity-0 animate-fade-in",
+        "group relative p-4 sm:p-6 md:p-8 rounded-2xl opacity-0 animate-fade-in",
         "transition-all duration-300 ease-out",
         "hover:scale-105 hover:-translate-y-2 hover:shadow-xl",
         featured 

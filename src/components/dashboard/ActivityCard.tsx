@@ -227,13 +227,14 @@ export function ActivityCard({
         >
           {isCompleted ? (
             <>
-              <Check className="w-6 h-6 mr-2" />
+              <Check className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
               COMPLETADO
             </>
           ) : (
             <>
-              <Check className="w-6 h-6 mr-2" />
-              ENTRENAMIENTO REALIZADO
+              <Check className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
+              <span className="sm:hidden">REALIZADO</span>
+              <span className="hidden sm:inline">ENTRENAMIENTO REALIZADO</span>
             </>
           )}
         </Button>
