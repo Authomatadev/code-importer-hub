@@ -1,4 +1,5 @@
 export { AdminStats } from './AdminStats';
+export { ResultsImporter } from './ResultsImporter';
 export { PlanSelector } from './PlanSelector';
 export { WeekManager } from './WeekManager';
 export { WeekCard } from './WeekCard';
