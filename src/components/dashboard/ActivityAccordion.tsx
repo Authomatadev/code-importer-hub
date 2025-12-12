@@ -174,18 +174,43 @@ export function ActivityAccordion({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Badge 
-                        className="text-xs text-white cursor-help transition-transform hover:scale-105"
+                        className="text-xs text-white cursor-help transition-transform hover:scale-105 gap-1"
                         style={{ backgroundColor: zone.color }}
                       >
-                        {zone.shortLabel}
+                        <span>{zone.icon}</span>
+                        <span>{zone.shortLabel}</span>
                       </Badge>
                     </TooltipTrigger>
                     <TooltipContent 
                       side="top" 
                       className="max-w-[250px] text-center"
                     >
-                      <p className="font-semibold">{zone.label}</p>
+                      <p className="font-semibold">{zone.icon} {zone.label}</p>
                       <p className="text-xs text-muted-foreground mt-1">{zone.description}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              {activity.intensity && (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge variant="outline" className="text-xs cursor-help gap-0.5">
+                        {[1, 2, 3, 4, 5].map((level) => (
+                          <span 
+                            key={level} 
+                            className={cn(
+                              "text-[10px]",
+                              level <= activity.intensity! ? "opacity-100" : "opacity-20"
+                            )}
+                          >
+                            ⚡
+                          </span>
+                        ))}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      <p className="font-semibold">Intensidad {activity.intensity}/5</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

@@ -144,7 +144,7 @@ export function WeekActivityGrid({
           variant={isWeekComplete ? "secondary" : "default"}
           size="lg"
           className={cn(
-            "w-full h-16 text-lg font-bold transition-all duration-300",
+            "w-full h-14 sm:h-16 text-sm sm:text-lg font-bold transition-all duration-300",
             isWeekComplete 
               ? "bg-green-500/20 text-green-500 border border-green-500/30" 
               : "hover:scale-[1.01] active:scale-[0.99] bg-gradient-to-r from-primary to-primary/80",
@@ -153,13 +153,13 @@ export function WeekActivityGrid({
         >
           {isWeekComplete ? (
             <>
-              <Trophy className="w-6 h-6 mr-3" />
-              ¡SEMANA COMPLETADA!
+              <Trophy className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 shrink-0" />
+              <span className="truncate">¡SEMANA COMPLETADA!</span>
             </>
           ) : (
             <>
-              <CheckCheck className="w-6 h-6 mr-3" />
-              COMPLETAR TODA LA SEMANA
+              <CheckCheck className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 shrink-0" />
+              <span className="truncate">COMPLETAR SEMANA</span>
             </>
           )}
         </Button>
