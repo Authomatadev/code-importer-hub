@@ -116,8 +116,8 @@ export function ActivityAccordion({
                     )}
                   </div>
                   <p className={cn(
-                    "text-sm text-muted-foreground",
-                    isCompleted && "line-through"
+                    "text-base text-muted-foreground",
+                    isCompleted && "opacity-60"
                   )}>
                     {activity.title}
                   </p>
