@@ -5,3 +5,4 @@ export { WeekCard } from './WeekCard';
 export { ActivityManager } from './ActivityManager';
 export { ActivityForm } from './ActivityForm';
 export { ActivityDayCard } from './ActivityDayCard';
+export { PlanImporter } from './PlanImporter';

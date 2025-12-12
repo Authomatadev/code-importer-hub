@@ -1,0 +1,215 @@
+{
+  "weeks": [
+    {
+      "week_number": 1,
+      "tip_week": {
+        "title": "Bienvenido a la Semana 1",
+        "content": "Esta semana nos enfocaremos en construir una base sólida. Recuerda hidratarte bien y descansar.",
+        "media_url": ""
+      },
+      "tip_month": {
+        "title": "Mes 1: Construyendo la Base",
+        "content": "Durante este primer mes, el objetivo es adaptar tu cuerpo al entrenamiento. No te preocupes por la velocidad.",
+        "media_url": ""
+      },
+      "activities": [
+        {
+          "day_of_week": 0,
+          "title": "Trote Suave de Inicio",
+          "activity_type": "run",
+          "phase": "base_1",
+          "training_type": "trote_largo",
+          "zone": "Z1",
+          "terrain": "plano",
+          "main_work_type": "trote_largo_z1",
+          "warmup_duration_min": 10,
+          "main_work_distance_km": 5,
+          "main_work_duration_min": 35,
+          "total_daily_km": 5,
+          "duration_min": 45,
+          "intensity": 2,
+          "description": "Trote suave para iniciar la semana. Mantén un ritmo conversacional.",
+          "notes": "Si te sientes cansado, alterna con caminata.",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 1,
+          "title": "Descanso Activo",
+          "activity_type": "rest",
+          "phase": "base_1",
+          "training_type": "descanso",
+          "description": "Día de recuperación. Puedes hacer estiramientos suaves o una caminata corta.",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 2,
+          "title": "Intervalos Suaves",
+          "activity_type": "run",
+          "phase": "base_1",
+          "training_type": "intervalo",
+          "zone": "Z2",
+          "terrain": "plano",
+          "main_work_type": "intervalo_zy",
+          "warmup_duration_min": 10,
+          "repetitions": 4,
+          "rep_distance_meters": 400,
+          "rest_between_reps_min": 2,
+          "stretch_before_after": true,
+          "total_daily_km": 6,
+          "duration_min": 50,
+          "intensity": 3,
+          "description": "Intervalos cortos para mejorar tu capacidad aeróbica.",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 3,
+          "title": "Fuerza y Movilidad",
+          "activity_type": "strength",
+          "phase": "base_1",
+          "training_type": "elongaciones",
+          "duration_min": 30,
+          "intensity": 2,
+          "description": "Ejercicios de fortalecimiento para corredores. Enfócate en piernas y core.",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 4,
+          "title": "Trote de Recuperación",
+          "activity_type": "run",
+          "phase": "base_1",
+          "training_type": "trote_largo",
+          "zone": "Z1",
+          "terrain": "plano",
+          "main_work_type": "trote_largo_z1",
+          "warmup_duration_min": 5,
+          "main_work_distance_km": 4,
+          "total_daily_km": 4,
+          "duration_min": 30,
+          "intensity": 1,
+          "description": "Trote muy suave de recuperación activa.",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 5,
+          "title": "Descanso Total",
+          "activity_type": "rest",
+          "phase": "base_1",
+          "training_type": "descanso",
+          "description": "Día de descanso completo. Tu cuerpo necesita recuperarse.",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 6,
+          "title": "Trote Largo de Fin de Semana",
+          "activity_type": "run",
+          "phase": "base_1",
+          "training_type": "trote_largo",
+          "zone": "Z2",
+          "terrain": "plano",
+          "main_work_type": "trote_largo_z2",
+          "warmup_duration_min": 10,
+          "main_work_distance_km": 8,
+          "main_work_duration_min": 55,
+          "total_daily_km": 8,
+          "duration_min": 65,
+          "intensity": 3,
+          "description": "El trote largo de la semana. Mantén un ritmo cómodo y constante.",
+          "notes": "Lleva hidratación si hace calor.",
+          "order_index": 1
+        }
+      ]
+    },
+    {
+      "week_number": 2,
+      "tip_week": {
+        "title": "Semana 2: Consolidando",
+        "content": "Esta semana aumentamos ligeramente el volumen. Escucha a tu cuerpo.",
+        "media_url": ""
+      },
+      "activities": [
+        {
+          "day_of_week": 0,
+          "title": "Trote Base",
+          "activity_type": "run",
+          "phase": "base_1",
+          "training_type": "trote_largo",
+          "zone": "Z2",
+          "terrain": "plano",
+          "main_work_type": "trote_largo_z2",
+          "warmup_duration_min": 10,
+          "main_work_distance_km": 6,
+          "total_daily_km": 6,
+          "duration_min": 50,
+          "intensity": 2,
+          "description": "Trote de base para iniciar la semana.",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 1,
+          "title": "Descanso",
+          "activity_type": "rest",
+          "phase": "base_1",
+          "training_type": "descanso",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 2,
+          "title": "Fartlek",
+          "activity_type": "run",
+          "phase": "base_1",
+          "training_type": "intervalo",
+          "zone": "Z3",
+          "terrain": "plano",
+          "total_daily_km": 7,
+          "duration_min": 55,
+          "intensity": 3,
+          "description": "Variaciones de ritmo durante el trote. Juega con la velocidad.",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 3,
+          "title": "Fuerza",
+          "activity_type": "strength",
+          "phase": "base_1",
+          "duration_min": 35,
+          "intensity": 3,
+          "order_index": 1
+        },
+        {
+          "day_of_week": 4,
+          "title": "Recuperación",
+          "activity_type": "run",
+          "phase": "base_1",
+          "training_type": "trote_largo",
+          "zone": "Z1",
+          "total_daily_km": 4,
+          "duration_min": 30,
+          "intensity": 1,
+          "order_index": 1
+        },
+        {
+          "day_of_week": 5,
+          "title": "Descanso",
+          "activity_type": "rest",
+          "phase": "base_1",
+          "order_index": 1
+        },
+        {
+          "day_of_week": 6,
+          "title": "Trote Largo",
+          "activity_type": "run",
+          "phase": "base_1",
+          "training_type": "trote_largo",
+          "zone": "Z2",
+          "terrain": "plano",
+          "main_work_distance_km": 10,
+          "total_daily_km": 10,
+          "duration_min": 75,
+          "intensity": 3,
+          "description": "Aumentamos la distancia del trote largo.",
+          "order_index": 1
+        }
+      ]
+    }
+  ]
+}
