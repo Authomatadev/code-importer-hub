@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import ShinyText from "@/components/ui/ShinyText";
 import ElectricBorder from "@/components/ui/ElectricBorder";
@@ -55,6 +55,7 @@ export function ActivityAccordion({
   animationDelay = 0
 }: ActivityAccordionProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
   const zone = getZoneByValue(activity.zone);
   const terrain = getTerrainByValue(activity.terrain);
   const trainingType = getTrainingTypeByValue(activity.training_type);
@@ -69,13 +70,22 @@ export function ActivityAccordion({
     const timer = setTimeout(() => setIsLoaded(true), animationDelay * 100);
     return () => clearTimeout(timer);
   }, [animationDelay]);
+  
+  // Scroll to content when accordion opens
+  useEffect(() => {
+    if (isExpanded && contentRef.current) {
+      setTimeout(() => {
+        contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [isExpanded]);
   const handleComplete = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (onMarkComplete && !isCompleted) {
       onMarkComplete(activity.id);
     }
   };
-  return <Collapsible open={isExpanded} onOpenChange={onToggle}>
+  return <Collapsible open={isExpanded} onOpenChange={onToggle} ref={contentRef}>
       <ElectricBorder 
         color="hsl(var(--primary))" 
         speed={1.5} 
