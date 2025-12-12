@@ -138,7 +138,7 @@ export function ActivityAccordion({
                 <ShinyText 
                   text={dayFullNames[activity.day_of_week]}
                   className={cn(
-                    "text-xs sm:text-sm font-semibold",
+                    "text-base sm:text-lg font-semibold",
                     isToday ? "!text-primary" : ""
                   )}
                   speed={4}
