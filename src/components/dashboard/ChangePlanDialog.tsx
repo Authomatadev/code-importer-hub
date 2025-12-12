@@ -129,15 +129,15 @@ export function ChangePlanDialog({ currentPlanId, onPlanChanged }: ChangePlanDia
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Cambiar plan
+        <Button variant="outline" size="sm" className="gap-2">
+          <RefreshCw className="w-4 h-4" />
+          <span className="hidden sm:inline">Cambiar plan</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto">
         <DialogHeader>
-          <DialogTitle className="font-heading text-2xl">Cambiar Plan</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="font-heading text-xl sm:text-2xl">Cambiar Plan</DialogTitle>
+          <DialogDescription className="text-sm">
             Selecciona un nuevo plan. Tu progreso actual será reiniciado.
           </DialogDescription>
         </DialogHeader>
@@ -152,10 +152,10 @@ export function ChangePlanDialog({ currentPlanId, onPlanChanged }: ChangePlanDia
               value={selectedPlanId || undefined}
               onValueChange={(value) => setSelectedPlanId(value)}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full h-12 text-base">
                 <SelectValue placeholder="Seleccionar plan..." />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-[40vh]">
                 {plans.map((plan) => {
                   const isCurrent = currentPlanId === plan.id;
                   return (
@@ -163,6 +163,7 @@ export function ChangePlanDialog({ currentPlanId, onPlanChanged }: ChangePlanDia
                       key={plan.id} 
                       value={plan.id}
                       disabled={isCurrent}
+                      className="py-3"
                     >
                       {plan.distance} - {difficultyLabels[plan.difficulty]} ({plan.total_weeks} sem.)
                       {isCurrent && ' (Actual)'}
@@ -174,13 +175,14 @@ export function ChangePlanDialog({ currentPlanId, onPlanChanged }: ChangePlanDia
           )}
         </div>
 
-        <div className="flex justify-end gap-2">
-          <Button variant="ghost" onClick={() => setOpen(false)}>
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+          <Button variant="ghost" onClick={() => setOpen(false)} className="w-full sm:w-auto">
             Cancelar
           </Button>
           <Button 
             onClick={handleChangePlan} 
             disabled={!selectedPlanId || saving}
+            className="w-full sm:w-auto"
           >
             {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             Confirmar
