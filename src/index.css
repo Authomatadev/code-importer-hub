@@ -344,8 +344,12 @@
   .stagger-5 { animation-delay: 0.5s; }
 
   /* Typography System - Mobile-First Legibility */
-  .text-label {
+  .text-label-sm {
     @apply text-[11px] sm:text-xs;
+  }
+
+  .text-label {
+    @apply text-xs sm:text-sm;
   }
 
   .text-body {

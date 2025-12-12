@@ -50,14 +50,14 @@ export function ActivityDayCard({ dayIndex, activity, onAdd, onEdit }: ActivityD
             <div className="flex flex-wrap justify-center gap-1 mb-1">
               {zone && (
                 <Badge 
-                  className="text-[9px] px-1.5 py-0 h-4 text-white"
+                  className="text-label-sm px-1.5 py-0 h-4 text-white"
                   style={{ backgroundColor: zone.color }}
                 >
                   {zone.value}
                 </Badge>
               )}
               {phase && (
-                <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4">
+                <Badge variant="outline" className="text-label-sm px-1.5 py-0 h-4">
                   {phase.label}
                 </Badge>
               )}

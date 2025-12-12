@@ -120,7 +120,7 @@ export function DayCard({
       {/* Zone badge */}
       {zone && (
         <Badge 
-          className="text-[9px] mt-1 px-1.5 py-0 h-4 text-white"
+          className="text-label-sm mt-1 px-1.5 py-0 h-4 text-white"
           style={{ backgroundColor: zone.color }}
         >
           {zone.value}
@@ -130,7 +130,7 @@ export function DayCard({
       {/* Distance/Duration badge */}
       {(activity?.total_daily_km || activity?.distance_km) && (
         <span className={cn(
-          "text-[10px] font-bold mt-1 transition-all duration-300",
+          "text-label-sm font-bold mt-1 transition-all duration-300",
           isCompleted ? "text-green-500/60 line-through" : "text-primary"
         )}>
           {activity.total_daily_km || activity.distance_km} km
@@ -138,7 +138,7 @@ export function DayCard({
       )}
       {!activity?.total_daily_km && !activity?.distance_km && activity?.duration_min && (
         <span className={cn(
-          "text-[10px] font-bold mt-1 transition-all duration-300",
+          "text-label-sm font-bold mt-1 transition-all duration-300",
           isCompleted ? "text-green-500/60 line-through" : "text-primary"
         )}>
           {activity.duration_min} min
