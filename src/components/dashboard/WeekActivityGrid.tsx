@@ -65,7 +65,7 @@ export function WeekActivityGrid({
   };
   return <div className="space-y-4">
       {/* Week Header with Progress */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mx-0 px-[10px]">
         <div>
           <h3 className="text-foreground font-sans font-extralight text-xl">
             SEMANA {weekNumber}
