@@ -8,6 +8,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { 
   Check, MapPin, Clock, Mountain, Heart, ChevronDown, 
   Repeat, Timer, Watch, Info, Zap 
@@ -118,47 +124,35 @@ export function ActivityAccordion({
         {/* Header - Always visible */}
         <CollapsibleTrigger asChild>
           <div className="p-4 cursor-pointer hover:bg-muted/30 transition-colors">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <ActivityIcon 
-                  type={activity.activity_type} 
-                  size="lg" 
-                  showBackground 
-                />
-                <div className="flex-1 min-w-0">
-                  <p className={cn(
-                    "text-xs font-medium",
-                    isToday ? "text-primary" : "text-muted-foreground"
-                  )}>
-                    {dayFullNames[activity.day_of_week]}
-                  </p>
-                  <h3 className={cn(
-                    "font-heading font-bold text-foreground truncate",
-                    isCompleted && "line-through"
-                  )}>
-                    {activity.title}
-                  </h3>
-                </div>
+            <div className="flex items-center gap-3">
+              {/* Icon */}
+              <ActivityIcon 
+                type={activity.activity_type} 
+                size="lg" 
+                showBackground 
+              />
+              
+              {/* Title and Day - Flex column for better stacking */}
+              <div className="flex-1 min-w-0">
+                <p className={cn(
+                  "text-xs font-medium mb-0.5",
+                  isToday ? "text-primary" : "text-muted-foreground"
+                )}>
+                  {dayFullNames[activity.day_of_week]}
+                </p>
+                <h3 className={cn(
+                  "font-heading font-bold text-foreground leading-tight",
+                  isCompleted && "line-through opacity-70"
+                )}>
+                  {activity.title}
+                </h3>
               </div>
 
-              {/* Quick stats */}
+              {/* Chevron + Check status */}
               <div className="flex items-center gap-2 shrink-0">
-                {distance && (
-                  <Badge variant="secondary" className="text-xs font-bold">
-                    {formatDistance(distance)}
-                  </Badge>
-                )}
-                {zone && (
-                  <Badge 
-                    className="text-xs text-white"
-                    style={{ backgroundColor: zone.color }}
-                  >
-                    {zone.label}
-                  </Badge>
-                )}
                 {isCompleted && (
-                  <div className="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center">
-                    <Check className="w-4 h-4 text-white" />
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <Check className="w-3.5 h-3.5 text-white" />
                   </div>
                 )}
                 <ChevronDown className={cn(
@@ -166,6 +160,42 @@ export function ActivityAccordion({
                   isExpanded && "rotate-180"
                 )} />
               </div>
+            </div>
+
+            {/* Stats row - Below title for better spacing */}
+            <div className="flex flex-wrap items-center gap-2 mt-2 ml-12 sm:ml-14">
+              {distance && (
+                <Badge variant="secondary" className="text-xs font-bold">
+                  {formatDistance(distance)}
+                </Badge>
+              )}
+              {zone && (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge 
+                        className="text-xs text-white cursor-help transition-transform hover:scale-105"
+                        style={{ backgroundColor: zone.color }}
+                      >
+                        {zone.shortLabel}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent 
+                      side="top" 
+                      className="max-w-[250px] text-center"
+                    >
+                      <p className="font-semibold">{zone.label}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{zone.description}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              {activity.duration_min && (
+                <Badge variant="outline" className="text-xs">
+                  <Clock className="w-3 h-3 mr-1" />
+                  {activity.duration_min} min
+                </Badge>
+              )}
             </div>
           </div>
         </CollapsibleTrigger>
