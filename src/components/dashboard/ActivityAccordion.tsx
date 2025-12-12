@@ -187,19 +187,19 @@ export function ActivityAccordion({
               {distance && (
                 <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
                   <div className="text-base font-semibold text-cyan-400">{formatDistance(distance)}</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Distancia</div>
+                  <div className="text-label text-muted-foreground uppercase tracking-wider">Distancia</div>
                 </div>
               )}
               {zone && (
                 <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
                   <div className="text-base font-semibold text-cyan-400">{zone.shortLabel}</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Zona</div>
+                  <div className="text-label text-muted-foreground uppercase tracking-wider">Zona</div>
                 </div>
               )}
               {activity.duration_min && (
                 <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
                   <div className="text-base font-semibold text-cyan-400">{activity.duration_min} min</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Tiempo</div>
+                  <div className="text-label text-muted-foreground uppercase tracking-wider">Tiempo</div>
                 </div>
               )}
               {activity.intensity && (
@@ -207,7 +207,7 @@ export function ActivityAccordion({
                   <div className="text-base font-semibold text-cyan-400">
                     {Array(activity.intensity).fill('⚡').join('')}
                   </div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Intensidad</div>
+                  <div className="text-label text-muted-foreground uppercase tracking-wider">Intensidad</div>
                 </div>
               )}
             </div>
