@@ -73,7 +73,7 @@ export function WeekActivityGrid({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Week Header with Progress */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -103,7 +103,7 @@ export function WeekActivityGrid({
       </div>
 
       {/* Activity Accordion List */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         {daysOrder.map((dayOfWeek, index) => {
           const activity = activityByDay[dayOfWeek];
           const isCompleted = activity ? completedActivityIds.includes(activity.id) : false;
