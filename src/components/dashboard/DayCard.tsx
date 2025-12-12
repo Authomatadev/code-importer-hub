@@ -3,6 +3,7 @@ import { ActivityIcon, ActivityType, getActivityLabel } from "./ActivityIcon";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { getZoneByValue } from "@/lib/activity-constants";
+import { ZoneTooltip } from "./ZoneTooltip";
 
 interface Activity {
   id: string;
@@ -119,12 +120,14 @@ export function DayCard({
 
       {/* Zone badge */}
       {zone && (
-        <Badge 
-          className="text-label-sm mt-1 px-1.5 py-0 h-4 text-white"
-          style={{ backgroundColor: zone.color }}
-        >
-          {zone.value}
-        </Badge>
+        <ZoneTooltip zone={zone}>
+          <Badge 
+            className="text-label-sm mt-1 px-1.5 py-0 h-4 text-white"
+            style={{ backgroundColor: zone.color }}
+          >
+            {zone.icon} {zone.value}
+          </Badge>
+        </ZoneTooltip>
       )}
 
       {/* Distance/Duration badge */}

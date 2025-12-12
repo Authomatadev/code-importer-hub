@@ -6,10 +6,11 @@ import { ActivityIcon, ActivityType, getActivityLabel } from "./ActivityIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Check, MapPin, Clock, Mountain, Heart, ChevronDown, Repeat, Timer, Watch, Info, Zap } from "lucide-react";
 import { getZoneByValue, getTerrainByValue, getTrainingTypeByValue, getPhaseByValue, getMainWorkTypeByValue, GARMIN_INSTRUCTIONS, WARMUP_INFO, STRETCH_REMINDER } from "@/lib/activity-constants";
 import { formatDistance } from "@/lib/format-distance";
+import { ZoneTooltip } from "./ZoneTooltip";
+import { IntensityTooltip } from "./IntensityTooltip";
 interface Activity {
   id: string;
   day_of_week: number;
@@ -134,20 +135,28 @@ export function ActivityAccordion({
                   <div className="text-base font-semibold text-cyan-400">{formatDistance(distance)}</div>
                   <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Distancia</div>
                 </div>}
-              {zone && <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
-                  <div className="text-base font-semibold text-cyan-400">{zone.shortLabel}</div>
-                  <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Zona</div>
-                </div>}
+              {zone && (
+                <ZoneTooltip zone={zone}>
+                  <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                    <div className="text-base font-semibold text-cyan-400">{zone.icon} {zone.shortLabel}</div>
+                    <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Zona</div>
+                  </div>
+                </ZoneTooltip>
+              )}
               {activity.duration_min && <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
                   <div className="text-base font-semibold text-cyan-400">{activity.duration_min} min</div>
                   <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Tiempo</div>
                 </div>}
-              {activity.intensity && <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
-                  <div className="text-base font-semibold text-cyan-400">
-                    {Array(activity.intensity).fill('⚡').join('')}
+              {activity.intensity && (
+                <IntensityTooltip level={activity.intensity}>
+                  <div className="bg-white/5 dark:bg-white/4 border border-white/10 dark:border-white/8 rounded-xl p-2.5 text-center">
+                    <div className="text-base font-semibold text-cyan-400">
+                      {Array(activity.intensity).fill('⚡').join('')}
+                    </div>
+                    <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Intensidad</div>
                   </div>
-                  <div className="text-label-sm text-muted-foreground uppercase tracking-wider">Intensidad</div>
-                </div>}
+                </IntensityTooltip>
+              )}
             </div>
           </div>
         </CollapsibleTrigger>

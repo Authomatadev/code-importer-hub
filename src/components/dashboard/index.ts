@@ -9,3 +9,5 @@ export { ActivityDetail } from './ActivityDetail';
 export { WeekNavigation } from './WeekNavigation';
 export { TipCard } from './TipCard';
 export { ChangePlanDialog } from './ChangePlanDialog';
+export { ZoneTooltip } from './ZoneTooltip';
+export { IntensityTooltip } from './IntensityTooltip';

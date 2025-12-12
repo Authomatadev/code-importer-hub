@@ -19,15 +19,205 @@ export const TRAINING_TYPES = [
   { value: 'elongaciones', label: 'Elongaciones y Técnica', icon: 'Activity' },
 ] as const;
 
-export const ZONES = [
-  { value: 'Z1', label: 'Zona 1', shortLabel: 'Z1', color: 'hsl(var(--chart-2))', icon: '🟢', description: 'Recuperación activa - Ritmo muy suave, conversacional. 50-60% FC máx.' },
-  { value: 'Z2', label: 'Zona 2', shortLabel: 'Z2', color: 'hsl(var(--chart-3))', icon: '🔵', description: 'Resistencia base - Ritmo cómodo, puedes hablar. 60-70% FC máx.' },
-  { value: 'Z3', label: 'Zona 3', shortLabel: 'Z3', color: 'hsl(var(--chart-4))', icon: '🟡', description: 'Tempo - Ritmo moderado, hablar es difícil. 70-80% FC máx.' },
-  { value: 'Z4', label: 'Zona 4', shortLabel: 'Z4', color: 'hsl(var(--chart-5))', icon: '🟠', description: 'Umbral - Ritmo intenso, frases cortas. 80-90% FC máx.' },
-  { value: 'Z5', label: 'Zona 5', shortLabel: 'Z5', color: 'hsl(var(--destructive))', icon: '🔴', description: 'VO2 máx - Esfuerzo máximo, no puedes hablar. 90-100% FC máx.' },
-  { value: 'ZX', label: 'Zona X', shortLabel: 'ZX', color: 'hsl(var(--primary))', icon: '💎', description: 'Zona especial - Trabajo específico de técnica y forma.' },
-  { value: 'ZY', label: 'Umbral', shortLabel: 'ZY', color: 'hsl(var(--accent))', icon: '⚡', description: 'Zona Umbral - Ritmo maratón, sostenible pero exigente. ~85% FC máx.' },
-] as const;
+export interface ZoneInfo {
+  value: string;
+  label: string;
+  shortLabel: string;
+  color: string;
+  icon: string;
+  fcmRange: string;
+  intensity: string;
+  trainingType: string;
+  duration: string;
+  characteristics: string[];
+  benefits: string[];
+  activitiesInPlan: number;
+}
+
+export const ZONES: ZoneInfo[] = [
+  {
+    value: 'Z1',
+    label: 'Zona de Recuperación',
+    shortLabel: 'Z1',
+    color: 'hsl(var(--chart-2))',
+    icon: '🟢',
+    fcmRange: '50-60%',
+    intensity: 'Muy baja',
+    trainingType: 'Recuperación, calentamiento',
+    duration: 'Ilimitada',
+    characteristics: [
+      'Intensidad muy baja y cómoda',
+      'Ritmo de conversación fácil',
+      'Ideal para entrenamientos de recuperación activa'
+    ],
+    benefits: [
+      'Mejora la circulación y la recuperación',
+      'Construye una base aeróbica sólida',
+      'Reduce el riesgo de lesiones'
+    ],
+    activitiesInPlan: 19
+  },
+  {
+    value: 'Z2',
+    label: 'Zona Aeróbica Base',
+    shortLabel: 'Z2',
+    color: 'hsl(var(--chart-3))',
+    icon: '🔵',
+    fcmRange: '60-70%',
+    intensity: 'Moderada',
+    trainingType: 'Rodajes, base aeróbica',
+    duration: '1-3 horas',
+    characteristics: [
+      'Intensidad moderada',
+      'Ritmo sostenible durante períodos prolongados',
+      'El cuerpo utiliza principalmente grasas como combustible'
+    ],
+    benefits: [
+      'Construcción de base aeróbica',
+      'Mejora de la economía de carrera',
+      'Aumento de mitocondrias en células musculares',
+      'Ideal para rodajes y entrenamientos de volumen'
+    ],
+    activitiesInPlan: 55
+  },
+  {
+    value: 'Z3',
+    label: 'Zona de Ritmo Sostenido',
+    shortLabel: 'Z3',
+    color: 'hsl(var(--chart-4))',
+    icon: '🟡',
+    fcmRange: '70-80%',
+    intensity: 'Moderada-alta',
+    trainingType: 'Ritmo sostenido',
+    duration: '30-60 min',
+    characteristics: [
+      'Intensidad moderada-alta',
+      'Ritmo que puedes mantener de 30 minutos a 1 hora',
+      'Respiración más profunda y controlada',
+      'Punto de transición entre aeróbico y anaeróbico'
+    ],
+    benefits: [
+      'Mejora la resistencia aeróbica',
+      'Aumenta la velocidad de crucero',
+      'Desarrollo de capacidad cardiovascular',
+      'Mejora la economía de carrera a ritmos más rápidos'
+    ],
+    activitiesInPlan: 2
+  },
+  {
+    value: 'Z4',
+    label: 'Zona de Umbral Anaeróbico',
+    shortLabel: 'Z4',
+    color: 'hsl(var(--chart-5))',
+    icon: '🟠',
+    fcmRange: '80-90%',
+    intensity: 'Alta',
+    trainingType: 'Umbral anaeróbico',
+    duration: '20-60 min',
+    characteristics: [
+      'Intensidad alta',
+      'Corresponde al "umbral de lactato"',
+      'Ritmo que podrías mantener aproximadamente 1 hora',
+      'Punto donde el cuerpo comienza a acumular lactato'
+    ],
+    benefits: [
+      'Mejora la velocidad de resistencia',
+      'Aumenta el umbral de lactato',
+      'Mejora la capacidad de mantener ritmos rápidos',
+      'Desarrollo de potencia aeróbica'
+    ],
+    activitiesInPlan: 5
+  },
+  {
+    value: 'Z5',
+    label: 'Zona VO2 Máximo',
+    shortLabel: 'Z5',
+    color: 'hsl(var(--destructive))',
+    icon: '🔴',
+    fcmRange: '90-100%',
+    intensity: 'Muy alta',
+    trainingType: 'VO2 máximo',
+    duration: '3-8 min',
+    characteristics: [
+      'Intensidad muy alta',
+      'Ritmo que solo puedes mantener 3-8 minutos',
+      'Requiere recuperación completa entre repeticiones',
+      'Máxima captación de oxígeno'
+    ],
+    benefits: [
+      'Aumenta el VO2 máximo',
+      'Mejora la velocidad máxima',
+      'Desarrollo de potencia anaeróbica',
+      'Mejora del rendimiento en esfuerzos cortos intensos'
+    ],
+    activitiesInPlan: 3
+  },
+  {
+    value: 'ZX',
+    label: 'Zona de Esfuerzo Mixto',
+    shortLabel: 'ZX',
+    color: 'hsl(var(--primary))',
+    icon: '💎',
+    fcmRange: 'Variable',
+    intensity: 'Variable',
+    trainingType: 'Fartlek, ritmo variable',
+    duration: 'Variable',
+    characteristics: [
+      'Intensidad variable o de transición',
+      'Puede incluir cambios de ritmo',
+      'Entrenamiento de fartlek o ritmo variable'
+    ],
+    benefits: [
+      'Desarrollo de adaptabilidad',
+      'Mejora de la capacidad de cambio de ritmo',
+      'Entrenamiento más dinámico'
+    ],
+    activitiesInPlan: 18
+  },
+  {
+    value: 'ZY',
+    label: 'Zona de Umbral',
+    shortLabel: 'ZY',
+    color: 'hsl(var(--accent))',
+    icon: '⚡',
+    fcmRange: '80-90%',
+    intensity: 'Alta',
+    trainingType: 'Umbral/Intervalos',
+    duration: '20-60 min',
+    characteristics: [
+      'Intensidad alta y sostenida',
+      'Corresponde al umbral de lactato',
+      'Ritmo que podrías mantener aproximadamente 1 hora',
+      'Punto donde el cuerpo comienza a acumular lactato'
+    ],
+    benefits: [
+      'Mejora la velocidad de resistencia',
+      'Aumenta el umbral de lactato',
+      'Mejora la capacidad de mantener ritmos rápidos',
+      'Desarrollo de potencia aeróbica'
+    ],
+    activitiesInPlan: 40
+  }
+];
+
+export interface IntensityLevel {
+  level: number;
+  label: string;
+  description: string;
+  effort: string;
+}
+
+export const INTENSITY_LEVELS: IntensityLevel[] = [
+  { level: 1, label: 'Muy Suave', description: 'Esfuerzo mínimo, recuperación activa', effort: 'Puedes mantener una conversación fácilmente' },
+  { level: 2, label: 'Suave', description: 'Esfuerzo ligero, ritmo cómodo', effort: 'Puedes hablar con frases completas' },
+  { level: 3, label: 'Moderado', description: 'Esfuerzo considerable, ritmo de trabajo', effort: 'Hablar cuesta un poco más' },
+  { level: 4, label: 'Intenso', description: 'Esfuerzo alto, ritmo exigente', effort: 'Solo puedes decir frases cortas' },
+  { level: 5, label: 'Máximo', description: 'Esfuerzo total, al límite', effort: 'No puedes hablar' }
+];
+
+export function getIntensityByLevel(level: number | null | undefined): IntensityLevel | undefined {
+  return INTENSITY_LEVELS.find(i => i.level === level);
+}
 
 export const TERRAINS = [
   { value: 'plano', label: 'Terreno Plano' },

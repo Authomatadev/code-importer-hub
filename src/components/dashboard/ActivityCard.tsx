@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Check, MapPin, Clock, Mountain, Heart } from "lucide-react";
 import { getZoneByValue, getTerrainByValue, getTrainingTypeByValue } from "@/lib/activity-constants";
+import { ZoneTooltip } from "./ZoneTooltip";
 
 interface Activity {
   id: string;
@@ -162,12 +163,14 @@ export function ActivityCard({
               <Heart className="w-3.5 h-3.5" style={{ color: zone.color }} />
             </div>
             <span className="text-sm text-muted-foreground">Zona:</span>
-            <Badge 
-              className="text-xs text-white font-bold"
-              style={{ backgroundColor: zone.color }}
-            >
-              {zone.label}
-            </Badge>
+            <ZoneTooltip zone={zone}>
+              <Badge 
+                className="text-xs text-white font-bold"
+                style={{ backgroundColor: zone.color }}
+              >
+                {zone.icon} {zone.label}
+              </Badge>
+            </ZoneTooltip>
           </div>
         )}
 
