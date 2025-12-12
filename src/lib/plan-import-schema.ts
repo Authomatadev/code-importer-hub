@@ -3,7 +3,8 @@ import { z } from 'zod';
 // Activity import schema matching database structure
 export const ActivityImportSchema = z.object({
   // Database constraint requires 1-7 (Monday=1, Sunday=7)
-  day_of_week: z.number().min(1).max(7),
+  // Auto-transform: if value is 0-6, convert to 1-7
+  day_of_week: z.number().min(0).max(7).transform((val) => val === 0 ? 7 : (val <= 6 ? val : val)),
   title: z.string().min(1, 'Título es requerido'),
   activity_type: z.enum(['run', 'walk', 'strength', 'rest', 'stretch', 'cross_training']).optional().default('run'),
   order_index: z.number().optional().default(1),
