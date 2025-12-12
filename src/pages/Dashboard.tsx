@@ -7,7 +7,6 @@ import type { User as SupabaseUser } from "@supabase/supabase-js";
 import logoImage from "@/assets/logo-caja-los-andes.png";
 import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard, ChangePlanDialog } from "@/components/dashboard";
 import { useToast } from "@/hooks/use-toast";
-
 interface UserProfile {
   id: string;
   full_name: string | null;
@@ -17,19 +16,16 @@ interface UserProfile {
   start_date: string | null;
   current_plan_id: string | null;
 }
-
 interface Plan {
   id: string;
   name: string;
   total_weeks: number;
 }
-
 interface Tip {
   title?: string;
   content?: string;
   media_url?: string;
 }
-
 interface Week {
   id: string;
   week_number: number;
@@ -37,7 +33,6 @@ interface Week {
   tip_week: Tip | null;
   tip_month: Tip | null;
 }
-
 interface Activity {
   id: string;
   day_of_week: number;
@@ -63,10 +58,11 @@ interface Activity {
   notes?: string | null;
   media_url?: string | null;
 }
-
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [plan, setPlan] = useState<Plan | null>(null);
@@ -74,57 +70,58 @@ export default function Dashboard() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [completedActivityIds, setCompletedActivityIds] = useState<string[]>([]);
   const [completedWeeks, setCompletedWeeks] = useState<number[]>([]);
-  const [currentWeekTips, setCurrentWeekTips] = useState<{ tip_week: Tip | null; tip_month: Tip | null }>({ tip_week: null, tip_month: null });
+  const [currentWeekTips, setCurrentWeekTips] = useState<{
+    tip_week: Tip | null;
+    tip_month: Tip | null;
+  }>({
+    tip_week: null,
+    tip_month: null
+  });
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: {
+          session
+        }
+      } = await supabase.auth.getSession();
       if (!session) {
         navigate("/auth");
         return;
       }
-
       setUser(session.user);
 
       // Fetch user profile
-      const { data: profileData } = await supabase
-        .from("user_profiles")
-        .select("*")
-        .eq("id", session.user.id)
-        .maybeSingle();
-
+      const {
+        data: profileData
+      } = await supabase.from("user_profiles").select("*").eq("id", session.user.id).maybeSingle();
       if (profileData) {
         setProfile(profileData);
 
         // Fetch plan if user has one
         if (profileData.current_plan_id) {
-          const { data: planData } = await supabase
-            .from("plans")
-            .select("id, name, total_weeks")
-            .eq("id", profileData.current_plan_id)
-            .maybeSingle();
-
+          const {
+            data: planData
+          } = await supabase.from("plans").select("id, name, total_weeks").eq("id", profileData.current_plan_id).maybeSingle();
           if (planData) {
             setPlan(planData);
           }
         }
       }
-
       setIsLoading(false);
     };
-
     checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: {
+        subscription
+      }
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
         navigate("/auth");
       } else {
         setUser(session.user);
       }
     });
-
     return () => subscription.unsubscribe();
   }, [navigate]);
 
@@ -134,16 +131,15 @@ export default function Dashboard() {
       if (!plan) return;
 
       // Get the week for this plan and week number
-      const { data: weekData } = await supabase
-        .from("weeks")
-        .select("id, week_number, tip_week, tip_month")
-        .eq("plan_id", plan.id)
-        .eq("week_number", currentWeekNumber)
-        .maybeSingle();
-
+      const {
+        data: weekData
+      } = await supabase.from("weeks").select("id, week_number, tip_week, tip_month").eq("plan_id", plan.id).eq("week_number", currentWeekNumber).maybeSingle();
       if (!weekData) {
         setActivities([]);
-        setCurrentWeekTips({ tip_week: null, tip_month: null });
+        setCurrentWeekTips({
+          tip_week: null,
+          tip_month: null
+        });
         return;
       }
 
@@ -154,30 +150,23 @@ export default function Dashboard() {
       });
 
       // Get activities for this week with all fields
-      const { data: activitiesData } = await supabase
-        .from("activities")
-        .select("id, day_of_week, title, description, activity_type, distance_km, duration_min, intensity, zone, terrain, training_type, total_daily_km, phase, warmup_duration_min, main_work_type, main_work_distance_km, main_work_duration_min, repetitions, rep_distance_meters, rest_between_reps_min, stretch_before_after, notes, media_url")
-        .eq("week_id", weekData.id)
-        .order("day_of_week");
-
+      const {
+        data: activitiesData
+      } = await supabase.from("activities").select("id, day_of_week, title, description, activity_type, distance_km, duration_min, intensity, zone, terrain, training_type, total_daily_km, phase, warmup_duration_min, main_work_type, main_work_distance_km, main_work_duration_min, repetitions, rep_distance_meters, rest_between_reps_min, stretch_before_after, notes, media_url").eq("week_id", weekData.id).order("day_of_week");
       if (activitiesData) {
         setActivities(activitiesData as Activity[]);
       }
 
       // Get completed activities for this user
       if (user) {
-        const { data: logsData } = await supabase
-          .from("activity_logs")
-          .select("activity_id")
-          .eq("user_id", user.id)
-          .eq("completed", true);
-
+        const {
+          data: logsData
+        } = await supabase.from("activity_logs").select("activity_id").eq("user_id", user.id).eq("completed", true);
         if (logsData) {
           setCompletedActivityIds(logsData.map(log => log.activity_id));
         }
       }
     };
-
     fetchWeekActivities();
   }, [plan, currentWeekNumber, user]);
 
@@ -187,66 +176,49 @@ export default function Dashboard() {
       if (!plan || !user) return;
 
       // Get all weeks for this plan
-      const { data: weeksData } = await supabase
-        .from("weeks")
-        .select("id, week_number")
-        .eq("plan_id", plan.id);
-
+      const {
+        data: weeksData
+      } = await supabase.from("weeks").select("id, week_number").eq("plan_id", plan.id);
       if (!weeksData) return;
 
       // Get all completed activity logs
-      const { data: logsData } = await supabase
-        .from("activity_logs")
-        .select("activity_id")
-        .eq("user_id", user.id)
-        .eq("completed", true);
-
+      const {
+        data: logsData
+      } = await supabase.from("activity_logs").select("activity_id").eq("user_id", user.id).eq("completed", true);
       if (!logsData) return;
-
       const completedActivitySet = new Set(logsData.map(log => log.activity_id));
 
       // Check each week for completion
       const completedWeekNumbers: number[] = [];
-
       for (const week of weeksData) {
-        const { data: weekActivities } = await supabase
-          .from("activities")
-          .select("id, activity_type")
-          .eq("week_id", week.id);
-
+        const {
+          data: weekActivities
+        } = await supabase.from("activities").select("id, activity_type").eq("week_id", week.id);
         if (weekActivities) {
           const nonRestActivities = weekActivities.filter(a => a.activity_type !== 'rest');
-          const allCompleted = nonRestActivities.length > 0 && 
-            nonRestActivities.every(a => completedActivitySet.has(a.id));
-          
+          const allCompleted = nonRestActivities.length > 0 && nonRestActivities.every(a => completedActivitySet.has(a.id));
           if (allCompleted) {
             completedWeekNumbers.push(week.week_number);
           }
         }
       }
-
       setCompletedWeeks(completedWeekNumbers);
     };
-
     fetchCompletedWeeks();
   }, [plan, user, completedActivityIds]);
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
   };
-
   const handleMarkComplete = async (activityId: string) => {
     if (!user) return;
-
-    const { error } = await supabase
-      .from("activity_logs")
-      .insert({
-        user_id: user.id,
-        activity_id: activityId,
-        completed: true
-      });
-
+    const {
+      error
+    } = await supabase.from("activity_logs").insert({
+      user_id: user.id,
+      activity_id: activityId,
+      completed: true
+    });
     if (error) {
       toast({
         title: "Error",
@@ -255,22 +227,17 @@ export default function Dashboard() {
       });
       return;
     }
-
     setCompletedActivityIds(prev => [...prev, activityId]);
     toast({
       title: "¡Excelente! 💪",
       description: "Actividad completada"
     });
   };
-
   const handleCompleteWeek = async () => {
     if (!user) return;
-    
+
     // Get all non-rest activities that aren't completed
-    const uncompletedActivities = activities.filter(
-      a => a.activity_type !== 'rest' && !completedActivityIds.includes(a.id)
-    );
-    
+    const uncompletedActivities = activities.filter(a => a.activity_type !== 'rest' && !completedActivityIds.includes(a.id));
     if (uncompletedActivities.length === 0) {
       toast({
         title: "¡Semana ya completada!",
@@ -285,11 +252,9 @@ export default function Dashboard() {
       activity_id: activity.id,
       completed: true
     }));
-
-    const { error } = await supabase
-      .from("activity_logs")
-      .insert(insertData);
-
+    const {
+      error
+    } = await supabase.from("activity_logs").insert(insertData);
     if (error) {
       toast({
         title: "Error",
@@ -298,38 +263,29 @@ export default function Dashboard() {
       });
       return;
     }
-
-    setCompletedActivityIds(prev => [
-      ...prev, 
-      ...uncompletedActivities.map(a => a.id)
-    ]);
-    
+    setCompletedActivityIds(prev => [...prev, ...uncompletedActivities.map(a => a.id)]);
     toast({
       title: "🎉 ¡SEMANA COMPLETADA!",
       description: `${uncompletedActivities.length} actividades marcadas como completadas`
     });
   };
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+    return <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+      </div>;
   }
-
   const getDifficultyName = (difficulty: number | null) => {
     switch (difficulty) {
-      case 1: return "Principiante";
-      case 2: return "Intermedio";
-      default: return "No seleccionado";
+      case 1:
+        return "Principiante";
+      case 2:
+        return "Intermedio";
+      default:
+        return "No seleccionado";
     }
   };
-
   const hasPlan = plan && plan.total_weeks > 0;
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -370,10 +326,7 @@ export default function Dashboard() {
                 </p>
               </div>
             </div>
-            <ChangePlanDialog 
-              currentPlanId={profile?.current_plan_id || null}
-              onPlanChanged={() => window.location.reload()}
-            />
+            <ChangePlanDialog currentPlanId={profile?.current_plan_id || null} onPlanChanged={() => window.location.reload()} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -392,61 +345,32 @@ export default function Dashboard() {
             <div className="bg-muted rounded-xl p-4">
               <p className="text-sm text-muted-foreground mb-1">Fecha de inicio</p>
               <p className="font-heading text-2xl font-bold text-foreground">
-                {profile?.start_date 
-                  ? new Date(profile.start_date).toLocaleDateString("es-CL")
-                  : "No iniciado"}
+                {profile?.start_date ? new Date(profile.start_date).toLocaleDateString("es-CL") : "No iniciado"}
               </p>
             </div>
           </div>
         </div>
 
         {/* Week View or Coming Soon */}
-        {hasPlan ? (
-          <div className="space-y-6">
+        {hasPlan ? <div className="space-y-6">
             {/* Week Navigation */}
-            <WeekNavigation
-              currentWeek={currentWeekNumber}
-              totalWeeks={plan.total_weeks}
-              completedWeeks={completedWeeks}
-              onWeekChange={setCurrentWeekNumber}
-            />
+            <WeekNavigation currentWeek={currentWeekNumber} totalWeeks={plan.total_weeks} completedWeeks={completedWeeks} onWeekChange={setCurrentWeekNumber} />
 
-{/* Tips Section */}
-            {(currentWeekTips.tip_week || currentWeekTips.tip_month) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TipCard 
-                  tip={currentWeekTips.tip_week} 
-                  type="week" 
-                  weekNumber={currentWeekNumber} 
-                />
-                <TipCard 
-                  tip={currentWeekTips.tip_month} 
-                  type="month" 
-                />
-              </div>
-            )}
+        {/* Tips Section */}
+            {(currentWeekTips.tip_week || currentWeekTips.tip_month) && <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <TipCard tip={currentWeekTips.tip_week} type="week" weekNumber={currentWeekNumber} />
+                <TipCard tip={currentWeekTips.tip_month} type="month" />
+              </div>}
 
             {/* Week Activities */}
-            <div className="bg-card border border-border rounded-2xl p-6">
-              {activities.length > 0 ? (
-                <WeekActivityGrid
-                  weekNumber={currentWeekNumber}
-                  activities={activities}
-                  completedActivityIds={completedActivityIds}
-                  onMarkComplete={handleMarkComplete}
-                  onCompleteWeek={handleCompleteWeek}
-                />
-              ) : (
-                <div className="text-center py-8">
+            <div className="bg-card border border-border rounded-2xl p-6 px-[7px]">
+              {activities.length > 0 ? <WeekActivityGrid weekNumber={currentWeekNumber} activities={activities} completedActivityIds={completedActivityIds} onMarkComplete={handleMarkComplete} onCompleteWeek={handleCompleteWeek} /> : <div className="text-center py-8">
                   <p className="text-muted-foreground">
                     No hay actividades programadas para esta semana.
                   </p>
-                </div>
-              )}
+                </div>}
             </div>
-          </div>
-        ) : (
-          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center">
+          </div> : <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center">
             <h3 className="font-heading text-2xl font-bold text-foreground mb-2">
               🚧 En construcción
             </h3>
@@ -455,9 +379,7 @@ export default function Dashboard() {
               <br />
               ¡Prepárate para conquistar el Maratón de Santiago 2026!
             </p>
-          </div>
-        )}
+          </div>}
       </main>
-    </div>
-  );
+    </div>;
 }
