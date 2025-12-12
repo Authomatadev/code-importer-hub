@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import ShinyText from "@/components/ui/ShinyText";
 import { ActivityIcon, ActivityType, getActivityLabel } from "./ActivityIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -134,12 +135,14 @@ export function ActivityAccordion({
               
               {/* Title and Day - Flex column for better stacking */}
               <div className="flex-1 min-w-0">
-                <p className={cn(
-                  "text-[10px] sm:text-xs font-medium mb-0.5",
-                  isToday ? "text-primary" : "text-muted-foreground"
-                )}>
-                  {dayFullNames[activity.day_of_week]}
-                </p>
+                <ShinyText 
+                  text={dayFullNames[activity.day_of_week]}
+                  className={cn(
+                    "text-xs sm:text-sm font-semibold",
+                    isToday ? "!text-primary" : ""
+                  )}
+                  speed={4}
+                />
                 <h3 className={cn(
                   "font-heading font-semibold text-sm sm:text-base text-foreground leading-tight truncate",
                   isCompleted && "line-through opacity-70"
