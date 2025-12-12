@@ -1,0 +1,1 @@
+UPDATE plans SET total_weeks = 24 WHERE distance = '42k' AND difficulty = 2;
