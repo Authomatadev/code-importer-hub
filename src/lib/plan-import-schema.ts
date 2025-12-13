@@ -1,10 +1,19 @@
 import { z } from 'zod';
 
+// Helper to convert meters to km if value seems to be in meters
+const normalizeDistanceToKm = (val: number | undefined) => {
+  if (val === undefined || val === null) return undefined;
+  // If value is small (< 1) but clearly meant to be km (like 0.5km), keep it
+  // If value is large (>= 100), assume it's meters and convert
+  // Values between 1-100 are ambiguous, assume km
+  return val >= 100 ? val / 1000 : val;
+};
+
 // Activity import schema matching database structure
 export const ActivityImportSchema = z.object({
   // Database constraint requires 1-7 (Monday=1, Sunday=7)
-  // Auto-transform: if value is 0-6, convert to 1-7
-  day_of_week: z.number().min(0).max(7).transform((val) => val === 0 ? 7 : (val <= 6 ? val : val)),
+  // JSON may use 0=Sunday (JS style), transform: 0→7, 1-6 stay as-is
+  day_of_week: z.number().min(0).max(7).transform((val) => val === 0 ? 7 : val),
   title: z.string().min(1, 'Título es requerido'),
   activity_type: z.enum(['run', 'walk', 'strength', 'rest', 'stretch', 'cross_training']).optional().default('run'),
   order_index: z.number().optional().default(1),
@@ -17,7 +26,7 @@ export const ActivityImportSchema = z.object({
   zone: z.string().optional(),
   terrain: z.string().optional(),
   main_work_type: z.string().optional(),
-  main_work_distance_km: z.number().optional(),
+  main_work_distance_km: z.number().optional().transform(normalizeDistanceToKm),
   main_work_duration_min: z.number().optional(),
   
   // Warmup
@@ -30,9 +39,9 @@ export const ActivityImportSchema = z.object({
   stretch_before_after: z.boolean().optional().default(true),
   
   // Totals
-  distance_km: z.number().optional(),
+  distance_km: z.number().optional().transform(normalizeDistanceToKm),
   duration_min: z.number().optional(),
-  total_daily_km: z.number().optional(),
+  total_daily_km: z.number().optional().transform(normalizeDistanceToKm),
   intensity: z.number().min(1).max(5).optional(),
   
   // Content
