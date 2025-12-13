@@ -314,7 +314,8 @@ export default function Dashboard() {
 
         {/* Profile Card - Collapsible */}
         <Collapsible className="mb-8">
-          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6">
+          <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-2xl">
+          <div className="bg-card rounded-2xl p-4 sm:p-6">
             <div className="flex items-center justify-between gap-3">
               <CollapsibleTrigger className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 text-left">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
@@ -368,6 +369,7 @@ export default function Dashboard() {
               </div>
             </CollapsibleContent>
           </div>
+          </ElectricBorder>
         </Collapsible>
 
         {/* Week View or Coming Soon */}
