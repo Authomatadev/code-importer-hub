@@ -28,7 +28,16 @@ interface DayCardProps {
   onToggleComplete?: (activityId: string) => void;
 }
 
-const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+// day_of_week: 1=Lunes, 2=Martes, ... 7=Domingo (formato BD)
+const dayNames: Record<number, string> = {
+  1: "Lun",
+  2: "Mar", 
+  3: "Mié",
+  4: "Jue",
+  5: "Vie",
+  6: "Sáb",
+  7: "Dom"
+};
 
 export function DayCard({ 
   dayNumber, 
@@ -159,5 +168,7 @@ export function DayCard({
 }
 
 export function getDayName(dayOfWeek: number): string {
+  // Soporta formato 1-7 (BD) y 0-6 (JS Date.getDay())
+  if (dayOfWeek === 0) return dayNames[7]; // Domingo en formato JS
   return dayNames[dayOfWeek] || "—";
 }
