@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import ShinyText from "@/components/ui/ShinyText";
 import ElectricBorder from "@/components/ui/ElectricBorder";
+import StarBorder from "@/components/ui/StarBorder";
 import { ActivityIcon, ActivityType, getActivityLabel } from "./ActivityIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -90,7 +91,8 @@ export function ActivityAccordion({
     }
   };
   return <Collapsible open={isExpanded} onOpenChange={onToggle} ref={contentRef}>
-      <div className={cn("w-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500", isToday && "ring-2 ring-primary/50", isCompleted && "opacity-80", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
+      <StarBorder color="hsl(207, 55%, 48%)" speed="6s" thickness={1}>
+      <div className={cn("w-full bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-2xl p-5 shadow-2xl transition-all duration-500", isToday && "ring-2 ring-primary/50", isCompleted && "opacity-80", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
         {/* Header - Always visible */}
         <CollapsibleTrigger asChild>
           <div className="cursor-pointer">
@@ -309,6 +311,7 @@ export function ActivityAccordion({
           </div>
         </CollapsibleContent>
       </div>
+      </StarBorder>
     </Collapsible>;
 }
 
@@ -325,7 +328,8 @@ export function RestDayAccordion({
     const timer = setTimeout(() => setIsLoaded(true), animationDelay * 100);
     return () => clearTimeout(timer);
   }, [animationDelay]);
-  return <div className={cn("w-full bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 border border-border/20 rounded-2xl p-5 shadow-2xl transition-all duration-500", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
+  return <StarBorder color="hsl(207, 55%, 48%)" speed="6s" thickness={1}>
+    <div className={cn("w-full bg-gradient-to-br from-slate-900 to-slate-950 dark:from-slate-900 dark:to-slate-950 rounded-2xl p-5 shadow-2xl transition-all duration-500", isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
       {/* Header Row */}
       <div className="flex items-start gap-3">
         {/* Icon */}
@@ -349,5 +353,6 @@ export function RestDayAccordion({
         <div className="text-2xl mb-1">😴</div>
         <div className="text-sm text-muted-foreground">Recuperación activa</div>
       </div>
-    </div>;
+    </div>
+  </StarBorder>;
 }
