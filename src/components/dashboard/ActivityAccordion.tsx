@@ -121,7 +121,7 @@ export function ActivityAccordion({
                 {isCompleted && <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white shrink-0">
                     <Check className="w-4 h-4" />
                   </div>}
-                <ChevronDown className={cn("w-5 h-5 text-muted-foreground transition-transform duration-300", isExpanded && "rotate-180")} />
+                <ChevronDown className={cn("w-6 h-6 text-primary transition-transform duration-300", isExpanded && "rotate-180")} />
               </div>
             </div>
 
