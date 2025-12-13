@@ -15,7 +15,6 @@ const StarBorder: React.FC<StarBorderProps> = ({
   className = '',
   color = 'hsl(207, 55%, 48%)',
   speed = '6s',
-  thickness = 1,
   children,
   ...rest
 }) => {
@@ -28,16 +27,14 @@ const StarBorder: React.FC<StarBorderProps> = ({
       <div
         className="border-gradient-bottom"
         style={{
-          background: `radial-gradient(circle, ${color}, transparent 10%)`,
-          height: `${100 / thickness}%`,
+          background: `radial-gradient(circle, ${color}, transparent 20%)`,
           animationDuration: speed,
         }}
       />
       <div
         className="border-gradient-top"
         style={{
-          background: `radial-gradient(circle, ${color}, transparent 10%)`,
-          height: `${100 / thickness}%`,
+          background: `radial-gradient(circle, ${color}, transparent 20%)`,
           animationDuration: speed,
         }}
       />
