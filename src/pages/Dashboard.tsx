@@ -322,7 +322,7 @@ export default function Dashboard() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h2 className="font-heading text-base sm:text-lg font-bold text-foreground">
+                    <h2 className="text-base sm:text-lg font-bold text-foreground font-sans">
                       Tu Plan
                     </h2>
                     <div className="flex items-center gap-1.5">
