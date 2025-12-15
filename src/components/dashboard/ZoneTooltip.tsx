@@ -21,8 +21,11 @@ export function ZoneTooltip({ zone, children }: ZoneTooltipProps) {
           <div className="cursor-help">{children}</div>
         </TooltipTrigger>
         <TooltipContent 
-          className="max-w-xs p-4 space-y-3 bg-popover border border-border shadow-xl"
-          side="top"
+          className="max-w-xs p-4 space-y-3 bg-popover border border-border shadow-xl z-[9999]"
+          side="right"
+          sideOffset={8}
+          collisionPadding={16}
+          avoidCollisions={true}
         >
           {/* Header */}
           <div className="flex items-center gap-2">
