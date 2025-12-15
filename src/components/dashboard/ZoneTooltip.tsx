@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { ZoneInfo } from "@/lib/activity-constants";
+import { cn } from "@/lib/utils";
 
 interface ZoneTooltipProps {
   zone: ZoneInfo;
@@ -14,11 +15,31 @@ interface ZoneTooltipProps {
 }
 
 export function ZoneTooltip({ zone, children }: ZoneTooltipProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="cursor-help">{children}</div>
+          <div 
+            className={cn(
+              "cursor-help relative group",
+              // Animación de pulso sutil para indicar interactividad
+              "after:absolute after:inset-0 after:rounded-xl after:border-2 after:border-transparent",
+              "hover:after:border-primary/50 hover:after:animate-pulse",
+              "transition-all duration-300 hover:scale-[1.02]"
+            )}
+            onClick={handleClick}
+            onMouseDown={handleClick}
+          >
+            {/* Indicador de info */}
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary/80 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+              <span className="text-[10px] text-primary-foreground font-bold">i</span>
+            </div>
+            {children}
+          </div>
         </TooltipTrigger>
         <TooltipContent 
           className="max-w-xs p-4 space-y-3 bg-popover border border-border shadow-xl z-[9999]"
