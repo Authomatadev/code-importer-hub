@@ -46,7 +46,16 @@ interface ActivityAccordionProps {
   onMarkComplete?: (activityId: string) => void;
   animationDelay?: number;
 }
-const dayFullNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+// Database uses 1-7 format (Monday=1, Sunday=7)
+const dayFullNames: Record<number, string> = {
+  1: "Lunes",
+  2: "Martes", 
+  3: "Miércoles",
+  4: "Jueves",
+  5: "Viernes",
+  6: "Sábado",
+  7: "Domingo"
+};
 export function ActivityAccordion({
   activity,
   isToday = false,
