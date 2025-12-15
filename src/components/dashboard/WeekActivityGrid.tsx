@@ -37,7 +37,17 @@ interface WeekActivityGridProps {
   onMarkComplete?: (activityId: string) => void;
   onCompleteWeek?: () => void;
 }
-const dayFullNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+// Database uses 1-7 format (Monday=1, Sunday=7)
+const dayFullNames: Record<number, string> = {
+  1: "Lunes",
+  2: "Martes", 
+  3: "Miércoles",
+  4: "Jueves",
+  5: "Viernes",
+  6: "Sábado",
+  7: "Domingo"
+};
+
 export function WeekActivityGrid({
   weekNumber,
   activities,
@@ -46,10 +56,15 @@ export function WeekActivityGrid({
   onCompleteWeek
 }: WeekActivityGridProps) {
   const [expandedActivityId, setExpandedActivityId] = useState<string | null>(null);
-  const today = new Date().getDay();
-  const daysOrder = [1, 2, 3, 4, 5, 6, 0]; // Monday to Sunday
+  
+  // Convert JS day (0=Sunday) to DB format (1=Monday, 7=Sunday)
+  const jsDay = new Date().getDay();
+  const today = jsDay === 0 ? 7 : jsDay;
+  
+  // Days in DB format: Monday=1 through Sunday=7
+  const daysOrder = [1, 2, 3, 4, 5, 6, 7];
 
-  // Create activity map by day
+  // Create activity map by day (using DB format 1-7)
   const activityByDay: Record<number, Activity> = {};
   activities.forEach(activity => {
     activityByDay[activity.day_of_week] = activity;
