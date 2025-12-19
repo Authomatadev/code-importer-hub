@@ -1,11 +1,11 @@
 import { Achievement, UserAchievement, BADGE_COLORS, CATEGORY_LABELS } from "@/lib/achievements";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Download, Share2, Check, Lock } from "lucide-react";
+import { Download, Share2, Check, Lock, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRef } from "react";
 import { toPng } from "html-to-image";
 import { AchievementCard } from "./AchievementCard";
+import { createPortal } from "react-dom";
 
 interface MedalDetailProps {
   achievement: Achievement | null;
@@ -27,7 +27,7 @@ export function MedalDetail({
   const cardRef = useRef<HTMLDivElement>(null);
   const isUnlocked = !!userAchievement;
   
-  if (!achievement) return null;
+  if (!achievement || !isOpen) return null;
   
   const colorClass = BADGE_COLORS[achievement.badge_color] || BADGE_COLORS.primary;
   
@@ -60,7 +60,6 @@ export function MedalDetail({
         backgroundColor: '#0F0F0F',
       });
       
-      // Convert data URL to blob
       const response = await fetch(dataUrl);
       const blob = await response.blob();
       const file = new File([blob], 'logro.png', { type: 'image/png' });
@@ -72,7 +71,6 @@ export function MedalDetail({
           text: '#MaratonSantiago2026 #CajaLosAndes #Running',
         });
       } else {
-        // Fallback: download
         handleDownload();
       }
     } catch (error) {
@@ -80,33 +78,53 @@ export function MedalDetail({
       handleDownload();
     }
   };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
   
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-[9999]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <span className="text-2xl">{achievement.icon}</span>
-            {achievement.name}
-          </DialogTitle>
-        </DialogHeader>
+  const modalContent = (
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      onClick={handleBackdropClick}
+    >
+      {/* Modal content */}
+      <div className="relative w-full max-w-sm bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-200">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute right-3 top-3 z-10 p-2 rounded-full bg-muted/80 hover:bg-muted transition-colors"
+        >
+          <X className="w-4 h-4 text-foreground" />
+        </button>
         
-        <div className="space-y-4">
+        {/* Header */}
+        <div className="pt-6 pb-4 px-6 border-b border-border">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">{achievement.icon}</span>
+            <h2 className="text-xl font-bold text-foreground pr-8">{achievement.name}</h2>
+          </div>
+        </div>
+        
+        {/* Content */}
+        <div className="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
           {/* Medal visual */}
           <div className="flex justify-center">
             <div className={cn(
-              "w-24 h-24 rounded-full flex items-center justify-center",
+              "w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center",
               isUnlocked ? [
                 "bg-gradient-to-br",
                 colorClass,
-                "shadow-xl animate-pulse",
+                "shadow-xl",
               ] : [
                 "bg-muted/50",
                 "border-2 border-dashed border-muted-foreground/30",
                 "grayscale",
               ]
             )}>
-              <span className="text-4xl">{achievement.icon}</span>
+              <span className="text-3xl sm:text-4xl">{achievement.icon}</span>
             </div>
           </div>
           
@@ -135,8 +153,8 @@ export function MedalDetail({
           </div>
           
           {/* Description */}
-          <div className="space-y-2">
-            <p className="text-foreground text-center font-medium">
+          <div className="space-y-3">
+            <p className="text-foreground text-center font-medium text-sm sm:text-base">
               {achievement.description}
             </p>
             
@@ -175,30 +193,32 @@ export function MedalDetail({
           {/* Share buttons - only for unlocked */}
           {isUnlocked && (
             <div className="flex gap-2 pt-2">
-              <Button variant="outline" className="flex-1" onClick={handleDownload}>
+              <Button variant="outline" className="flex-1 h-11" onClick={handleDownload}>
                 <Download className="w-4 h-4 mr-2" />
                 Descargar
               </Button>
-              <Button className="flex-1" onClick={handleShare}>
+              <Button className="flex-1 h-11" onClick={handleShare}>
                 <Share2 className="w-4 h-4 mr-2" />
                 Compartir
               </Button>
             </div>
           )}
         </div>
-        
-        {/* Hidden card for image generation */}
-        {isUnlocked && (
-          <div className="absolute -left-[9999px]">
-            <AchievementCard 
-              ref={cardRef}
-              achievement={achievement}
-              userName={userName}
-              unlockedAt={userAchievement?.unlocked_at}
-            />
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+      </div>
+      
+      {/* Hidden card for image generation */}
+      {isUnlocked && (
+        <div className="fixed -left-[9999px] -top-[9999px]">
+          <AchievementCard 
+            ref={cardRef}
+            achievement={achievement}
+            userName={userName}
+            unlockedAt={userAchievement?.unlocked_at}
+          />
+        </div>
+      )}
+    </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
