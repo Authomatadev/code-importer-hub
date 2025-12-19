@@ -120,7 +120,7 @@ export function AchievementCelebration({
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md border-none bg-transparent shadow-none">
+      <DialogContent className="sm:max-w-md border-none bg-transparent shadow-none fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-[9999]">
         <button
           onClick={onClose}
           className="absolute right-4 top-4 z-50 rounded-full bg-background/80 p-2 hover:bg-background"
