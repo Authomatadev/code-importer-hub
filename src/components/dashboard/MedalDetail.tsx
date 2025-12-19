@@ -83,7 +83,7 @@ export function MedalDetail({
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-[9999]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <span className="text-2xl">{achievement.icon}</span>
