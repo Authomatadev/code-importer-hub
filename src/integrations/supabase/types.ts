@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          badge_color: string | null
+          category: string
+          created_at: string | null
+          description: string
+          how_to_earn: string
+          icon: string
+          id: string
+          name: string
+          sort_order: number | null
+          trigger_type: string
+          trigger_value: number | null
+        }
+        Insert: {
+          badge_color?: string | null
+          category: string
+          created_at?: string | null
+          description: string
+          how_to_earn: string
+          icon: string
+          id?: string
+          name: string
+          sort_order?: number | null
+          trigger_type: string
+          trigger_value?: number | null
+        }
+        Update: {
+          badge_color?: string | null
+          category?: string
+          created_at?: string | null
+          description?: string
+          how_to_earn?: string
+          icon?: string
+          id?: string
+          name?: string
+          sort_order?: number | null
+          trigger_type?: string
+          trigger_value?: number | null
+        }
+        Relationships: []
+      }
       activities: {
         Row: {
           activity_type: Database["public"]["Enums"]["activity_type"] | null
@@ -317,6 +359,45 @@ export type Database = {
           total_weeks?: number
         }
         Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          id: string
+          shared_at: string | null
+          unlocked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          id?: string
+          shared_at?: string | null
+          unlocked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          id?: string
+          shared_at?: string | null
+          unlocked_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_profiles: {
         Row: {

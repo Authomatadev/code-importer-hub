@@ -2,3 +2,6 @@ project_id = "vegtxitejztnhnsobzqi"
 
 [functions.send-weekly-notification]
 verify_jwt = false
+
+[functions.check-achievements]
+verify_jwt = false

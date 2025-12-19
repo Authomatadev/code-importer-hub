@@ -8,6 +8,9 @@ import ElectricBorder from "@/components/ui/ElectricBorder";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import logoImage from "@/assets/logo-caja-los-andes.png";
 import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard, ChangePlanDialog } from "@/components/dashboard";
+import { MedalBar } from "@/components/dashboard/MedalBar";
+import { AchievementCelebration } from "@/components/dashboard/AchievementCelebration";
+import { useAchievements } from "@/hooks/useAchievements";
 import { useToast } from "@/hooks/use-toast";
 interface UserProfile {
   id: string;
@@ -62,9 +65,7 @@ interface Activity {
 }
 export default function Dashboard() {
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [plan, setPlan] = useState<Plan | null>(null);
@@ -80,6 +81,16 @@ export default function Dashboard() {
     tip_month: null
   });
   const [isLoading, setIsLoading] = useState(true);
+
+  // Achievements hook
+  const {
+    achievements,
+    userAchievements,
+    userStats,
+    newAchievement,
+    clearNewAchievement,
+    refreshStats,
+  } = useAchievements(user?.id || null);
   useEffect(() => {
     const checkAuth = async () => {
       const {
@@ -234,6 +245,8 @@ export default function Dashboard() {
       title: "¡Excelente! 💪",
       description: "Actividad completada"
     });
+    // Refresh achievements
+    refreshStats();
   };
   const handleCompleteWeek = async () => {
     if (!user) return;
@@ -303,7 +316,7 @@ export default function Dashboard() {
 
       <main className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
+        <div className="mb-6">
           <h1 className="font-heading text-3xl md:text-4xl font-black text-foreground mb-2">
             ¡HOLA, ATLETA! 👋
           </h1>
@@ -311,6 +324,24 @@ export default function Dashboard() {
             {user?.email}
           </p>
         </div>
+
+        {/* Medal Bar */}
+        {achievements.length > 0 && (
+          <MedalBar
+            achievements={achievements}
+            userAchievements={userAchievements}
+            userName={profile?.full_name || profile?.email || user?.email}
+            userStats={userStats || undefined}
+          />
+        )}
+
+        {/* Achievement Celebration Modal */}
+        <AchievementCelebration
+          achievement={newAchievement}
+          isOpen={!!newAchievement}
+          onClose={clearNewAchievement}
+          userName={profile?.full_name || profile?.email || user?.email}
+        />
 
         {/* Profile Card - Collapsible */}
         <Collapsible className="mb-8">

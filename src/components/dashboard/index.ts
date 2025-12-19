@@ -11,3 +11,8 @@ export { TipCard } from './TipCard';
 export { ChangePlanDialog } from './ChangePlanDialog';
 export { ZoneTooltip } from './ZoneTooltip';
 export { IntensityTooltip } from './IntensityTooltip';
+export { MedalBar } from './MedalBar';
+export { MedalItem } from './MedalItem';
+export { MedalDetail } from './MedalDetail';
+export { AchievementCard } from './AchievementCard';
+export { AchievementCelebration } from './AchievementCelebration';
