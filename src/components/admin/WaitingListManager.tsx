@@ -19,8 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CheckCircle, XCircle, Loader2, RefreshCw, Mail } from "lucide-react";
+import { CheckCircle, XCircle, Loader2, RefreshCw, Mail, Edit } from "lucide-react";
 import { formatRut } from "@/lib/rut-validation";
+import { EditWaitingEntryDialog } from "./EditWaitingEntryDialog";
 
 type WaitingStatus = "pending" | "approved" | "rejected" | "invited" | "joined";
 
@@ -42,6 +43,8 @@ export function WaitingListManager() {
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<WaitingStatus | "all">("pending");
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [editingEntry, setEditingEntry] = useState<WaitingListEntry | null>(null);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const { toast } = useToast();
 
   const fetchEntries = async () => {
@@ -76,13 +79,19 @@ export function WaitingListManager() {
     fetchEntries();
   }, [filter]);
 
+  const hasCompleteData = (entry: WaitingListEntry): boolean => {
+    return !!(
+      entry.rut &&
+      entry.first_name &&
+      entry.last_name &&
+      entry.selected_distance &&
+      entry.selected_difficulty
+    );
+  };
+
   const handleApprove = async (entry: WaitingListEntry) => {
-    if (!entry.rut || !entry.first_name || !entry.last_name) {
-      toast({
-        title: "Datos incompletos",
-        description: "El usuario no tiene todos los datos necesarios para aprobar",
-        variant: "destructive",
-      });
+    if (!hasCompleteData(entry)) {
+      setEditingEntry(entry);
       return;
     }
 
@@ -109,6 +118,52 @@ export function WaitingListManager() {
       });
     } finally {
       setProcessingId(null);
+    }
+  };
+
+  const handleSaveAndApprove = async (
+    id: string,
+    data: {
+      rut: string;
+      first_name: string;
+      last_name: string;
+      selected_distance: string;
+      selected_difficulty: number;
+    }
+  ) => {
+    setIsSavingEdit(true);
+    try {
+      // First update the waiting_list entry
+      const { error: updateError } = await supabase
+        .from("waiting_list")
+        .update(data)
+        .eq("id", id);
+
+      if (updateError) throw updateError;
+
+      // Then approve the user
+      const { error: approveError } = await supabase.functions.invoke("approve-user", {
+        body: { waiting_list_id: id },
+      });
+
+      if (approveError) throw approveError;
+
+      toast({
+        title: "Usuario aprobado",
+        description: `Se guardaron los datos y se envió el correo con las credenciales`,
+      });
+
+      setEditingEntry(null);
+      fetchEntries();
+    } catch (error: any) {
+      console.error("Error saving and approving:", error);
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo completar la operación",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSavingEdit(false);
     }
   };
 
@@ -208,12 +263,16 @@ export function WaitingListManager() {
               {entries.map((entry) => (
                 <TableRow key={entry.id}>
                   <TableCell className="font-mono text-sm">
-                    {entry.rut ? formatRut(entry.rut) : "-"}
+                    {entry.rut ? formatRut(entry.rut) : (
+                      <span className="text-muted-foreground italic">Sin RUT</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     {entry.first_name && entry.last_name
                       ? `${entry.first_name} ${entry.last_name}`
-                      : "-"}
+                      : (
+                        <span className="text-muted-foreground italic">Sin nombre</span>
+                      )}
                   </TableCell>
                   <TableCell className="max-w-[200px] truncate">
                     {entry.email}
@@ -227,7 +286,7 @@ export function WaitingListManager() {
                         </span>
                       </div>
                     ) : (
-                      "-"
+                      <span className="text-muted-foreground italic">Sin plan</span>
                     )}
                   </TableCell>
                   <TableCell>{getStatusBadge(entry.status)}</TableCell>
@@ -237,6 +296,17 @@ export function WaitingListManager() {
                   <TableCell className="text-right">
                     {entry.status === "pending" && (
                       <div className="flex justify-end gap-2">
+                        {!hasCompleteData(entry) && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setEditingEntry(entry)}
+                            disabled={processingId === entry.id}
+                          >
+                            <Edit className="w-4 h-4 mr-1" />
+                            Completar
+                          </Button>
+                        )}
                         <Button
                           variant="default"
                           size="sm"
@@ -276,6 +346,14 @@ export function WaitingListManager() {
           </Table>
         </div>
       )}
+
+      <EditWaitingEntryDialog
+        entry={editingEntry}
+        open={!!editingEntry}
+        onOpenChange={(open) => !open && setEditingEntry(null)}
+        onSave={handleSaveAndApprove}
+        isSaving={isSavingEdit}
+      />
     </div>
   );
 }
