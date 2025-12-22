@@ -410,8 +410,10 @@ export type Database = {
           first_name: string | null
           full_name: string | null
           id: string
+          is_first_login: boolean | null
           last_activity_at: string | null
           last_name: string | null
+          rut: string | null
           start_date: string | null
           target_race_date: string | null
         }
@@ -425,8 +427,10 @@ export type Database = {
           first_name?: string | null
           full_name?: string | null
           id: string
+          is_first_login?: boolean | null
           last_activity_at?: string | null
           last_name?: string | null
+          rut?: string | null
           start_date?: string | null
           target_race_date?: string | null
         }
@@ -440,8 +444,10 @@ export type Database = {
           first_name?: string | null
           full_name?: string | null
           id?: string
+          is_first_login?: boolean | null
           last_activity_at?: string | null
           last_name?: string | null
+          rut?: string | null
           start_date?: string | null
           target_race_date?: string | null
         }
@@ -527,21 +533,42 @@ export type Database = {
       }
       waiting_list: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           created_at: string | null
           email: string
+          first_name: string | null
           id: string
+          last_name: string | null
+          rut: string | null
+          selected_difficulty: number | null
+          selected_distance: string | null
           status: Database["public"]["Enums"]["waiting_status"] | null
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string | null
           email: string
+          first_name?: string | null
           id?: string
+          last_name?: string | null
+          rut?: string | null
+          selected_difficulty?: number | null
+          selected_distance?: string | null
           status?: Database["public"]["Enums"]["waiting_status"] | null
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string | null
           email?: string
+          first_name?: string | null
           id?: string
+          last_name?: string | null
+          rut?: string | null
+          selected_difficulty?: number | null
+          selected_distance?: string | null
           status?: Database["public"]["Enums"]["waiting_status"] | null
         }
         Relationships: []
@@ -615,7 +642,7 @@ export type Database = {
         | "failed"
         | "opened"
         | "clicked"
-      waiting_status: "pending" | "invited" | "joined"
+      waiting_status: "pending" | "invited" | "joined" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -760,7 +787,7 @@ export const Constants = {
         "pdf",
       ],
       notification_status: ["sent", "delivered", "failed", "opened", "clicked"],
-      waiting_status: ["pending", "invited", "joined"],
+      waiting_status: ["pending", "invited", "joined", "approved", "rejected"],
     },
   },
 } as const
