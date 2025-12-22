@@ -6,7 +6,7 @@ import { DistanceCard } from "@/components/DistanceCard";
 import { Footer } from "@/components/Footer";
 import { LaserFlow } from "@/components/LaserFlow";
 import heroImage from "@/assets/hero-marathon.jpg";
-import { CalendarDays, TrendingUp, Video, Bell, Trophy, Users, ChevronDown } from "lucide-react";
+import { CalendarDays, TrendingUp, Video, Bell, Trophy, Users } from "lucide-react";
 import { useEffect } from "react";
 const features = [{
   icon: CalendarDays,
@@ -118,7 +118,7 @@ const Index = () => {
             </p>
             
             {/* Countdown */}
-            <div id="countdown" className="mb-12">
+            <div id="countdown" className="mb-8">
               <p className="text-sm text-muted-foreground uppercase tracking-widest mb-6 opacity-0 animate-fade-in" style={{
               animationDelay: "0.35s"
             }}>
@@ -127,39 +127,28 @@ const Index = () => {
               <Countdown />
             </div>
             
-            {/* Waiting List Form */}
-            <div className="opacity-0 animate-fade-in" style={{
+            {/* Destacado Entrena Sin Costo - movido aquí */}
+            <div className="max-w-2xl mx-auto mb-8 opacity-0 animate-fade-in" style={{
             animationDelay: "0.4s"
+          }}>
+              <h3 className="font-heading text-xl md:text-2xl font-black mb-3">
+                ENTRENA SIN COSTO CON <span className="px-2 py-1 bg-secondary text-secondary-foreground rounded">CAJA LOS ANDES.</span>
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Si eres afiliado a Caja Los Andes, tu plan de entrenamiento para el Maratón de Santiago 2026 es completamente SIN COSTO.
+              </p>
+            </div>
+            
+            {/* Waiting List Form */}
+            <div id="waitlist" className="opacity-0 animate-fade-in" style={{
+            animationDelay: "0.45s"
           }}>
               <WaitingListForm />
             </div>
           </div>
         </div>
-        
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in" style={{
-        animationDelay: "0.6s"
-      }}>
-          <a href="#features" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-            <span className="text-xs uppercase tracking-widest">Descubre más</span>
-            <ChevronDown className="w-5 h-5 animate-bounce" />
-          </a>
-        </div>
       </section>
 
-      {/* Alliance Banner Section */}
-      <section className="py-12 bg-secondary/10 border-y border-secondary/20 my-[20px]">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h3 className="font-heading text-2xl md:text-3xl font-black mb-4">
-              ENTRENA SIN COSTO CON <span className="px-2 py-1 bg-secondary text-secondary-foreground rounded">CAJA LOS ANDES.</span>
-            </h3>
-            <p className="text-muted-foreground">
-              Si eres afiliado a Caja Los Andes, tu plan de entrenamiento para el Maratón de Santiago 2026 es completamente SIN COSTO. Solo regístrate y desbloquea tus rutinas semana a semana.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* Features Section */}
       <section id="features" className="py-20 md:py-32 bg-muted">
