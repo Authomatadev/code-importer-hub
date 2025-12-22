@@ -29,30 +29,30 @@ export function Navbar() {
             </Link>
             
             <ThemeToggle />
-            <Link to="/auth?mode=login">
-              <Button variant="outline" size="lg" className="gap-2">
-                <LogIn className="w-4 h-4" />
-                INGRESAR
+            <Link to="/#waitlist">
+              <Button variant="outline" size="lg">
+                REGÍSTRATE
               </Button>
             </Link>
-            <Link to="/auth">
-              <Button variant="nike" size="lg">
-                COMENZAR
+            <Link to="/auth?mode=login">
+              <Button variant="nike" size="lg" className="gap-2">
+                <LogIn className="w-4 h-4" />
+                INGRESA
               </Button>
             </Link>
           </div>
 
           {/* Mobile - Botones siempre visibles + Menú */}
           <div className="flex items-center gap-2 md:hidden">
-            <Link to="/auth?mode=login">
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                <LogIn className="h-5 w-5" />
+            <Link to="/#waitlist">
+              <Button variant="outline" size="sm" className="px-3">
+                REGÍSTRATE
               </Button>
             </Link>
-            <Link to="/auth">
+            <Link to="/auth?mode=login">
               <Button variant="nike" size="sm" className="px-3 gap-1">
-                <Play className="h-4 w-4" />
-                IR
+                <LogIn className="h-4 w-4" />
+                INGRESA
               </Button>
             </Link>
             <ThemeToggle />
