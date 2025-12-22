@@ -180,10 +180,14 @@ export function WaitingListForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full max-w-2xl mx-auto">
         {step === 1 ? (
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center mb-6">
-              <h3 className="text-lg font-semibold text-foreground">Paso 1: Elige tu plan</h3>
-              <p className="text-sm text-muted-foreground">Selecciona la distancia y nivel que deseas entrenar</p>
+          <div className="space-y-6 animate-fade-in p-6 rounded-2xl bg-card/50 border border-border/50 backdrop-blur-sm">
+            <div className="text-center mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider mb-3">
+                <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
+                Paso 1
+              </div>
+              <h3 className="text-xl font-bold text-foreground">Elige tu plan</h3>
+              <p className="text-sm text-muted-foreground mt-1">Selecciona la distancia y nivel que deseas entrenar</p>
             </div>
             
             {/* Distance Selection */}

@@ -118,7 +118,7 @@ const Index = () => {
             </p>
             
             {/* Countdown */}
-            <div id="countdown" className="mb-8">
+            <div id="countdown" className="mb-12">
               <p className="text-sm text-muted-foreground uppercase tracking-widest mb-6 opacity-0 animate-fade-in" style={{
               animationDelay: "0.35s"
             }}>
@@ -127,15 +127,15 @@ const Index = () => {
               <Countdown />
             </div>
             
-            {/* Destacado Entrena Sin Costo - movido aquí */}
-            <div className="max-w-2xl mx-auto mb-8 opacity-0 animate-fade-in" style={{
+            {/* Destacado Entrena Sin Costo */}
+            <div className="max-w-2xl mx-auto mb-10 p-6 rounded-2xl bg-secondary/10 border border-secondary/30 backdrop-blur-sm opacity-0 animate-fade-in" style={{
             animationDelay: "0.4s"
           }}>
-              <h3 className="font-heading text-xl md:text-2xl font-black mb-3">
-                ENTRENA SIN COSTO CON <span className="px-2 py-1 bg-secondary text-secondary-foreground rounded">CAJA LOS ANDES.</span>
+              <h3 className="font-heading text-xl md:text-2xl font-black mb-2">
+                ENTRENA <span className="px-3 py-1 bg-secondary text-secondary-foreground rounded-lg">SIN COSTO</span>
               </h3>
-              <p className="text-sm text-muted-foreground">
-                Si eres afiliado a Caja Los Andes, tu plan de entrenamiento para el Maratón de Santiago 2026 es completamente SIN COSTO.
+              <p className="text-sm md:text-base text-muted-foreground">
+                Si eres afiliado a <span className="font-semibold text-foreground">Caja Los Andes</span>, tu plan de entrenamiento es completamente gratis.
               </p>
             </div>
             
