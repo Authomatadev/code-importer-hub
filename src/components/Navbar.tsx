@@ -1,6 +1,6 @@
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Settings, LogIn, Play, Trophy } from "lucide-react";
+import { Menu, X, Settings, LogIn, UserPlus, Trophy } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logoCajaLosAndes from "@/assets/logo-caja-los-andes.png";
@@ -42,22 +42,22 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile - Botones siempre visibles + Menú */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Mobile - Botones compactos + Menú */}
+          <div className="flex items-center gap-1 md:hidden">
             <Link to="/#waitlist">
-              <Button variant="outline" size="sm" className="px-3">
-                REGÍSTRATE
+              <Button variant="ghost" size="icon" className="h-9 w-9">
+                <UserPlus className="h-5 w-5" />
               </Button>
             </Link>
             <Link to="/auth?mode=login">
-              <Button variant="nike" size="sm" className="px-3 gap-1">
+              <Button variant="nike" size="sm" className="px-2 gap-1">
                 <LogIn className="h-4 w-4" />
-                INGRESA
+                <span className="hidden xs:inline">Ingresa</span>
               </Button>
             </Link>
             <ThemeToggle />
-            <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
