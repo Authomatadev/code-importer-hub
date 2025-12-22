@@ -22,10 +22,9 @@ type LoginFormData = z.infer<typeof loginSchema>;
 interface LoginFormProps {
   onSubmit: (data: LoginFormData) => Promise<void>;
   isLoading: boolean;
-  onSwitchToSignUp: () => void;
 }
 
-export function LoginForm({ onSubmit, isLoading, onSwitchToSignUp }: LoginFormProps) {
+export function LoginForm({ onSubmit, isLoading }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginFormData>({
@@ -100,17 +99,6 @@ export function LoginForm({ onSubmit, isLoading, onSwitchToSignUp }: LoginFormPr
             "INICIAR SESIÓN"
           )}
         </Button>
-
-        <p className="text-center text-sm text-muted-foreground">
-          ¿No tienes cuenta?{" "}
-          <button
-            type="button"
-            onClick={onSwitchToSignUp}
-            className="text-primary font-semibold hover:underline"
-          >
-            Regístrate gratis
-          </button>
-        </p>
       </form>
     </Form>
   );

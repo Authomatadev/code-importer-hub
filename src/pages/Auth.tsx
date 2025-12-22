@@ -108,7 +108,6 @@ export default function Auth() {
             <LoginForm
               onSubmit={handleLogin}
               isLoading={isLoading}
-              onSwitchToSignUp={handleSwitchToSignUp}
             />
           </div>
 
