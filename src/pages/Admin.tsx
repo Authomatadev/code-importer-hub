@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { AdminStats, PlanSelector, WeekManager, ActivityManager, PlanImporter, ResultsImporter } from '@/components/admin';
+import { WaitingListManager } from '@/components/admin/WaitingListManager';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { supabase } from '@/integrations/supabase/client';
@@ -94,6 +95,16 @@ export default function Admin() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Resumen</h2>
             <AdminStats />
+          </section>
+
+          {/* Waiting List Section */}
+          <section>
+            <h2 className="text-xl font-semibold mb-4">Aprobación de Usuarios</h2>
+            <Card>
+              <CardContent className="p-6">
+                <WaitingListManager />
+              </CardContent>
+            </Card>
           </section>
 
           {/* Content Management Section */}

@@ -1,33 +1,15 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { StepIndicator } from "@/components/auth/StepIndicator";
-import { DistanceSelector } from "@/components/auth/DistanceSelector";
-import { DifficultySelector } from "@/components/auth/DifficultySelector";
-import { SignUpForm, SignUpFormData } from "@/components/auth/SignUpForm";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import logoImage from "@/assets/logo-caja-los-andes.png";
 
-type AuthMode = "signup" | "login";
-
 export default function Auth() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  const [mode, setMode] = useState<AuthMode>(
-    searchParams.get("mode") === "login" ? "login" : "signup"
-  );
-  const [step, setStep] = useState(1);
-  const [selectedDistance, setSelectedDistance] = useState<string | null>(
-    searchParams.get("distance") || null
-  );
-  const [selectedDifficulty, setSelectedDifficulty] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSigningUp, setIsSigningUp] = useState(false);
 
   // Check if user is already logged in
   useEffect(() => {
@@ -40,133 +22,13 @@ export default function Auth() {
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // Don't redirect during signup - we handle it manually after profile update
-      if (session && !isSigningUp) {
+      if (session) {
         navigate("/dashboard");
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, isSigningUp]);
-
-  const handleSignUp = async (data: SignUpFormData) => {
-    if (!selectedDistance || !selectedDifficulty) {
-      toast({
-        title: "Error",
-        description: "Selecciona distancia y dificultad primero",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    setIsSigningUp(true);
-    
-    try {
-      // 1. Sign up the user with name metadata
-      const { data: authData, error: signUpError } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
-          data: {
-            first_name: data.firstName,
-            last_name: data.lastName,
-            full_name: `${data.firstName} ${data.lastName}`,
-          },
-        },
-      });
-
-      if (signUpError) {
-        if (signUpError.message.includes("already registered")) {
-          toast({
-            title: "Usuario ya registrado",
-            description: "Este correo ya está registrado. Intenta iniciar sesión.",
-            variant: "destructive",
-          });
-        } else {
-          throw signUpError;
-        }
-        setIsSigningUp(false);
-        return;
-      }
-
-      if (authData.user) {
-        // 2. Wait for the trigger to create the profile first
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        // 3. Find the corresponding plan (ensure exact type match)
-        const { data: plan, error: planError } = await supabase
-          .from("plans")
-          .select("id, name")
-          .eq("distance", selectedDistance)
-          .eq("difficulty", Number(selectedDifficulty))
-          .maybeSingle();
-
-        console.log("Finding plan for:", { 
-          distance: selectedDistance, 
-          difficulty: selectedDifficulty,
-          planFound: plan,
-          planError 
-        });
-
-        if (planError) {
-          console.error("Error finding plan:", planError);
-        }
-
-        if (!plan) {
-          console.error("No plan found for:", { 
-            distance: selectedDistance, 
-            difficulty: selectedDifficulty 
-          });
-        }
-
-        // 4. Update user profile with selected plan
-        const { error: updateError } = await supabase
-          .from("user_profiles")
-          .update({
-            distance: selectedDistance,
-            difficulty: Number(selectedDifficulty),
-            current_plan_id: plan?.id || null,
-            start_date: new Date().toISOString().split("T")[0],
-          })
-          .eq("id", authData.user.id);
-        
-        console.log("Profile update result:", { 
-          userId: authData.user.id,
-          planId: plan?.id,
-          updateError 
-        });
-
-        if (updateError) {
-          console.error("Error updating profile:", updateError);
-          toast({
-            title: "Error al guardar plan",
-            description: "Tu cuenta fue creada pero hubo un error guardando tu plan.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "¡Cuenta creada!",
-            description: "¡Bienvenido! Tu plan está listo.",
-          });
-        }
-
-        // Navigate to dashboard after profile is updated
-        navigate("/dashboard");
-      }
-    } catch (error: any) {
-      console.error("Sign up error:", error);
-      toast({
-        title: "Error al crear cuenta",
-        description: error.message || "Intenta nuevamente",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-      setIsSigningUp(false);
-    }
-  };
+  }, [navigate]);
 
   const handleLogin = async (data: { email: string; password: string }) => {
     setIsLoading(true);
@@ -211,10 +73,14 @@ export default function Auth() {
     }
   };
 
-  const canProceedToStep2 = selectedDistance !== null;
-  const canProceedToStep3 = selectedDifficulty !== null;
-
-  const stepLabels = ["Distancia", "Nivel", "Cuenta"];
+  const handleSwitchToSignUp = () => {
+    // Redirect to landing page with waiting list form
+    navigate("/");
+    toast({
+      title: "Solicita acceso",
+      description: "Completa el formulario en la página principal para solicitar acceso.",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -224,157 +90,37 @@ export default function Auth() {
           <button onClick={() => navigate("/")} className="flex items-center gap-2">
             <img src={logoImage} alt="Caja Los Andes" className="h-8" />
           </button>
-          {mode === "login" && (
-            <Button variant="ghost" onClick={() => setMode("signup")}>
-              Registrarse
-            </Button>
-          )}
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 md:py-12">
-        {mode === "signup" ? (
-          <>
-            {/* Step Indicator */}
-            <StepIndicator currentStep={step} totalSteps={3} labels={stepLabels} />
-
-            {/* Step Content */}
-            <div className="max-w-4xl mx-auto">
-              {/* Step 1: Distance Selection */}
-              {step === 1 && (
-                <div className="animate-fade-in">
-                  <div className="text-center mb-8">
-                    <h1 className="font-heading text-3xl md:text-4xl font-black text-foreground mb-2">
-                      ELIGE TU DESAFÍO
-                    </h1>
-                    <p className="text-muted-foreground">
-                      Selecciona la distancia que quieres conquistar
-                    </p>
-                  </div>
-
-                  <DistanceSelector
-                    selected={selectedDistance}
-                    onSelect={setSelectedDistance}
-                  />
-
-                  <div className="mt-8 flex justify-center">
-                    <Button
-                      size="lg"
-                      onClick={() => setStep(2)}
-                      disabled={!canProceedToStep2}
-                      className="min-w-[200px]"
-                    >
-                      Continuar
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 2: Difficulty Selection */}
-              {step === 2 && (
-                <div className="animate-fade-in">
-                  <div className="text-center mb-8">
-                    <h1 className="font-heading text-3xl md:text-4xl font-black text-foreground mb-2">
-                      ELIGE TU NIVEL
-                    </h1>
-                    <p className="text-muted-foreground">
-                      Selecciona tu nivel de experiencia actual
-                    </p>
-                  </div>
-
-                  <DifficultySelector
-                    selected={selectedDifficulty}
-                    onSelect={setSelectedDifficulty}
-                  />
-
-                  <div className="mt-8 flex justify-center gap-4">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      onClick={() => setStep(1)}
-                    >
-                      <ArrowLeft className="w-5 h-5 mr-2" />
-                      Atrás
-                    </Button>
-                    <Button
-                      size="lg"
-                      onClick={() => setStep(3)}
-                      disabled={!canProceedToStep3}
-                      className="min-w-[200px]"
-                    >
-                      Continuar
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 3: Sign Up Form */}
-              {step === 3 && (
-                <div className="animate-fade-in max-w-md mx-auto">
-                  <div className="text-center mb-8">
-                    <h1 className="font-heading text-3xl md:text-4xl font-black text-foreground mb-2">
-                      CREA TU CUENTA
-                    </h1>
-                    <p className="text-muted-foreground">
-                      Un paso más para comenzar tu entrenamiento
-                    </p>
-                    
-                    {/* Selected Plan Summary */}
-                    <div className="mt-4 p-4 bg-muted rounded-xl">
-                      <p className="text-sm text-muted-foreground">Plan seleccionado:</p>
-                      <p className="font-bold text-foreground">
-                        {selectedDistance} - Nivel {selectedDifficulty === 1 ? "Principiante" : selectedDifficulty === 2 ? "Intermedio" : "Avanzado"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
-                    <SignUpForm
-                      onSubmit={handleSignUp}
-                      isLoading={isLoading}
-                      onSwitchToLogin={() => setMode("login")}
-                    />
-                  </div>
-
-                  <div className="mt-6 flex justify-center">
-                    <Button
-                      variant="ghost"
-                      onClick={() => setStep(2)}
-                    >
-                      <ArrowLeft className="w-5 h-5 mr-2" />
-                      Cambiar nivel
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          /* Login Mode */
-          <div className="animate-fade-in max-w-md mx-auto">
-            <div className="text-center mb-8">
-              <h1 className="font-heading text-3xl md:text-4xl font-black text-foreground mb-2">
-                BIENVENIDO DE VUELTA
-              </h1>
-              <p className="text-muted-foreground">
-                Inicia sesión para continuar tu entrenamiento
-              </p>
-            </div>
-
-            <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
-              <LoginForm
-                onSubmit={handleLogin}
-                isLoading={isLoading}
-                onSwitchToSignUp={() => {
-                  setMode("signup");
-                  setStep(1);
-                }}
-              />
-            </div>
+        <div className="animate-fade-in max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="font-heading text-3xl md:text-4xl font-black text-foreground mb-2">
+              BIENVENIDO DE VUELTA
+            </h1>
+            <p className="text-muted-foreground">
+              Inicia sesión para continuar tu entrenamiento
+            </p>
           </div>
-        )}
+
+          <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
+            <LoginForm
+              onSubmit={handleLogin}
+              isLoading={isLoading}
+              onSwitchToSignUp={handleSwitchToSignUp}
+            />
+          </div>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              ¿No tienes cuenta?{" "}
+              <Button variant="link" className="p-0 h-auto" onClick={handleSwitchToSignUp}>
+                Solicita acceso aquí
+              </Button>
+            </p>
+          </div>
+        </div>
       </main>
     </div>
   );
