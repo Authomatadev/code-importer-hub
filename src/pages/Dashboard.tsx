@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, LogOut, User, ChevronDown } from "lucide-react";
+import { Loader2, LogOut, User, ChevronDown, Settings } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import ElectricBorder from "@/components/ui/ElectricBorder";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -81,6 +81,7 @@ export default function Dashboard() {
     tip_month: null
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Achievements hook
   const {
@@ -103,6 +104,13 @@ export default function Dashboard() {
         return;
       }
       setUser(session.user);
+
+      // Check if user is admin
+      const { data: roleData } = await supabase.rpc("has_role", {
+        _user_id: session.user.id,
+        _role: "admin"
+      });
+      setIsAdmin(!!roleData);
 
       // Fetch user profile
       const {
@@ -307,10 +315,18 @@ export default function Dashboard() {
           <button onClick={() => navigate("/")} className="flex items-center gap-2">
             <img src={logoImage} alt="Caja Los Andes" className="h-8" />
           </button>
-          <Button variant="ghost" onClick={handleLogout}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Cerrar sesión
-          </Button>
+          <div className="flex items-center gap-2">
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={() => navigate("/admin")}>
+                <Settings className="w-4 h-4 mr-2" />
+                Admin
+              </Button>
+            )}
+            <Button variant="ghost" onClick={handleLogout}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Cerrar sesión
+            </Button>
+          </div>
         </div>
       </header>
 
