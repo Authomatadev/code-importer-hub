@@ -171,7 +171,7 @@ serve(async (req) => {
       const loginUrl = `${req.headers.get("origin") || "https://vegtxitejztnhnsobzqi.lovable.app"}/auth?mode=login`;
       
       const { error: emailError } = await resend.emails.send({
-        from: "Entrenamiento Maratón <onboarding@resend.dev>",
+        from: "Entrenamiento Maratón <activmente@authomata.io>",
         to: [waitingEntry.email],
         subject: "¡Tu solicitud ha sido aprobada! 🎉",
         html: `
