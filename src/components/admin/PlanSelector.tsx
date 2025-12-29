@@ -14,6 +14,7 @@ interface PlanSelectorProps {
 const difficultyLabels: Record<number, string> = {
   1: 'Principiante',
   2: 'Intermedio',
+  3: 'Avanzado',
 };
 
 export function PlanSelector({ selectedPlanId, onSelect }: PlanSelectorProps) {
