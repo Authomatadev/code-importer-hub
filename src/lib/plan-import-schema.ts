@@ -65,15 +65,39 @@ export const WeekImportSchema = z.object({
   activities: z.array(ActivityImportSchema).min(1),
 });
 
-// Full plan import schema
-export const PlanImportSchema = z.object({
+// Schema for the plan wrapper (optional)
+const PlanWrapperSchema = z.object({
+  name: z.string().optional(),
+  total_weeks: z.number().optional(),
+  total_phases: z.number().optional(),
+  phases: z.array(z.string()).optional(),
+  created_at: z.string().optional(),
   weeks: z.array(WeekImportSchema).min(1),
 });
+
+// Full plan import schema - accepts both formats:
+// 1. { "weeks": [...] }
+// 2. { "plan": { "weeks": [...] } }
+export const PlanImportSchema = z.union([
+  z.object({ weeks: z.array(WeekImportSchema).min(1) }),
+  z.object({ plan: PlanWrapperSchema }),
+]);
 
 // Types derived from schemas
 export type ActivityImport = z.infer<typeof ActivityImportSchema>;
 export type WeekImport = z.infer<typeof WeekImportSchema>;
 export type PlanImport = z.infer<typeof PlanImportSchema>;
+
+// Helper to extract weeks from parsed data (handles both formats)
+export function getWeeksFromPlanImport(data: PlanImport): WeekImport[] {
+  if ('plan' in data && data.plan?.weeks) {
+    return data.plan.weeks;
+  }
+  if ('weeks' in data && data.weeks) {
+    return data.weeks;
+  }
+  return [];
+}
 
 // Validation result type
 export interface ImportValidationResult {
@@ -98,14 +122,15 @@ export function validatePlanImport(data: unknown): ImportValidationResult {
     };
   }
   
-  const totalActivities = result.data.weeks.reduce((sum, w) => sum + w.activities.length, 0);
-  const weekNumbers = result.data.weeks.map(w => w.week_number).sort((a, b) => a - b);
+  const weeks = getWeeksFromPlanImport(result.data);
+  const totalActivities = weeks.reduce((sum, w) => sum + w.activities.length, 0);
+  const weekNumbers = weeks.map(w => w.week_number).sort((a, b) => a - b);
   
   return {
     valid: true,
     errors: [],
     summary: {
-      totalWeeks: result.data.weeks.length,
+      totalWeeks: weeks.length,
       totalActivities,
       weekNumbers,
     },

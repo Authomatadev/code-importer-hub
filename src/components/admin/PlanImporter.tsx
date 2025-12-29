@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { PlanSelector } from './PlanSelector';
 import { supabase } from '@/integrations/supabase/client';
-import { validatePlanImport, PlanImport, PlanImportSchema } from '@/lib/plan-import-schema';
+import { validatePlanImport, PlanImport, PlanImportSchema, getWeeksFromPlanImport, WeekImport } from '@/lib/plan-import-schema';
 import { toast } from 'sonner';
 import {
   Upload,
@@ -91,7 +91,8 @@ export function PlanImporter() {
     if (!selectedPlan || !parsedData) return;
 
     setImporting(true);
-    const totalSteps = parsedData.weeks.length * 2; // weeks + activities per week
+    const weeks = getWeeksFromPlanImport(parsedData);
+    const totalSteps = weeks.length * 2; // weeks + activities per week
     let currentStep = 0;
 
     try {
@@ -108,7 +109,7 @@ export function PlanImporter() {
       }
 
       // Import each week
-      for (const week of parsedData.weeks) {
+      for (const week of weeks) {
         currentStep++;
         setProgress({
           current: currentStep,
@@ -201,7 +202,7 @@ export function PlanImporter() {
       }
 
       toast.success(
-        `Plan importado exitosamente: ${parsedData.weeks.length} semanas, ${validationResult?.summary.totalActivities} actividades`
+        `Plan importado exitosamente: ${weeks.length} semanas, ${validationResult?.summary.totalActivities} actividades`
       );
       clearFile();
     } catch (error: any) {
