@@ -53,7 +53,7 @@ export function ZoneTooltip({ zone, children }: ZoneTooltipProps) {
             <span className="text-2xl">{zone.icon}</span>
             <div>
               <p className="font-bold text-foreground">{zone.label}</p>
-              <p className="text-xs text-muted-foreground">{zone.fcmRange} FCM</p>
+              <p className="text-xs text-muted-foreground">{zone.fcmRange} FCM • RPE {zone.rpe}</p>
             </div>
           </div>
 
