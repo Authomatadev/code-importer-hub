@@ -1,0 +1,1 @@
+UPDATE public.plans SET total_weeks = 24;
