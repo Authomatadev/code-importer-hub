@@ -27,6 +27,7 @@ export interface ZoneInfo {
   icon: string;
   fcmRange: string;
   intensity: string;
+  rpe: string;
   trainingType: string;
   duration: string;
   characteristics: string[];
@@ -37,14 +38,15 @@ export interface ZoneInfo {
 export const ZONES: ZoneInfo[] = [
   {
     value: 'Z1',
-    label: 'Zona de Recuperación',
+    label: 'Zona aeróbica - Regenerativa',
     shortLabel: 'Z1',
     color: 'hsl(var(--chart-2))',
     icon: '🟢',
     fcmRange: '50-60%',
-    intensity: 'Muy baja',
-    trainingType: 'Recuperación, calentamiento',
-    duration: 'Ilimitada',
+    intensity: 'Regenerativo',
+    rpe: '1-2',
+    trainingType: 'Regenerativo',
+    duration: 'Largos',
     characteristics: [
       'Intensidad muy baja y cómoda',
       'Ritmo de conversación fácil',
@@ -59,14 +61,15 @@ export const ZONES: ZoneInfo[] = [
   },
   {
     value: 'Z2',
-    label: 'Zona Aeróbica Base',
+    label: 'Zona aeróbica - Construcción',
     shortLabel: 'Z2',
     color: 'hsl(var(--chart-3))',
     icon: '🔵',
     fcmRange: '60-70%',
-    intensity: 'Moderada',
-    trainingType: 'Rodajes, base aeróbica',
-    duration: '1-3 horas',
+    intensity: 'Largos',
+    rpe: '2-3',
+    trainingType: 'Construcción aeróbica',
+    duration: 'Largos',
     characteristics: [
       'Intensidad moderada',
       'Ritmo sostenible durante períodos prolongados',
@@ -81,18 +84,42 @@ export const ZONES: ZoneInfo[] = [
     activitiesInPlan: 55
   },
   {
+    value: 'ZX',
+    label: 'Zona aeróbica - Umbral Aeróbico',
+    shortLabel: 'ZX',
+    color: 'hsl(var(--primary))',
+    icon: '💎',
+    fcmRange: '70-75%',
+    intensity: 'Ritmo de maratón',
+    rpe: '3-4',
+    trainingType: 'Umbral aeróbico',
+    duration: 'Largos - Medios',
+    characteristics: [
+      'Ritmo de maratón',
+      'Intensidad controlada y sostenible',
+      'Punto de transición aeróbico'
+    ],
+    benefits: [
+      'Mejora la resistencia aeróbica',
+      'Desarrollo de ritmo de competencia',
+      'Mejora de la economía de carrera'
+    ],
+    activitiesInPlan: 18
+  },
+  {
     value: 'Z3',
-    label: 'Zona de Ritmo Sostenido',
+    label: 'Zona aeróbica - Sub Umbral',
     shortLabel: 'Z3',
     color: 'hsl(var(--chart-4))',
     icon: '🟡',
-    fcmRange: '70-80%',
-    intensity: 'Moderada-alta',
-    trainingType: 'Ritmo sostenido',
-    duration: '30-60 min',
+    fcmRange: '75-80%',
+    intensity: 'Ritmo media maratón',
+    rpe: '4-5',
+    trainingType: 'Sub umbral',
+    duration: 'Medios',
     characteristics: [
       'Intensidad moderada-alta',
-      'Ritmo que puedes mantener de 30 minutos a 1 hora',
+      'Ritmo de media maratón',
       'Respiración más profunda y controlada',
       'Punto de transición entre aeróbico y anaeróbico'
     ],
@@ -105,19 +132,20 @@ export const ZONES: ZoneInfo[] = [
     activitiesInPlan: 2
   },
   {
-    value: 'Z4',
-    label: 'Zona de Umbral Anaeróbico',
-    shortLabel: 'Z4',
-    color: 'hsl(var(--chart-5))',
-    icon: '🟠',
-    fcmRange: '80-90%',
-    intensity: 'Alta',
+    value: 'ZY',
+    label: 'Zona aeróbica - Umbral Anaeróbico',
+    shortLabel: 'ZY',
+    color: 'hsl(var(--accent))',
+    icon: '⚡',
+    fcmRange: '80-85%',
+    intensity: 'Trabajos de series',
+    rpe: '6-7',
     trainingType: 'Umbral anaeróbico',
-    duration: '20-60 min',
+    duration: 'Medios - Cortos',
     characteristics: [
-      'Intensidad alta',
-      'Corresponde al "umbral de lactato"',
-      'Ritmo que podrías mantener aproximadamente 1 hora',
+      'Intensidad alta y sostenida',
+      'Corresponde al umbral de lactato',
+      'Ideal para trabajos de series',
       'Punto donde el cuerpo comienza a acumular lactato'
     ],
     benefits: [
@@ -126,21 +154,47 @@ export const ZONES: ZoneInfo[] = [
       'Mejora la capacidad de mantener ritmos rápidos',
       'Desarrollo de potencia aeróbica'
     ],
+    activitiesInPlan: 40
+  },
+  {
+    value: 'Z4',
+    label: 'Zona aeróbica - Supra Umbral Anaeróbico',
+    shortLabel: 'Z4',
+    color: 'hsl(var(--chart-5))',
+    icon: '🟠',
+    fcmRange: '85-90%',
+    intensity: 'Ritmos aeróbicos rápidos',
+    rpe: '7-8',
+    trainingType: 'Supra umbral anaeróbico',
+    duration: 'Cortos',
+    characteristics: [
+      'Intensidad alta',
+      'Ritmos aeróbicos rápidos',
+      'Requiere buena recuperación entre repeticiones',
+      'Trabajo por encima del umbral de lactato'
+    ],
+    benefits: [
+      'Mejora la velocidad de resistencia',
+      'Aumenta la capacidad anaeróbica',
+      'Mejora la capacidad de mantener ritmos rápidos',
+      'Desarrollo de potencia aeróbica'
+    ],
     activitiesInPlan: 5
   },
   {
     value: 'Z5',
-    label: 'Zona VO2 Máximo',
+    label: 'Zona aeróbica - VO2 Máx',
     shortLabel: 'Z5',
     color: 'hsl(var(--destructive))',
     icon: '🔴',
     fcmRange: '90-100%',
-    intensity: 'Muy alta',
+    intensity: 'Consumo máximo de oxígeno',
+    rpe: '8-10',
     trainingType: 'VO2 máximo',
-    duration: '3-8 min',
+    duration: 'Cortos',
     characteristics: [
       'Intensidad muy alta',
-      'Ritmo que solo puedes mantener 3-8 minutos',
+      'Consumo máximo de oxígeno',
       'Requiere recuperación completa entre repeticiones',
       'Máxima captación de oxígeno'
     ],
@@ -151,52 +205,6 @@ export const ZONES: ZoneInfo[] = [
       'Mejora del rendimiento en esfuerzos cortos intensos'
     ],
     activitiesInPlan: 3
-  },
-  {
-    value: 'ZX',
-    label: 'Zona de Esfuerzo Mixto',
-    shortLabel: 'ZX',
-    color: 'hsl(var(--primary))',
-    icon: '💎',
-    fcmRange: 'Variable',
-    intensity: 'Variable',
-    trainingType: 'Fartlek, ritmo variable',
-    duration: 'Variable',
-    characteristics: [
-      'Intensidad variable o de transición',
-      'Puede incluir cambios de ritmo',
-      'Entrenamiento de fartlek o ritmo variable'
-    ],
-    benefits: [
-      'Desarrollo de adaptabilidad',
-      'Mejora de la capacidad de cambio de ritmo',
-      'Entrenamiento más dinámico'
-    ],
-    activitiesInPlan: 18
-  },
-  {
-    value: 'ZY',
-    label: 'Zona de Umbral',
-    shortLabel: 'ZY',
-    color: 'hsl(var(--accent))',
-    icon: '⚡',
-    fcmRange: '80-90%',
-    intensity: 'Alta',
-    trainingType: 'Umbral/Intervalos',
-    duration: '20-60 min',
-    characteristics: [
-      'Intensidad alta y sostenida',
-      'Corresponde al umbral de lactato',
-      'Ritmo que podrías mantener aproximadamente 1 hora',
-      'Punto donde el cuerpo comienza a acumular lactato'
-    ],
-    benefits: [
-      'Mejora la velocidad de resistencia',
-      'Aumenta el umbral de lactato',
-      'Mejora la capacidad de mantener ritmos rápidos',
-      'Desarrollo de potencia aeróbica'
-    ],
-    activitiesInPlan: 40
   }
 ];
 
