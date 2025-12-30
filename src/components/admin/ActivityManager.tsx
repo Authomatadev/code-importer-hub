@@ -42,8 +42,8 @@ export function ActivityManager({ weekId, weekNumber, planName, onBack }: Activi
     setLoading(false);
   }
 
-  function getActivityForDay(dayIndex: number): Activity | null {
-    return activities.find((a) => a.day_of_week === dayIndex) || null;
+  function getActivityForDay(dayNumber: number): Activity | null {
+    return activities.find((a) => a.day_of_week === dayNumber) || null;
   }
 
   function handleAddActivity(dayIndex: number) {
@@ -88,12 +88,12 @@ export function ActivityManager({ weekId, weekNumber, planName, onBack }: Activi
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 min-w-0">
-            {[...Array(7)].map((_, dayIndex) => (
+            {[1, 2, 3, 4, 5, 6, 7].map((dayNumber) => (
               <ActivityDayCard
-                key={dayIndex}
-                dayIndex={dayIndex}
-                activity={getActivityForDay(dayIndex)}
-                onAdd={() => handleAddActivity(dayIndex)}
+                key={dayNumber}
+                dayNumber={dayNumber}
+                activity={getActivityForDay(dayNumber)}
+                onAdd={() => handleAddActivity(dayNumber)}
                 onEdit={handleEditActivity}
               />
             ))}
