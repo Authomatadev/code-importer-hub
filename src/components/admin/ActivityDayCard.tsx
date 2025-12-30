@@ -7,7 +7,15 @@ import { getZoneByValue, getPhaseByValue } from '@/lib/activity-constants';
 
 type Activity = Tables<'activities'>;
 
-const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const dayNames: Record<number, string> = {
+  1: 'Lun',
+  2: 'Mar',
+  3: 'Mié',
+  4: 'Jue',
+  5: 'Vie',
+  6: 'Sáb',
+  7: 'Dom',
+};
 
 const activityIcons: Record<string, string> = {
   run: '🏃',
@@ -19,14 +27,14 @@ const activityIcons: Record<string, string> = {
 };
 
 interface ActivityDayCardProps {
-  dayIndex: number;
+  dayNumber: number; // 1-7 (Monday=1, Sunday=7)
   activity: Activity | null;
   onAdd: () => void;
   onEdit: (activity: Activity) => void;
 }
 
-export function ActivityDayCard({ dayIndex, activity, onAdd, onEdit }: ActivityDayCardProps) {
-  const dayName = dayNames[dayIndex] || `Día ${dayIndex + 1}`;
+export function ActivityDayCard({ dayNumber, activity, onAdd, onEdit }: ActivityDayCardProps) {
+  const dayName = dayNames[dayNumber] || `Día ${dayNumber}`;
   const zone = getZoneByValue(activity?.zone);
   const phase = getPhaseByValue(activity?.phase);
 
