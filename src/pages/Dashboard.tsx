@@ -10,6 +10,7 @@ import logoImage from "@/assets/logo-caja-los-andes.png";
 import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard, ChangePlanDialog } from "@/components/dashboard";
 import { MedalBar } from "@/components/dashboard/MedalBar";
 import { AchievementCelebration } from "@/components/dashboard/AchievementCelebration";
+import { ContestEntryCard, ContestRankingBanner } from "@/components/dashboard/contest";
 import { useAchievements } from "@/hooks/useAchievements";
 import { useToast } from "@/hooks/use-toast";
 interface UserProfile {
@@ -72,6 +73,7 @@ export default function Dashboard() {
   const [currentWeekNumber, setCurrentWeekNumber] = useState(1);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [completedActivityIds, setCompletedActivityIds] = useState<string[]>([]);
+  const [activityLogs, setActivityLogs] = useState<{ id: string; activity_id: string; photo_url?: string | null }[]>([]);
   const [completedWeeks, setCompletedWeeks] = useState<number[]>([]);
   const [currentWeekTips, setCurrentWeekTips] = useState<{
     tip_week: Tip | null;
@@ -182,9 +184,10 @@ export default function Dashboard() {
       if (user) {
         const {
           data: logsData
-        } = await supabase.from("activity_logs").select("activity_id").eq("user_id", user.id).eq("completed", true);
+        } = await supabase.from("activity_logs").select("id, activity_id, photo_url").eq("user_id", user.id).eq("completed", true);
         if (logsData) {
           setCompletedActivityIds(logsData.map(log => log.activity_id));
+          setActivityLogs(logsData);
         }
       }
     };
@@ -341,6 +344,12 @@ export default function Dashboard() {
           </p>
         </div>
 
+        {/* Contest Entry Card */}
+        {user && <ContestEntryCard userId={user.id} />}
+
+        {/* Contest Ranking Banner */}
+        {user && <ContestRankingBanner userId={user.id} />}
+
         {/* Medal Bar */}
         {achievements.length > 0 && (
           <MedalBar
@@ -427,7 +436,7 @@ export default function Dashboard() {
             {/* Week Activities */}
             <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-2xl">
             <div className="bg-card rounded-2xl p-6 px-[7px]">
-              {activities.length > 0 ? <WeekActivityGrid weekNumber={currentWeekNumber} activities={activities} completedActivityIds={completedActivityIds} onMarkComplete={handleMarkComplete} onCompleteWeek={handleCompleteWeek} /> : <div className="text-center py-8">
+              {activities.length > 0 ? <WeekActivityGrid weekNumber={currentWeekNumber} activities={activities} completedActivityIds={completedActivityIds} activityLogs={activityLogs} userId={user?.id} onMarkComplete={handleMarkComplete} onCompleteWeek={handleCompleteWeek} /> : <div className="text-center py-8">
                   <p className="text-muted-foreground">
                     No hay actividades programadas para esta semana.
                   </p>

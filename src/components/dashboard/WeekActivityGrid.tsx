@@ -30,10 +30,18 @@ interface Activity {
   notes?: string | null;
   media_url?: string | null;
 }
+interface ActivityLog {
+  id: string;
+  activity_id: string;
+  photo_url?: string | null;
+}
+
 interface WeekActivityGridProps {
   weekNumber: number;
   activities: Activity[];
   completedActivityIds: string[];
+  activityLogs?: ActivityLog[];
+  userId?: string | null;
   onMarkComplete?: (activityId: string) => void;
   onCompleteWeek?: () => void;
 }
@@ -52,10 +60,18 @@ export function WeekActivityGrid({
   weekNumber,
   activities,
   completedActivityIds,
+  activityLogs = [],
+  userId,
   onMarkComplete,
   onCompleteWeek
 }: WeekActivityGridProps) {
   const [expandedActivityId, setExpandedActivityId] = useState<string | null>(null);
+  
+  // Create activity log map by activity_id
+  const logByActivityId: Record<string, ActivityLog> = {};
+  activityLogs.forEach(log => {
+    logByActivityId[log.activity_id] = log;
+  });
   
   // Convert JS day (0=Sunday) to DB format (1=Monday, 7=Sunday)
   const jsDay = new Date().getDay();
@@ -111,7 +127,8 @@ export function WeekActivityGrid({
         if (!activity || activity.activity_type === 'rest') {
           return <RestDayAccordion key={`rest-${dayOfWeek}`} dayName={dayFullNames[dayOfWeek]} animationDelay={index} />;
         }
-        return <ActivityAccordion key={activity.id} activity={activity} isToday={dayOfWeek === today} isCompleted={isCompleted} isExpanded={expandedActivityId === activity.id} onToggle={() => handleToggleActivity(activity.id)} onMarkComplete={onMarkComplete} animationDelay={index} />;
+        const log = logByActivityId[activity.id];
+        return <ActivityAccordion key={activity.id} activity={activity} isToday={dayOfWeek === today} isCompleted={isCompleted} isExpanded={expandedActivityId === activity.id} onToggle={() => handleToggleActivity(activity.id)} onMarkComplete={onMarkComplete} animationDelay={index} userId={userId} activityLogId={log?.id || null} initialPhotoUrl={log?.photo_url || null} />;
       })}
       </div>
 
