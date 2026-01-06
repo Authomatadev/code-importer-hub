@@ -338,8 +338,8 @@ export function ActivityAccordion({
                 </>}
             </Button>
 
-            {/* Photo Uploader - Show only for non-rest activities when completed */}
-            {activity.activity_type !== 'rest' && isCompleted && userId && activityLogId && (
+            {/* Photo Uploader - Show for all non-rest activities */}
+            {activity.activity_type !== 'rest' && userId && activityLogId && (
               <div className="pt-2 border-t border-border/30">
                 <TrainingPhotoUploader
                   photoUrl={photoUrl}
