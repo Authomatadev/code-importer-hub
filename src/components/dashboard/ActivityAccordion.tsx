@@ -12,6 +12,8 @@ import { getZoneByValue, getTerrainByValue, getTrainingTypeByValue, getPhaseByVa
 import { formatDistance } from "@/lib/format-distance";
 import { ZoneTooltip } from "./ZoneTooltip";
 import { IntensityTooltip } from "./IntensityTooltip";
+import { TrainingPhotoUploader } from "./contest/TrainingPhotoUploader";
+import { useTrainingPhoto } from "@/hooks/useTrainingPhoto";
 interface Activity {
   id: string;
   day_of_week: number;
@@ -45,6 +47,9 @@ interface ActivityAccordionProps {
   onToggle?: () => void;
   onMarkComplete?: (activityId: string) => void;
   animationDelay?: number;
+  userId?: string | null;
+  activityLogId?: string | null;
+  initialPhotoUrl?: string | null;
 }
 // Database uses 1-7 format (Monday=1, Sunday=7)
 const dayFullNames: Record<number, string> = {
@@ -63,10 +68,25 @@ export function ActivityAccordion({
   isExpanded = false,
   onToggle,
   onMarkComplete,
-  animationDelay = 0
+  animationDelay = 0,
+  userId = null,
+  activityLogId = null,
+  initialPhotoUrl = null,
 }: ActivityAccordionProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Photo upload hook
+  const { photoUrl, isUploading, uploadPhoto, deletePhoto, setPhotoUrl } = useTrainingPhoto({
+    activityLogId,
+    userId,
+    initialPhotoUrl,
+  });
+
+  // Update photoUrl when initialPhotoUrl changes
+  useEffect(() => {
+    setPhotoUrl(initialPhotoUrl || null);
+  }, [initialPhotoUrl, setPhotoUrl]);
   const zone = getZoneByValue(activity.zone);
   const terrain = getTerrainByValue(activity.terrain);
   const trainingType = getTrainingTypeByValue(activity.training_type);
@@ -317,6 +337,18 @@ export function ActivityAccordion({
                   MARCAR COMO COMPLETADO
                 </>}
             </Button>
+
+            {/* Photo Uploader - Show only for non-rest activities when completed */}
+            {activity.activity_type !== 'rest' && isCompleted && userId && activityLogId && (
+              <div className="pt-2 border-t border-border/30">
+                <TrainingPhotoUploader
+                  photoUrl={photoUrl}
+                  onUpload={uploadPhoto}
+                  onDelete={deletePhoto}
+                  isUploading={isUploading}
+                />
+              </div>
+            )}
           </div>
         </CollapsibleContent>
       </div>

@@ -163,6 +163,7 @@ export type Database = {
           logged_distance_km: number | null
           logged_duration_min: number | null
           notes: string | null
+          photo_url: string | null
           user_id: string
         }
         Insert: {
@@ -173,6 +174,7 @@ export type Database = {
           logged_distance_km?: number | null
           logged_duration_min?: number | null
           notes?: string | null
+          photo_url?: string | null
           user_id: string
         }
         Update: {
@@ -183,6 +185,7 @@ export type Database = {
           logged_distance_km?: number | null
           logged_duration_min?: number | null
           notes?: string | null
+          photo_url?: string | null
           user_id?: string
         }
         Relationships: [
@@ -201,6 +204,107 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      contest_entries: {
+        Row: {
+          completion_percent: number | null
+          contest_id: string
+          created_at: string | null
+          id: string
+          is_winner: boolean | null
+          photo_percent: number | null
+          rank: number | null
+          score: number | null
+          terms_accepted: boolean | null
+          terms_accepted_at: string | null
+          user_id: string
+          video_uploaded_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          completion_percent?: number | null
+          contest_id: string
+          created_at?: string | null
+          id?: string
+          is_winner?: boolean | null
+          photo_percent?: number | null
+          rank?: number | null
+          score?: number | null
+          terms_accepted?: boolean | null
+          terms_accepted_at?: string | null
+          user_id: string
+          video_uploaded_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          completion_percent?: number | null
+          contest_id?: string
+          created_at?: string | null
+          id?: string
+          is_winner?: boolean | null
+          photo_percent?: number | null
+          rank?: number | null
+          score?: number | null
+          terms_accepted?: boolean | null
+          terms_accepted_at?: string | null
+          user_id?: string
+          video_uploaded_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contest_entries_contest_id_fkey"
+            columns: ["contest_id"]
+            isOneToOne: false
+            referencedRelation: "contests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contests: {
+        Row: {
+          code: string
+          created_at: string | null
+          description: string | null
+          end_date: string
+          id: string
+          is_active: boolean | null
+          max_winners: number | null
+          name: string
+          requires_photos: boolean | null
+          requires_video: boolean | null
+          start_date: string
+          terms_and_conditions: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          description?: string | null
+          end_date: string
+          id?: string
+          is_active?: boolean | null
+          max_winners?: number | null
+          name: string
+          requires_photos?: boolean | null
+          requires_video?: boolean | null
+          start_date: string
+          terms_and_conditions?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          end_date?: string
+          id?: string
+          is_active?: boolean | null
+          max_winners?: number | null
+          name?: string
+          requires_photos?: boolean | null
+          requires_video?: boolean | null
+          start_date?: string
+          terms_and_conditions?: string | null
+        }
+        Relationships: []
       }
       marathon_results: {
         Row: {
