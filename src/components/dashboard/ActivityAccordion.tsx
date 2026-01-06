@@ -48,7 +48,6 @@ interface ActivityAccordionProps {
   onMarkComplete?: (activityId: string) => void;
   animationDelay?: number;
   userId?: string | null;
-  activityLogId?: string | null;
   initialPhotoUrl?: string | null;
 }
 // Database uses 1-7 format (Monday=1, Sunday=7)
@@ -70,15 +69,14 @@ export function ActivityAccordion({
   onMarkComplete,
   animationDelay = 0,
   userId = null,
-  activityLogId = null,
   initialPhotoUrl = null,
 }: ActivityAccordionProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Photo upload hook
+  // Photo upload hook - now uses activityId instead of activityLogId
   const { photoUrl, isUploading, uploadPhoto, deletePhoto, setPhotoUrl } = useTrainingPhoto({
-    activityLogId,
+    activityId: activity.id,
     userId,
     initialPhotoUrl,
   });
@@ -339,7 +337,7 @@ export function ActivityAccordion({
             </Button>
 
             {/* Photo Uploader - Show for all non-rest activities */}
-            {activity.activity_type !== 'rest' && userId && activityLogId && (
+            {activity.activity_type !== 'rest' && userId && (
               <div className="pt-2 border-t border-border/30">
                 <TrainingPhotoUploader
                   photoUrl={photoUrl}
