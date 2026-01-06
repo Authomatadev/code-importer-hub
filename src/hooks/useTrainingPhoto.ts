@@ -3,21 +3,67 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 interface UseTrainingPhotoOptions {
-  activityLogId: string | null;
+  activityId: string;
   userId: string | null;
   initialPhotoUrl?: string | null;
+  onLogCreated?: (logId: string) => void;
 }
 
-export function useTrainingPhoto({ activityLogId, userId, initialPhotoUrl }: UseTrainingPhotoOptions) {
+export function useTrainingPhoto({ activityId, userId, initialPhotoUrl, onLogCreated }: UseTrainingPhotoOptions) {
   const [photoUrl, setPhotoUrl] = useState<string | null>(initialPhotoUrl || null);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
+  // Get or create activity log
+  const getOrCreateActivityLog = async (): Promise<string | null> => {
+    if (!userId) return null;
+
+    // Check if log exists
+    const { data: existingLog } = await supabase
+      .from('activity_logs')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('activity_id', activityId)
+      .maybeSingle();
+
+    if (existingLog) {
+      return existingLog.id;
+    }
+
+    // Create new log (not completed yet, just for photo)
+    const { data: newLog, error } = await supabase
+      .from('activity_logs')
+      .insert({
+        user_id: userId,
+        activity_id: activityId,
+        completed: false,
+      })
+      .select('id')
+      .single();
+
+    if (error) {
+      console.error('Error creating activity log:', error);
+      return null;
+    }
+
+    if (newLog && onLogCreated) {
+      onLogCreated(newLog.id);
+    }
+
+    return newLog?.id || null;
+  };
+
   const uploadPhoto = useCallback(async (file: File) => {
-    if (!activityLogId || !userId) return;
+    if (!userId) return null;
 
     try {
       setIsUploading(true);
+
+      // Get or create activity log
+      const logId = await getOrCreateActivityLog();
+      if (!logId) {
+        throw new Error('Could not create activity log');
+      }
 
       // Compress image if needed (max 2MB)
       let fileToUpload = file;
@@ -27,7 +73,7 @@ export function useTrainingPhoto({ activityLogId, userId, initialPhotoUrl }: Use
 
       // Upload to storage
       const fileExt = file.name.split('.').pop() || 'jpg';
-      const filePath = `training-photos/${userId}/${activityLogId}.${fileExt}`;
+      const filePath = `training-photos/${userId}/${logId}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('activity-media')
@@ -44,7 +90,7 @@ export function useTrainingPhoto({ activityLogId, userId, initialPhotoUrl }: Use
       const { error: updateError } = await supabase
         .from('activity_logs')
         .update({ photo_url: urlData.publicUrl })
-        .eq('id', activityLogId);
+        .eq('id', logId);
 
       if (updateError) throw updateError;
 
@@ -67,28 +113,37 @@ export function useTrainingPhoto({ activityLogId, userId, initialPhotoUrl }: Use
     } finally {
       setIsUploading(false);
     }
-  }, [activityLogId, userId, toast]);
+  }, [activityId, userId, toast]);
 
   const deletePhoto = useCallback(async () => {
-    if (!activityLogId || !userId) return;
+    if (!userId) return;
 
     try {
       setIsUploading(true);
 
-      // Delete from storage
-      const { error: deleteError } = await supabase.storage
-        .from('activity-media')
-        .remove([`training-photos/${userId}/${activityLogId}.jpg`]);
+      // Get activity log
+      const { data: log } = await supabase
+        .from('activity_logs')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('activity_id', activityId)
+        .maybeSingle();
 
-      if (deleteError) {
-        console.warn('Could not delete file from storage:', deleteError);
+      if (!log) return;
+
+      // Delete from storage (try common extensions)
+      const extensions = ['jpg', 'jpeg', 'png', 'webp'];
+      for (const ext of extensions) {
+        await supabase.storage
+          .from('activity-media')
+          .remove([`training-photos/${userId}/${log.id}.${ext}`]);
       }
 
       // Update activity_log to remove photo URL
       const { error: updateError } = await supabase
         .from('activity_logs')
         .update({ photo_url: null })
-        .eq('id', activityLogId);
+        .eq('id', log.id);
 
       if (updateError) throw updateError;
 
@@ -108,7 +163,7 @@ export function useTrainingPhoto({ activityLogId, userId, initialPhotoUrl }: Use
     } finally {
       setIsUploading(false);
     }
-  }, [activityLogId, userId, toast]);
+  }, [activityId, userId, toast]);
 
   return {
     photoUrl,

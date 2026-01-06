@@ -128,7 +128,7 @@ export function WeekActivityGrid({
           return <RestDayAccordion key={`rest-${dayOfWeek}`} dayName={dayFullNames[dayOfWeek]} animationDelay={index} />;
         }
         const log = logByActivityId[activity.id];
-        return <ActivityAccordion key={activity.id} activity={activity} isToday={dayOfWeek === today} isCompleted={isCompleted} isExpanded={expandedActivityId === activity.id} onToggle={() => handleToggleActivity(activity.id)} onMarkComplete={onMarkComplete} animationDelay={index} userId={userId} activityLogId={log?.id || null} initialPhotoUrl={log?.photo_url || null} />;
+        return <ActivityAccordion key={activity.id} activity={activity} isToday={dayOfWeek === today} isCompleted={isCompleted} isExpanded={expandedActivityId === activity.id} onToggle={() => handleToggleActivity(activity.id)} onMarkComplete={onMarkComplete} animationDelay={index} userId={userId} initialPhotoUrl={log?.photo_url || null} />;
       })}
       </div>
 
