@@ -12,6 +12,8 @@ import { MedalBar } from "@/components/dashboard/MedalBar";
 import { AchievementCelebration } from "@/components/dashboard/AchievementCelebration";
 import { ContestEntryCard, ContestRankingBanner } from "@/components/dashboard/contest";
 import { useAchievements } from "@/hooks/useAchievements";
+import { useContest } from "@/hooks/useContest";
+import { useContestEntry } from "@/hooks/useContestEntry";
 import { useToast } from "@/hooks/use-toast";
 interface UserProfile {
   id: string;
@@ -94,6 +96,13 @@ export default function Dashboard() {
     clearNewAchievement,
     refreshStats,
   } = useAchievements(user?.id || null);
+
+  // Contest hooks
+  const { contest } = useContest();
+  const { isEnrolled: isContestEnrolled } = useContestEntry({
+    contestId: contest?.id || null,
+    userId: user?.id || null,
+  });
   useEffect(() => {
     const checkAuth = async () => {
       const {
@@ -436,7 +445,7 @@ export default function Dashboard() {
             {/* Week Activities */}
             <ElectricBorder color="hsl(var(--primary))" speed={1.5} chaos={0.8} thickness={2} className="rounded-2xl">
             <div className="bg-card rounded-2xl p-6 px-[7px]">
-              {activities.length > 0 ? <WeekActivityGrid weekNumber={currentWeekNumber} activities={activities} completedActivityIds={completedActivityIds} activityLogs={activityLogs} userId={user?.id} onMarkComplete={handleMarkComplete} onCompleteWeek={handleCompleteWeek} /> : <div className="text-center py-8">
+              {activities.length > 0 ? <WeekActivityGrid weekNumber={currentWeekNumber} activities={activities} completedActivityIds={completedActivityIds} activityLogs={activityLogs} userId={user?.id} isContestEnrolled={isContestEnrolled} onMarkComplete={handleMarkComplete} onCompleteWeek={handleCompleteWeek} /> : <div className="text-center py-8">
                   <p className="text-muted-foreground">
                     No hay actividades programadas para esta semana.
                   </p>
