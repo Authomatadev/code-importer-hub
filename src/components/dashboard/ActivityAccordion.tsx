@@ -49,6 +49,7 @@ interface ActivityAccordionProps {
   animationDelay?: number;
   userId?: string | null;
   initialPhotoUrl?: string | null;
+  isContestEnrolled?: boolean;
 }
 // Database uses 1-7 format (Monday=1, Sunday=7)
 const dayFullNames: Record<number, string> = {
@@ -70,6 +71,7 @@ export function ActivityAccordion({
   animationDelay = 0,
   userId = null,
   initialPhotoUrl = null,
+  isContestEnrolled = false,
 }: ActivityAccordionProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -336,8 +338,8 @@ export function ActivityAccordion({
                 </>}
             </Button>
 
-            {/* Photo Uploader - Show for all non-rest activities */}
-            {activity.activity_type !== 'rest' && userId && (
+            {/* Photo Uploader - Show only for contest participants */}
+            {activity.activity_type !== 'rest' && userId && isContestEnrolled && (
               <div className="pt-2 border-t border-border/30">
                 <TrainingPhotoUploader
                   photoUrl={photoUrl}
