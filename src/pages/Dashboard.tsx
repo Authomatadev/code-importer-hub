@@ -10,7 +10,7 @@ import logoImage from "@/assets/logo-caja-los-andes.png";
 import { WeekActivityGrid, WeekNavigation, ActivityType, TipCard, ChangePlanDialog } from "@/components/dashboard";
 import { MedalBar } from "@/components/dashboard/MedalBar";
 import { AchievementCelebration } from "@/components/dashboard/AchievementCelebration";
-import { ContestEntryCard, ContestRankingBanner } from "@/components/dashboard/contest";
+import { ContestEntryCard, ContestRankingBanner, ContestLeaderboard } from "@/components/dashboard/contest";
 import { useAchievements } from "@/hooks/useAchievements";
 import { useContest } from "@/hooks/useContest";
 import { useContestEntry } from "@/hooks/useContestEntry";
@@ -358,6 +358,9 @@ export default function Dashboard() {
 
         {/* Contest Ranking Banner */}
         {user && <ContestRankingBanner userId={user.id} />}
+
+        {/* Contest Leaderboard */}
+        {user && isContestEnrolled && <div className="mb-6"><ContestLeaderboard currentUserId={user.id} /></div>}
 
         {/* Medal Bar */}
         {achievements.length > 0 && (
