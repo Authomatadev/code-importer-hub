@@ -21,11 +21,106 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
+function EmptyPodiumPosition({ position }: { position: 1 | 2 | 3 }) {
+  const podiumConfig = {
+    1: {
+      height: 'h-28',
+      bgGradient: 'from-yellow-500/20 to-yellow-600/5',
+      borderColor: 'border-yellow-500/30',
+      iconColor: 'text-yellow-400/40',
+      icon: Crown,
+      size: 'w-20 h-20',
+      order: 'order-2',
+    },
+    2: {
+      height: 'h-20',
+      bgGradient: 'from-slate-400/20 to-slate-500/5',
+      borderColor: 'border-slate-400/30',
+      iconColor: 'text-slate-300/40',
+      icon: Medal,
+      size: 'w-16 h-16',
+      order: 'order-1',
+    },
+    3: {
+      height: 'h-16',
+      bgGradient: 'from-amber-700/20 to-amber-800/5',
+      borderColor: 'border-amber-600/30',
+      iconColor: 'text-amber-600/40',
+      icon: Medal,
+      size: 'w-16 h-16',
+      order: 'order-3',
+    },
+  };
+
+  const config = podiumConfig[position];
+  const Icon = config.icon;
+
+  return (
+    <div className={cn("flex flex-col items-center gap-2", config.order)}>
+      {/* Empty avatar placeholder */}
+      <div className="relative">
+        <div className={cn(
+          config.size,
+          "rounded-full border-2 border-dashed flex items-center justify-center",
+          config.borderColor,
+          "bg-muted/20"
+        )}>
+          <span className={cn("text-2xl", config.iconColor)}>?</span>
+        </div>
+        
+        {/* Position badge */}
+        <div className={cn(
+          "absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center",
+          "bg-background border-2",
+          config.borderColor
+        )}>
+          <Icon className={cn("w-3.5 h-3.5", config.iconColor)} />
+        </div>
+      </div>
+
+      {/* Empty name placeholder */}
+      <p className="text-xs text-muted-foreground/50">
+        —
+      </p>
+
+      {/* Empty score */}
+      <div className={cn(
+        "flex items-center gap-1 px-3 py-1 rounded-full",
+        "bg-muted/20 border border-dashed",
+        config.borderColor
+      )}>
+        <TrendingUp className={cn("w-3 h-3", config.iconColor)} />
+        <span className={cn("font-bold text-xs", config.iconColor)}>
+          —
+        </span>
+      </div>
+
+      {/* Podium base */}
+      <div className={cn(
+        "w-20 rounded-t-lg flex items-end justify-center pb-2",
+        "bg-gradient-to-t",
+        config.bgGradient,
+        "border-x border-t border-dashed",
+        config.borderColor,
+        config.height
+      )}>
+        <span className={cn("font-bold text-2xl", config.iconColor)}>
+          {position}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function PodiumPosition({ entry, position, currentUserId }: { 
-  entry: LeaderboardEntry; 
+  entry: LeaderboardEntry | undefined; 
   position: 1 | 2 | 3;
   currentUserId?: string | null;
 }) {
+  if (!entry) {
+    return <EmptyPodiumPosition position={position} />;
+  }
+
   const isCurrentUser = entry.user_id === currentUserId;
   
   const podiumConfig = {
@@ -265,50 +360,40 @@ export function ContestLeaderboard({ currentUserId }: ContestLeaderboardProps) {
           </div>
         ) : (
           <>
-            {/* Podium for top 3 */}
-            {topThree.length >= 3 && (
-              <div className="flex justify-center items-end gap-2 mb-6 pt-4">
-                <PodiumPosition 
-                  entry={topThree[1]} 
-                  position={2} 
-                  currentUserId={currentUserId}
-                />
-                <PodiumPosition 
-                  entry={topThree[0]} 
-                  position={1} 
-                  currentUserId={currentUserId}
-                />
-                <PodiumPosition 
-                  entry={topThree[2]} 
-                  position={3} 
-                  currentUserId={currentUserId}
-                />
-              </div>
-            )}
+            {/* Podium always visible */}
+            <div className="flex justify-center items-end gap-2 mb-6 pt-4">
+              <PodiumPosition 
+                entry={topThree[1]} 
+                position={2} 
+                currentUserId={currentUserId}
+              />
+              <PodiumPosition 
+                entry={topThree[0]} 
+                position={1} 
+                currentUserId={currentUserId}
+              />
+              <PodiumPosition 
+                entry={topThree[2]} 
+                position={3} 
+                currentUserId={currentUserId}
+              />
+            </div>
 
-            {/* List view when less than 3 participants or for rest of leaderboard */}
-            <ScrollArea className={cn(topThree.length >= 3 ? "h-[300px]" : "h-[400px]", "pr-2")}>
-              <div className="space-y-2">
-                {/* If less than 3, show all in list */}
-                {topThree.length < 3 && topThree.map((entry) => (
-                  <LeaderboardRow 
-                    key={entry.id} 
-                    entry={entry} 
-                    currentUserId={currentUserId}
-                    maxWinners={maxWinners}
-                  />
-                ))}
-                {/* Rest of the list */}
-                {restOfList.map((entry) => (
-                  <LeaderboardRow 
-                    key={entry.id} 
-                    entry={entry} 
-                    currentUserId={currentUserId}
-                    maxWinners={maxWinners}
-                  />
-                ))}
-              </div>
-            </ScrollArea>
+            {/* Rest of the leaderboard */}
+            {restOfList.length > 0 && (
+              <ScrollArea className="h-[300px] pr-2">
+                <div className="space-y-2">
+                  {restOfList.map((entry) => (
+                    <LeaderboardRow 
+                      key={entry.id} 
+                      entry={entry} 
+                      currentUserId={currentUserId}
+                      maxWinners={maxWinners}
+                    />
+                  ))}
+                </div>
+              </ScrollArea>
+            )}
           </>
         )}
       </CardContent>
