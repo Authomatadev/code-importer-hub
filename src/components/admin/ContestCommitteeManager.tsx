@@ -97,13 +97,14 @@ export function ContestCommitteeManager() {
 
     setIsLoading(true);
     
-    // Fetch preselected entries
+    // Fetch ALL entries for this contest (not just preselected)
+    // This allows the admin to see all participants regardless of phase
     const { data: entriesData, error: entriesError } = await supabase
       .from('contest_entries')
       .select('*')
       .eq('contest_id', selectedContest.id)
-      .eq('is_preselected', true)
-      .order('rank', { ascending: true });
+      .order('rank', { ascending: true, nullsFirst: false })
+      .order('score', { ascending: false });
 
     if (entriesError) {
       toast.error('Error al cargar participantes');
@@ -113,12 +114,17 @@ export function ContestCommitteeManager() {
 
     // Fetch user profiles for each entry
     const userIds = entriesData?.map(e => e.user_id) || [];
-    const { data: profilesData } = await supabase
-      .from('user_profiles')
-      .select('id, first_name, last_name, email, rut, distance, difficulty')
-      .in('id', userIds);
+    
+    let profilesData: any[] = [];
+    if (userIds.length > 0) {
+      const { data } = await supabase
+        .from('user_profiles')
+        .select('id, first_name, last_name, email, rut, distance, difficulty')
+        .in('id', userIds);
+      profilesData = data || [];
+    }
 
-    const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+    const profilesMap = new Map(profilesData.map(p => [p.id, p]));
 
     const enrichedEntries: PreselectedEntry[] = (entriesData || []).map(entry => ({
       ...entry,
@@ -310,7 +316,7 @@ export function ContestCommitteeManager() {
                 <Users className="h-8 w-8 text-primary" />
                 <div>
                   <p className="text-2xl font-bold">{entries.length}</p>
-                  <p className="text-sm text-muted-foreground">Preseleccionados</p>
+                  <p className="text-sm text-muted-foreground">Total Participantes</p>
                 </div>
               </CardContent>
             </Card>
@@ -379,7 +385,14 @@ export function ContestCommitteeManager() {
           {/* Entries Table */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Participantes Preseleccionados (Top {selectedContest.preselection_count || 100})</CardTitle>
+              <CardTitle className="text-lg">
+                Todos los Participantes 
+                {entries.filter(e => e.is_preselected).length > 0 && (
+                  <Badge variant="secondary" className="ml-2">
+                    {entries.filter(e => e.is_preselected).length} preseleccionados
+                  </Badge>
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <ScrollArea className="h-[600px]">
@@ -419,9 +432,16 @@ export function ContestCommitteeManager() {
                           />
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className="font-mono">
-                            #{entry.rank || '-'}
-                          </Badge>
+                          <div className="flex flex-col gap-1">
+                            <Badge variant="outline" className="font-mono">
+                              #{entry.rank || '-'}
+                            </Badge>
+                            {entry.is_preselected && (
+                              <Badge variant="default" className="text-[10px]">
+                                Top 100
+                              </Badge>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
