@@ -228,13 +228,13 @@ function PodiumPosition({ entry, position, currentUserId }: {
   );
 }
 
-function LeaderboardRow({ entry, currentUserId, maxWinners }: { 
+function LeaderboardRow({ entry, currentUserId, preselectionCount }: { 
   entry: LeaderboardEntry; 
   currentUserId?: string | null;
-  maxWinners: number;
+  preselectionCount: number;
 }) {
   const isCurrentUser = entry.user_id === currentUserId;
-  const isTopThirty = entry.rank && entry.rank <= maxWinners;
+  const isPreselected = entry.rank && entry.rank <= preselectionCount;
 
   return (
     <div className={cn(
@@ -246,7 +246,7 @@ function LeaderboardRow({ entry, currentUserId, maxWinners }: {
       {/* Rank */}
       <div className={cn(
         "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shrink-0",
-        isTopThirty 
+        isPreselected 
           ? "bg-green-500/20 text-green-500" 
           : "bg-muted text-muted-foreground"
       )}>
@@ -299,13 +299,13 @@ function LeaderboardRow({ entry, currentUserId, maxWinners }: {
       <div className="text-right shrink-0">
         <p className={cn(
           "font-bold text-lg",
-          isTopThirty ? "text-green-500" : "text-foreground"
+          isPreselected ? "text-green-500" : "text-foreground"
         )}>
           {(entry.score || 0).toFixed(0)}%
         </p>
-        {isTopThirty && (
+        {isPreselected && (
           <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-green-500/30 text-green-500">
-            Top {maxWinners}
+            Top {preselectionCount}
           </Badge>
         )}
       </div>
@@ -319,7 +319,7 @@ export function ContestLeaderboard({ currentUserId }: ContestLeaderboardProps) {
     contestId: contest?.id || null,
   });
 
-  const maxWinners = contest?.max_winners || 30;
+  const preselectionCount = (contest as any)?.preselection_count || 100;
 
   if (!contest) return null;
 
@@ -336,7 +336,7 @@ export function ContestLeaderboard({ currentUserId }: ContestLeaderboardProps) {
             {entries.length} participantes
           </span>
           <span>•</span>
-          <span>Top {maxWinners} ganan premios</span>
+          <span>Top {preselectionCount} serán preseleccionados</span>
         </div>
         
         {/* Score formula explanation */}
@@ -388,7 +388,7 @@ export function ContestLeaderboard({ currentUserId }: ContestLeaderboardProps) {
                       key={entry.id} 
                       entry={entry} 
                       currentUserId={currentUserId}
-                      maxWinners={maxWinners}
+                      preselectionCount={preselectionCount}
                     />
                   ))}
                 </div>

@@ -37,19 +37,18 @@ serve(async (req) => {
       );
     }
 
-    // Get all entries for this contest
+    // Get ALL entries for this contest (not just those with videos)
     const { data: entries, error: entriesError } = await supabase
       .from('contest_entries')
       .select('*')
-      .eq('contest_id', contest_id)
-      .not('video_url', 'is', null);
+      .eq('contest_id', contest_id);
 
     if (entriesError) {
       console.error('Error fetching entries:', entriesError);
       throw entriesError;
     }
 
-    console.log(`Found ${entries?.length || 0} entries with videos`);
+    console.log(`Found ${entries?.length || 0} entries`);
 
     // Calculate scores for each participant
     for (const entry of entries || []) {
@@ -125,24 +124,28 @@ serve(async (req) => {
       }
     }
 
-    // Recalculate rankings (order by score DESC, then video_uploaded_at ASC for tiebreaker)
+    // Recalculate rankings (order by score DESC, then created_at ASC for tiebreaker)
+    // Note: We rank ALL participants, not just those with videos
     const { data: rankedEntries } = await supabase
       .from('contest_entries')
-      .select('id, score, video_uploaded_at')
+      .select('id, score, created_at')
       .eq('contest_id', contest_id)
-      .not('video_url', 'is', null)
       .order('score', { ascending: false })
-      .order('video_uploaded_at', { ascending: true });
+      .order('created_at', { ascending: true });
+
+    // Get preselection count from contest
+    const preselectionCount = contest.preselection_count || 100;
 
     // Update ranks
     for (let i = 0; i < (rankedEntries?.length || 0); i++) {
       const entry = rankedEntries![i];
       const rank = i + 1;
-      const isWinner = rank <= (contest.max_winners || 30);
+      // is_winner is now determined by committee, but we track top N for preselection
+      const isInTopN = rank <= preselectionCount;
 
       await supabase
         .from('contest_entries')
-        .update({ rank, is_winner: isWinner })
+        .update({ rank })
         .eq('id', entry.id);
     }
 
