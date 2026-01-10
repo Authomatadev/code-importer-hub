@@ -88,29 +88,66 @@ serve(async (req) => {
       throw new Error("Missing required user data (name or email)");
     }
 
-    console.log(`Creating user for: ${waitingEntry.email}`);
+    console.log(`Processing user for: ${waitingEntry.email}`);
 
     // Generate temporary password
     const temporaryPassword = generateTemporaryPassword();
+    
+    let userId: string;
+    let isExistingUser = false;
+    let shouldSendEmail = true;
 
-    // Create user in Supabase Auth
-    const { data: newUser, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
-      email: waitingEntry.email,
-      password: temporaryPassword,
-      email_confirm: true,
-      user_metadata: {
-        first_name: waitingEntry.first_name,
-        last_name: waitingEntry.last_name,
-        full_name: `${waitingEntry.first_name} ${waitingEntry.last_name}`,
-      },
-    });
+    // Check if user already exists
+    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
+    const existingUser = existingUsers?.users?.find(u => u.email === waitingEntry.email);
 
-    if (createUserError) {
-      console.error("Error creating user:", createUserError);
-      throw new Error(`Failed to create user: ${createUserError.message}`);
+    if (existingUser) {
+      console.log(`User already exists with ID: ${existingUser.id}`);
+      userId = existingUser.id;
+      isExistingUser = true;
+      
+      // Update user metadata
+      await supabaseAdmin.auth.admin.updateUserById(userId, {
+        user_metadata: {
+          first_name: waitingEntry.first_name,
+          last_name: waitingEntry.last_name,
+          full_name: `${waitingEntry.first_name} ${waitingEntry.last_name}`,
+        },
+      });
+      
+      // Check if this user already has a profile set up
+      const { data: existingProfile } = await supabaseAdmin
+        .from("user_profiles")
+        .select("current_plan_id")
+        .eq("id", userId)
+        .single();
+      
+      // Don't send welcome email if user already has a plan assigned
+      if (existingProfile?.current_plan_id) {
+        shouldSendEmail = false;
+        console.log("User already has a plan - skipping welcome email");
+      }
+    } else {
+      // Create new user in Supabase Auth
+      const { data: newUser, error: createUserError } = await supabaseAdmin.auth.admin.createUser({
+        email: waitingEntry.email,
+        password: temporaryPassword,
+        email_confirm: true,
+        user_metadata: {
+          first_name: waitingEntry.first_name,
+          last_name: waitingEntry.last_name,
+          full_name: `${waitingEntry.first_name} ${waitingEntry.last_name}`,
+        },
+      });
+
+      if (createUserError) {
+        console.error("Error creating user:", createUserError);
+        throw new Error(`Failed to create user: ${createUserError.message}`);
+      }
+
+      userId = newUser.user.id;
+      console.log(`New user created with ID: ${userId}`);
     }
-
-    console.log(`User created with ID: ${newUser.user.id}`);
 
     // Find the corresponding plan
     let planId = null;
@@ -144,7 +181,7 @@ serve(async (req) => {
         is_first_login: true,
         start_date: new Date().toISOString().split("T")[0],
       })
-      .eq("id", newUser.user.id);
+      .eq("id", userId);
 
     if (updateProfileError) {
       console.error("Error updating profile:", updateProfileError);
@@ -164,8 +201,8 @@ serve(async (req) => {
       console.error("Error updating waiting list:", updateWaitingError);
     }
 
-    // Send email with credentials
-    if (resendApiKey) {
+    // Send email with credentials (only for new users or users without a plan)
+    if (resendApiKey && shouldSendEmail) {
       const resend = new Resend(resendApiKey);
       
       const loginUrl = `${req.headers.get("origin") || "https://vegtxitejztnhnsobzqi.lovable.app"}/auth?mode=login`;
@@ -244,8 +281,11 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true, 
-        user_id: newUser.user.id,
-        message: "User approved and created successfully" 
+        user_id: userId,
+        is_existing_user: isExistingUser,
+        message: isExistingUser 
+          ? "Existing user linked and approved successfully" 
+          : "User approved and created successfully" 
       }),
       {
         status: 200,
