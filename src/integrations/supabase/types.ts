@@ -207,12 +207,18 @@ export type Database = {
       }
       contest_entries: {
         Row: {
+          committee_notes: string | null
+          committee_selected: boolean | null
           completion_percent: number | null
           contest_id: string
           created_at: string | null
+          final_winner: boolean | null
           id: string
+          is_preselected: boolean | null
           is_winner: boolean | null
+          notified_at: string | null
           photo_percent: number | null
+          preselected_at: string | null
           rank: number | null
           score: number | null
           terms_accepted: boolean | null
@@ -222,12 +228,18 @@ export type Database = {
           video_url: string | null
         }
         Insert: {
+          committee_notes?: string | null
+          committee_selected?: boolean | null
           completion_percent?: number | null
           contest_id: string
           created_at?: string | null
+          final_winner?: boolean | null
           id?: string
+          is_preselected?: boolean | null
           is_winner?: boolean | null
+          notified_at?: string | null
           photo_percent?: number | null
+          preselected_at?: string | null
           rank?: number | null
           score?: number | null
           terms_accepted?: boolean | null
@@ -237,12 +249,18 @@ export type Database = {
           video_url?: string | null
         }
         Update: {
+          committee_notes?: string | null
+          committee_selected?: boolean | null
           completion_percent?: number | null
           contest_id?: string
           created_at?: string | null
+          final_winner?: boolean | null
           id?: string
+          is_preselected?: boolean | null
           is_winner?: boolean | null
+          notified_at?: string | null
           photo_percent?: number | null
+          preselected_at?: string | null
           rank?: number | null
           score?: number | null
           terms_accepted?: boolean | null
@@ -265,44 +283,53 @@ export type Database = {
         Row: {
           code: string
           created_at: string | null
+          current_phase: string | null
           description: string | null
           end_date: string
           id: string
           is_active: boolean | null
           max_winners: number | null
           name: string
+          preselection_count: number | null
           requires_photos: boolean | null
           requires_video: boolean | null
           start_date: string
           terms_and_conditions: string | null
+          video_deadline: string | null
         }
         Insert: {
           code: string
           created_at?: string | null
+          current_phase?: string | null
           description?: string | null
           end_date: string
           id?: string
           is_active?: boolean | null
           max_winners?: number | null
           name: string
+          preselection_count?: number | null
           requires_photos?: boolean | null
           requires_video?: boolean | null
           start_date: string
           terms_and_conditions?: string | null
+          video_deadline?: string | null
         }
         Update: {
           code?: string
           created_at?: string | null
+          current_phase?: string | null
           description?: string | null
           end_date?: string
           id?: string
           is_active?: boolean | null
           max_winners?: number | null
           name?: string
+          preselection_count?: number | null
           requires_photos?: boolean | null
           requires_video?: boolean | null
           start_date?: string
           terms_and_conditions?: string | null
+          video_deadline?: string | null
         }
         Relationships: []
       }

@@ -15,6 +15,11 @@ export interface ContestEntry {
   score: number | null;
   rank: number | null;
   is_winner: boolean | null;
+  is_preselected: boolean | null;
+  preselected_at: string | null;
+  committee_selected: boolean | null;
+  final_winner: boolean | null;
+  notified_at: string | null;
   created_at: string | null;
 }
 
@@ -45,14 +50,13 @@ export function useContestEntry({ contestId, userId }: UseContestEntryOptions) {
         .maybeSingle();
 
       if (error) throw error;
-      setEntry(data);
+      setEntry(data as ContestEntry | null);
 
-      // Get total participants count
+      // Get total participants count (all users with entries, not just with videos)
       const { count } = await supabase
         .from('contest_entries')
         .select('*', { count: 'exact', head: true })
-        .eq('contest_id', contestId)
-        .not('video_url', 'is', null);
+        .eq('contest_id', contestId);
 
       setTotalParticipants(count || 0);
     } catch (err) {
@@ -66,12 +70,11 @@ export function useContestEntry({ contestId, userId }: UseContestEntryOptions) {
     fetchEntry();
   }, [fetchEntry]);
 
-  const acceptTerms = async () => {
-    if (!contestId || !userId) return;
+  // Auto-enroll user when they load the page (if not already enrolled)
+  const autoEnroll = async () => {
+    if (!contestId || !userId || entry) return;
 
     try {
-      setIsSubmitting(true);
-
       const { data, error } = await supabase
         .from('contest_entries')
         .upsert({
@@ -86,24 +89,16 @@ export function useContestEntry({ contestId, userId }: UseContestEntryOptions) {
         .single();
 
       if (error) throw error;
-      setEntry(data);
+      setEntry(data as ContestEntry);
 
-      toast({
-        title: '¡Términos aceptados!',
-        description: 'Ahora puedes subir tu video de presentación.',
-      });
+      // Trigger initial ranking calculation
+      await calculateRankings();
     } catch (err) {
-      console.error('Error accepting terms:', err);
-      toast({
-        title: 'Error',
-        description: 'No se pudieron aceptar los términos.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSubmitting(false);
+      console.error('Error auto-enrolling user:', err);
     }
   };
 
+  // Submit video (only for preselected users in video_submission phase)
   const submitVideo = async (file: File) => {
     if (!contestId || !userId || !entry) return;
 
@@ -137,15 +132,12 @@ export function useContestEntry({ contestId, userId }: UseContestEntryOptions) {
         .single();
 
       if (error) throw error;
-      setEntry(data);
+      setEntry(data as ContestEntry);
 
       toast({
         title: '¡Video subido!',
-        description: 'Ya estás participando en el concurso.',
+        description: 'Tu video de presentación ha sido recibido.',
       });
-
-      // Trigger ranking calculation
-      await calculateRankings();
     } catch (err) {
       console.error('Error uploading video:', err);
       toast({
@@ -179,11 +171,17 @@ export function useContestEntry({ contestId, userId }: UseContestEntryOptions) {
     isLoading,
     isSubmitting,
     totalParticipants,
-    acceptTerms,
+    autoEnroll,
     submitVideo,
     calculateRankings,
     refreshEntry,
-    isEnrolled: !!entry?.video_url,
-    hasAcceptedTerms: !!entry?.terms_accepted,
+    // New flow: enrolled = has entry (auto-enrolled when joining platform)
+    isEnrolled: !!entry,
+    // Preselected = top 100 after accumulation phase ends
+    isPreselected: !!entry?.is_preselected,
+    // Has submitted video (for preselected users)
+    hasSubmittedVideo: !!entry?.video_url,
+    // Final winner selected by committee
+    isFinalWinner: !!entry?.final_winner,
   };
 }

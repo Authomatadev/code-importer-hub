@@ -9,6 +9,7 @@ export interface LeaderboardEntry {
   photo_percent: number | null;
   rank: number | null;
   is_winner: boolean | null;
+  is_preselected: boolean | null;
   video_uploaded_at: string | null;
   user_name: string;
   user_avatar?: string;
@@ -33,7 +34,7 @@ export function useContestLeaderboard({ contestId, limit = 50 }: UseContestLeade
     try {
       setIsLoading(true);
 
-      // Fetch contest entries with user profiles
+      // Fetch ALL contest entries (not just those with videos)
       const { data: entriesData, error: entriesError } = await supabase
         .from('contest_entries')
         .select(`
@@ -44,10 +45,10 @@ export function useContestLeaderboard({ contestId, limit = 50 }: UseContestLeade
           photo_percent,
           rank,
           is_winner,
+          is_preselected,
           video_uploaded_at
         `)
         .eq('contest_id', contestId)
-        .not('video_url', 'is', null)
         .order('rank', { ascending: true, nullsFirst: false })
         .limit(limit);
 
