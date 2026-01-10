@@ -7,3 +7,4 @@ export { ActivityManager } from './ActivityManager';
 export { ActivityForm } from './ActivityForm';
 export { ActivityDayCard } from './ActivityDayCard';
 export { PlanImporter } from './PlanImporter';
+export { ContestCommitteeManager } from './ContestCommitteeManager';
