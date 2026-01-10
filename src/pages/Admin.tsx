@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { AdminStats, PlanSelector, WeekManager, ActivityManager, PlanImporter, ResultsImporter } from '@/components/admin';
+import { AdminStats, PlanSelector, WeekManager, ActivityManager, PlanImporter, ResultsImporter, ContestCommitteeManager } from '@/components/admin';
 import { WaitingListManager } from '@/components/admin/WaitingListManager';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -151,6 +151,16 @@ export default function Admin() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Gestión de Resultados</h2>
             <ResultsImporter />
+          </section>
+
+          {/* Contest Committee Section */}
+          <section>
+            <h2 className="text-xl font-semibold mb-4">Comité de Concurso</h2>
+            <Card>
+              <CardContent className="p-6">
+                <ContestCommitteeManager />
+              </CardContent>
+            </Card>
           </section>
         </div>
       </main>
