@@ -1,4 +1,4 @@
-project_id = "vegtxitejztnhnsobzqi"
+project_id = "duolkvpotxtzpfjnejeu"
 
 [functions.send-weekly-notification]
 verify_jwt = false
@@ -13,4 +13,7 @@ verify_jwt = true
 verify_jwt = false
 
 [functions.preselect-top-participants]
+verify_jwt = false
+
+[functions.create-admin-user]
 verify_jwt = false
