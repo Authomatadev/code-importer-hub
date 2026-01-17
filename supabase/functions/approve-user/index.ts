@@ -165,26 +165,37 @@ serve(async (req) => {
       }
     }
 
-    // Wait for trigger to create profile
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Update user profile with additional data
-    const { error: updateProfileError } = await supabaseAdmin
+    // UPSERT user profile (creates if doesn't exist, updates if exists)
+    const { error: upsertProfileError } = await supabaseAdmin
       .from("user_profiles")
-      .update({
+      .upsert({
+        id: userId,
+        email: waitingEntry.email,
         rut: waitingEntry.rut,
         first_name: waitingEntry.first_name,
         last_name: waitingEntry.last_name,
+        full_name: `${waitingEntry.first_name} ${waitingEntry.last_name}`,
         distance: waitingEntry.selected_distance,
         difficulty: waitingEntry.selected_difficulty,
         current_plan_id: planId,
         is_first_login: true,
         start_date: new Date().toISOString().split("T")[0],
-      })
-      .eq("id", userId);
+      }, { onConflict: 'id' });
 
-    if (updateProfileError) {
-      console.error("Error updating profile:", updateProfileError);
+    if (upsertProfileError) {
+      console.error("Error upserting profile:", upsertProfileError);
+    }
+
+    // UPSERT user role (ensure user has 'user' role)
+    const { error: upsertRoleError } = await supabaseAdmin
+      .from("user_roles")
+      .upsert({ 
+        user_id: userId, 
+        role: 'user' 
+      }, { onConflict: 'user_id,role' });
+
+    if (upsertRoleError) {
+      console.error("Error upserting user role:", upsertRoleError);
     }
 
     // Mark waiting list entry as approved
@@ -205,7 +216,7 @@ serve(async (req) => {
     if (resendApiKey && shouldSendEmail) {
       const resend = new Resend(resendApiKey);
       
-      const loginUrl = `${req.headers.get("origin") || "https://vegtxitejztnhnsobzqi.lovable.app"}/auth?mode=login`;
+      const loginUrl = `${req.headers.get("origin") || "https://id-preview--d6f1f0a3-2db8-489f-95f6-011f0f3ff136.lovable.app"}/auth`;
       
       const { error: emailError } = await resend.emails.send({
         from: "Entrenamiento Maratón <activmente@authomata.io>",
